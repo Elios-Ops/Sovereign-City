@@ -1,0 +1,45 @@
+# Dependencies
+node_modules/
+__pycache__/
+.venv/
+venv/
+env/
+*.dist-info/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Build / cache
+dist/
+build/
+.cache/
+.netlify/
+logs/
+*.log
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Deployment state
+.vercel/
+.now/
+
+# Databases
+*.sqlite
+*.sqlite3
+*.db
+
+# Large archives (never commit recovery ZIPs)
+*.zip
+*.7z
+*.rar
+*.tar
+*.tar.gz
