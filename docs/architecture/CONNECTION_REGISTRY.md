@@ -16,6 +16,8 @@ All rows below were located by grepping the actual imported source (`apps/gus/in
 | Muskrats.io (`apps/muskrats/poster.html`, trap coin) | Trap coin click → `triggerDescent()` | `window.location.href = 'descent.html'` (after audio cue) | `descent.html` (not yet imported) | Muskrats.io internal page | Confirmed in source, destination not yet imported |
 | F.A.M. (`apps/fam/index.html`) | `<a href>` links (exact link text not yet extracted) | `<a href target>` | `https://muskrats-io.netlify.app/marketplace`, `https://muskrats-io.netlify.app/mint`, `https://muskrats-io.netlify.app/syndicate` | Muskrats.io | **Confirmed in source** via grep of served HTML. |
 
+| Infinite Agentic Loop (`apps/infinite-agentic-loop/index.html`) | Landing/admin/dashboard links | `<a href>` | `https://agentic-loop.netlify.app/`, `.../admin-control.html`, `.../dashboard.html` | Same domain — confirms Gus's "Infinite Loop™ Dashboard" link above resolves to this exact application | **Confirmed end-to-end at the domain level** — this is the deployed identity of the standalone site now imported into `apps/infinite-agentic-loop/`. |
+
 ## Not Yet Traced
 
 - Remainder of Muskrats.io's internal page navigation beyond `index.html` (its own internal page links plus any `LEDGER_AI_INTEGRATION_PLAN.md`-referenced connection back to Ledger AI) — most of Muskrats.io's ~60 HTML pages were still being imported as of this report; re-run this trace once the import completes.

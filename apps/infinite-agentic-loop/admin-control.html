@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Control | Infinite Agentic Loop</title>
+    <link rel="icon" type="image/png" href="images/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --primary-cyan: #00FFFF;
+            --deep-purple: #9D00FF;
+            --dark-bg: #0A0A0F;
+            --card-bg: rgba(26, 26, 46, 0.95);
+            --text-primary: #FFFFFF;
+            --text-secondary: #B0B0C3;
+            --success-green: #00FF88;
+            --warning-red: #FF0044;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            padding: 20px;
+        }
+        
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: linear-gradient(45deg, var(--primary-cyan), var(--deep-purple));
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(0, 255, 255, 0.3);
+        }
+        
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 255, 255, 0.5);
+        }
+        
+        .auth-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .auth-card {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 25px;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+        
+        .auth-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: var(--primary-cyan);
+        }
+        
+        .auth-input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: var(--text-primary);
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .auth-btn {
+            padding: 15px 30px;
+            background: linear-gradient(45deg, var(--primary-cyan), var(--deep-purple));
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+        
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 255, 255, 0.4);
+        }
+        
+        .admin-panel {
+            display: none;
+        }
+        
+        .admin-panel.active {
+            display: block;
+        }
+        
+        .admin-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: var(--card-bg);
+            border-radius: 25px;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+        }
+        
+        .control-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .control-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .control-title {
+            color: var(--primary-cyan);
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .control-btn {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            border: 1px solid var(--primary-cyan);
+            border-radius: 8px;
+            color: var(--primary-cyan);
+            cursor: pointer;
+            margin: 5px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .control-btn:hover {
+            background: rgba(0, 255, 255, 0.1);
+        }
+        
+        .control-btn.primary {
+            background: linear-gradient(45deg, var(--primary-cyan), var(--deep-purple));
+            color: white;
+            border: none;
+        }
+        
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 12px 20px;
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 15px;
+            color: var(--primary-cyan);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .status-display {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <a href="https://ledger-ai.netlify.app/" class="back-button">
+        ← Back to Ledger AI
+    </a>
+    
+    <!-- Authentication Overlay -->
+    <div class="auth-overlay" id="authOverlay">
+        <div class="auth-card">
+            <h2 class="auth-title">🔐 Admin Access</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 20px;">
+                Enter admin password to access system controls
+            </p>
+            <input type="password" class="auth-input" id="adminPassword" placeholder="Admin Password">
+            <div>
+                <button class="auth-btn" onclick="checkAccess()">Access System</button>
+            </div>
+            <div style="margin-top: 20px; font-size: 0.8em; color: var(--text-secondary);">
+                Demo passwords: "admin", "demo123", or "ledgerai2024"
+            </div>
+        </div>
+    </div>
+    
+    <!-- Admin Panel -->
+    <div class="admin-panel" id="adminPanel">
+        <div class="admin-header">
+            <h1 style="font-family: 'Orbitron', monospace; font-size: 2.5em; background: linear-gradient(45deg, var(--primary-cyan), var(--deep-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                🎛️ Admin Control Center
+            </h1>
+            <p style="color: var(--text-secondary);">Full system access and control</p>
+            <button class="auth-btn" onclick="logout()" style="background: var(--warning-red); margin-top: 20px;">
+                Logout
+            </button>
+        </div>
+        
+        <div class="control-grid">
+            <!-- System Control -->
+            <div class="control-card">
+                <h3 class="control-title">⚡ System Control</h3>
+                <button class="control-btn primary" onclick="startSystem()">Start All Agents</button>
+                <button class="control-btn" onclick="stopSystem()">Stop All Agents</button>
+                <button class="control-btn" onclick="restartSystem()">Restart System</button>
+                <button class="control-btn" onclick="systemHealth()">Health Check</button>
+                <div class="status-display" id="systemStatus">
+                    System Status: Operational<br>
+                    Active Agents: 44/44<br>
+                    Memory Usage: 2.1GB<br>
+                    CPU Usage: 23%
+                </div>
+            </div>
+            
+            <!-- Loop Management -->
+            <div class="control-card">
+                <h3 class="control-title">🔄 Loop Management</h3>
+                <button class="control-btn primary" onclick="startLoop()">Start Infinite Loop</button>
+                <button class="control-btn" onclick="stopLoops()">Stop All Loops</button>
+                <button class="control-btn" onclick="configureLoop()">Configure Loop</button>
+                <button class="control-btn" onclick="loopAnalytics()">View Analytics</button>
+                <div class="status-display" id="loopStatus">
+                    Active Loops: 2<br>
+                    Success Rate: 99.2%<br>
+                    Avg Iteration Time: 1.3s<br>
+                    Total Iterations: 15,647
+                </div>
+            </div>
+            
+            <!-- Agent Management -->
+            <div class="control-card">
+                <h3 class="control-title">🤖 Agent Management</h3>
+                <button class="control-btn primary" onclick="deployAgents()">Deploy All Agents</button>
+                <button class="control-btn" onclick="agentStatus()">Agent Status</button>
+                <button class="control-btn" onclick="updateAgents()">Update Agents</button>
+                <button class="control-btn" onclick="agentLogs()">View Logs</button>
+                <div class="status-display" id="agentStatus">
+                    Infrastructure: 15/15 Active<br>
+                    Trading: 16/16 Active<br>
+                    Development: 13/13 Active<br>
+                    Response Time: 0.8s avg
+                </div>
+            </div>
+            
+            <!-- API Management -->
+            <div class="control-card">
+                <h3 class="control-title">🔌 API Management</h3>
+                <button class="control-btn primary" onclick="testAPIs()">Test All APIs</button>
+                <button class="control-btn" onclick="apiStats()">API Statistics</button>
+                <button class="control-btn" onclick="resetAPIs()">Reset Connections</button>
+                <button class="control-btn" onclick="apiConfig()">Configure APIs</button>
+                <div class="status-display" id="apiStatus">
+                    Gemini API: ✅ Online<br>
+                    Claude API: ✅ Online<br>
+                    OpenAI API: ✅ Online<br>
+                    Total Requests: 1,247
+                </div>
+            </div>
+            
+            <!-- Database & Storage -->
+            <div class="control-card">
+                <h3 class="control-title">💾 Data Management</h3>
+                <button class="control-btn primary" onclick="backupData()">Backup System</button>
+                <button class="control-btn" onclick="restoreData()">Restore Backup</button>
+                <button class="control-btn" onclick="clearCache()">Clear Cache</button>
+                <button class="control-btn" onclick="exportData()">Export Data</button>
+                <div class="status-display" id="dataStatus">
+                    Database: 15.2MB<br>
+                    Cache: 2.1MB<br>
+                    Logs: 8.7MB<br>
+                    Last Backup: 2h ago
+                </div>
+            </div>
+            
+            <!-- Security & Monitoring -->
+            <div class="control-card">
+                <h3 class="control-title">🛡️ Security Monitor</h3>
+                <button class="control-btn primary" onclick="securityScan()">Security Scan</button>
+                <button class="control-btn" onclick="accessLogs()">Access Logs</button>
+                <button class="control-btn" onclick="updateSecurity()">Update Security</button>
+                <button class="control-btn" onclick="threatAnalysis()">Threat Analysis</button>
+                <div class="status-display" id="securityStatus">
+                    Security Level: High<br>
+                    Failed Attempts: 0<br>
+                    Active Sessions: 1<br>
+                    Last Scan: 30m ago
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const ADMIN_PASSWORDS = ['admin', 'demo123', 'ledgerai2024'];
+        
+        function checkAccess() {
+            const password = document.getElementById('adminPassword').value;
+            
+            if (ADMIN_PASSWORDS.includes(password)) {
+                document.getElementById('authOverlay').style.display = 'none';
+                document.getElementById('adminPanel').classList.add('active');
+            } else {
+                alert('❌ Invalid password. Try: admin, demo123, or ledgerai2024');
+                document.getElementById('adminPassword').value = '';
+            }
+        }
+        
+        function logout() {
+            document.getElementById('authOverlay').style.display = 'flex';
+            document.getElementById('adminPanel').classList.remove('active');
+            document.getElementById('adminPassword').value = '';
+        }
+        
+        // System Control Functions
+        function startSystem() {
+            alert('🚀 Starting all agents...');
+            updateSystemStatus('Starting all 44 agents...', '44/44', '2.3GB', '35%');
+        }
+        
+        function stopSystem() {
+            alert('⏹️ Stopping all agents...');
+            updateSystemStatus('System shutdown initiated...', '0/44', '0.5GB', '5%');
+        }
+        
+        function restartSystem() {
+            alert('🔄 Restarting system...');
+            updateSystemStatus('System restarting...', '44/44', '2.1GB', '28%');
+        }
+        
+        function systemHealth() {
+            alert('✅ System Health Check Complete\n\n• All agents responding\n• Memory usage normal\n• API connections stable\n• No errors detected');
+        }
+        
+        function updateSystemStatus(status, agents, memory, cpu) {
+            document.getElementById('systemStatus').innerHTML = `
+                System Status: ${status}<br>
+                Active Agents: ${agents}<br>
+                Memory Usage: ${memory}<br>
+                CPU Usage: ${cpu}
+            `;
+        }
+        
+        // Loop Management Functions
+        function startLoop() {
+            alert('🔄 Infinite loop started with 10 agents!');
+            document.getElementById('loopStatus').innerHTML = `
+                Active Loops: 3<br>
+                Success Rate: 99.5%<br>
+                Avg Iteration Time: 1.1s<br>
+                Total Iterations: 15,734
+            `;
+        }
+        
+        function stopLoops() {
+            alert('⏹️ All loops stopped.');
+            document.getElementById('loopStatus').innerHTML = `
+                Active Loops: 0<br>
+                Success Rate: 99.2%<br>
+                Avg Iteration Time: --<br>
+                Total Iterations: 15,647
+            `;
+        }
+        
+        function configureLoop() {
+            const config = prompt('Enter loop configuration (agents, max iterations):', 'market-analysis,strategy-analysis,10');
+            if (config) {
+                alert(`✅ Loop configured: ${config}`);
+            }
+        }
+        
+        function loopAnalytics() {
+            alert('📊 Loop Analytics\n\n• Average iteration time: 1.3s\n• Success rate: 99.2%\n• Most active agent: MarketAnalysis\n• Peak performance: 14:30-16:00');
+        }
+        
+        // Agent Management Functions
+        function deployAgents() {
+            alert('🤖 Deploying all 44 agents...');
+            setTimeout(() => {
+                alert('✅ All agents deployed successfully!');
+            }, 2000);
+        }
+        
+        function agentStatus() {
+            alert('🤖 Agent Status Summary\n\n✅ Infrastructure: 15/15 online\n✅ Trading: 16/16 online\n✅ Development: 13/13 online\n\nAll systems operational!');
+        }
+        
+        function updateAgents() {
+            alert('🔄 Updating agent configurations...');
+        }
+        
+        function agentLogs() {
+            alert('📋 Recent Agent Activity\n\n• 14:35 - MarketAnalysis completed BTC analysis\n• 14:34 - StrategyEngine generated new strategy\n• 14:33 - RiskManager updated portfolio limits\n• 14:32 - SecurityAudit completed scan');
+        }
+        
+        // API Management Functions
+        function testAPIs() {
+            alert('🧪 Testing all API connections...');
+            setTimeout(() => {
+                alert('✅ All APIs responding correctly!\n\n• Gemini: 0.6s response\n• Claude: 0.8s response\n• OpenAI: 0.7s response');
+            }, 1500);
+        }
+        
+        function apiStats() {
+            alert('📊 API Usage Statistics\n\n• Total requests today: 1,247\n• Gemini: 623 requests\n• Claude: 419 requests\n• OpenAI: 205 requests\n• Success rate: 99.8%');
+        }
+        
+        function resetAPIs() {
+            alert('🔄 Resetting API connections...');
+        }
+        
+        function apiConfig() {
+            alert('⚙️ API Configuration\n\nCurrent settings:\n• Rate limiting: Enabled\n• Retry attempts: 3\n• Timeout: 30s\n• Load balancing: Active');
+        }
+        
+        // Data Management Functions
+        function backupData() {
+            alert('💾 Creating system backup...');
+            setTimeout(() => {
+                alert('✅ Backup created successfully!\n\nBackup ID: BK_' + Date.now());
+            }, 2000);
+        }
+        
+        function restoreData() {
+            const backupId = prompt('Enter backup ID to restore:');
+            if (backupId) {
+                alert(`🔄 Restoring from backup: ${backupId}`);
+            }
+        }
+        
+        function clearCache() {
+            alert('🧹 Cache cleared successfully!');
+            document.getElementById('dataStatus').innerHTML = `
+                Database: 15.2MB<br>
+                Cache: 0MB<br>
+                Logs: 8.7MB<br>
+                Last Backup: 2h ago
+            `;
+        }
+        
+        function exportData() {
+            alert('📤 Exporting system data...');
+            // Create download
+            const data = {
+                timestamp: new Date().toISOString(),
+                agents: 44,
+                loops: 2,
+                apiStats: { total: 1247, success: 99.8 }
+            };
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'infinite-agentic-loop-export.json';
+            a.click();
+        }
+        
+        // Security Functions
+        function securityScan() {
+            alert('🔍 Running security scan...');
+            setTimeout(() => {
+                alert('✅ Security scan complete!\n\n• No vulnerabilities detected\n• All endpoints secure\n• Authentication working\n• Data encryption active');
+            }, 2000);
+        }
+        
+        function accessLogs() {
+            alert('📝 Recent Access Log\n\n• 14:35 - Admin login (success)\n• 14:20 - API access (success)\n• 14:15 - Agent deployment (success)\n• 14:00 - System startup (success)');
+        }
+        
+        function updateSecurity() {
+            alert('🔄 Security updates applied!');
+        }
+        
+        function threatAnalysis() {
+            alert('🛡️ Threat Analysis\n\n• No active threats detected\n• Firewall status: Active\n• DDoS protection: Enabled\n• Rate limiting: Active\n\nSecurity level: HIGH');
+        }
+        
+        // Handle Enter key in password input
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('adminPassword').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    checkAccess();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
