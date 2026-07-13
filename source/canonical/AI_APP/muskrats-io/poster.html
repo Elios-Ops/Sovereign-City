@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Operation Moon Vault</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background: url('images/brick_wall_poster_bg.png') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Courier New', monospace;
+      color: #00ffff;
+      min-height: 100vh;
+      text-align: center;
+      position: relative;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+    }
+    h2 {
+      font-size: 2.4rem;
+      margin-top: 30px;
+      text-shadow: 0 0 12px #00ffff;
+      letter-spacing: 1px;
+    }
+    .poster-main-area {
+      flex: 1 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      position: relative;
+      z-index: 3;
+    }
+    .poster-container {
+      position: relative;
+      margin-top: 48px;
+      margin-bottom: 20px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      perspective: 1200px;
+      transform-style: preserve-3d;
+    }
+    .poster {
+      width: 100%;
+      max-width: 620px;
+      aspect-ratio: 2 / 3;
+      display: block;
+      transition: transform 0.6s cubic-bezier(0.7,0.1,0.4,1.2);
+      cursor: pointer;
+      z-index: 2;
+      box-shadow: 0 10px 40px #000c, 0 0 40px #00ffff33;
+      background: rgba(0,0,0,0.15);
+      border-radius: 16px;
+      transform-origin: bottom center;
+      position: relative;
+      animation: subtleWind 12s ease-in-out infinite;
+    }
+    
+    /* Very subtle wind effect - just enough to catch attention */
+    @keyframes subtleWind {
+      0%, 100% {
+        transform: rotateX(0deg) translateZ(0px);
+      }
+      10% {
+        transform: rotateX(-0.5deg) translateZ(1px);
+      }
+      20% {
+        transform: rotateX(0.3deg) translateZ(0.5px);
+      }
+      30% {
+        transform: rotateX(-0.8deg) translateZ(2px);
+      }
+      40%, 60% {
+        transform: rotateX(0deg) translateZ(0px);
+      }
+      70% {
+        transform: rotateX(-0.4deg) translateZ(1px);
+      }
+      80% {
+        transform: rotateX(0.6deg) translateZ(1.5px);
+      }
+      90% {
+        transform: rotateX(-0.3deg) translateZ(0.5px);
+      }
+    }
+    
+    /* Add very subtle corner shadow effect */
+    .poster::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 80px;
+      height: 120px;
+      background: linear-gradient(135deg, transparent 50%, rgba(0,0,0,0.05) 100%);
+      animation: cornerShadow 12s ease-in-out infinite;
+      transform-origin: top left;
+      pointer-events: none;
+      border-radius: 0 0 16px 0;
+    }
+    
+    @keyframes cornerShadow {
+      0%, 100% {
+        opacity: 0;
+      }
+      30% {
+        opacity: 0.2;
+      }
+      40%, 60% {
+        opacity: 0;
+      }
+      80% {
+        opacity: 0.15;
+      }
+    }
+    
+    /* Wind hint text */
+    .wind-hint {
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #00ffff;
+      font-size: 0.9rem;
+      text-shadow: 0 0 10px #00ffff;
+      opacity: 0;
+      animation: hintAppear 8s ease-in-out infinite;
+      pointer-events: none;
+      font-style: italic;
+      letter-spacing: 1px;
+      z-index: 10;
+    }
+    
+    @keyframes hintAppear {
+      0%, 20%, 40%, 100% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(0);
+      }
+      25%, 35% {
+        opacity: 0.7;
+        transform: translateX(-50%) translateY(-5px);
+      }
+      30% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(-3px);
+      }
+    }
+    
+    /* When poster is lifted, stop the wind animation and slide up */
+    .poster.lifted {
+      transform: translateY(-90px) !important;
+      animation: none !important;
+    }
+    .poster.lifted::before {
+      display: none;
+    }
+    .wind-hint.hide {
+      display: none;
+    }
+    .trap-coin {
+      position: absolute;
+      width: 110px;
+      bottom: -38px;
+      left: 50%;
+      transform: translateX(-50%) scale(0.7);
+      opacity: 0;
+      transition: all 0.6s cubic-bezier(0.7,0.1,0.4,1.2);
+      z-index: 1;
+      cursor: pointer;
+    }
+    .poster.lifted ~ .trap-coin {
+      opacity: 1;
+      transform: translateX(-50%) scale(1);
+    }
+    .fixed-sticker {
+      position: fixed;
+      top: 48%;
+      right: 6vw;
+      width: 186px;
+      z-index: 10;
+      cursor: pointer;
+      filter: drop-shadow(0 6px 22px #f0f);
+      user-select: none;
+    }
+    .fixed-sticker:hover {
+      filter: drop-shadow(0 0 20px #00ff95) brightness(1.18);
+    }
+    .fixed-egg {
+      position: fixed;
+      top: 49%;
+      left: 4vw;
+      width: 64px;
+      z-index: 10;
+      cursor: pointer;
+      opacity: 0.82;
+      filter: drop-shadow(0 2px 10px #fff8);
+      transition: opacity 0.2s, filter 0.2s;
+      user-select: none;
+    }
+    .fixed-egg:hover {
+      opacity: 1;
+      filter: drop-shadow(0 0 22px #fffa) brightness(1.15);
+    }
+    #dropMenu {
+      display: none;
+      position: fixed;
+      top: 57%;
+      right: 7vw;
+      background: rgba(10, 10, 15, 0.98);
+      border: 2px solid #00ffff88;
+      border-radius: 12px;
+      box-shadow: 0 8px 36px #000c;
+      padding: 14px 16px;
+      z-index: 99;
+      min-width: 265px;
+      text-align: left;
+      animation: pop-in 0.2s;
+    }
+    @keyframes pop-in {
+      0% { transform: scale(0.94); opacity: 0;}
+      100% { transform: scale(1); opacity: 1;}
+    }
+    #dropMenu h3 {
+      margin: 0 0 16px 2px;
+      color: #ff4af5;
+      font-size: 1.18rem;
+      letter-spacing: 1.5px;
+      text-shadow: 0 0 12px #f0f;
+      font-weight: 600;
+    }
+    .drop-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .drop-item:last-child { margin-bottom: 0; }
+    .drop-item img {
+      width: 40px; height: 40px;
+      border-radius: 8px;
+      border: 1.5px solid #00ffff66;
+      box-shadow: 0 0 6px #00ffff99;
+      background: #001e;
+    }
+    .drop-item a {
+      color: #00ffff;
+      font-size: 1.08rem;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.15s;
+    }
+    .drop-item a:hover { color: #fff; text-shadow: 0 0 8px #00ffffbb; }
+    .wallet-buttons {
+      margin: 34px 0 18px 0;
+      display: flex;
+      justify-content: center;
+      gap: 28px;
+      flex-wrap: wrap;
+    }
+    .wallet-buttons button {
+      padding: 12px 40px 12px 28px;
+      font-size: 1.14rem;
+      background: #00ffff;
+      color: black;
+      border: none;
+      cursor: pointer;
+      border-radius: 6px;
+      font-family: inherit;
+      font-weight: bold;
+      margin-bottom: 10px;
+      letter-spacing: 1px;
+      transition: background 0.18s, color 0.18s, box-shadow 0.2s;
+      box-shadow: 0 2px 8px #00ffff60;
+    }
+    .wallet-buttons button:hover {
+      background: white;
+      color: #00ffff;
+      box-shadow: 0 0 22px #00ffffbb;
+    }
+    /* Footer styles removed - using unified footer */
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      left: 0;
+      top: 110%;
+      min-width: 225px;
+      background: rgba(15, 15, 35, 0.98);
+      border: 1.5px solid #00ffff66;
+      box-shadow: 0 4px 24px #00ffff22;
+      z-index: 40;
+      border-radius: 9px;
+      padding: 8px 0;
+      text-align: left;
+      font-size: 1.01rem;
+    }
+    .dropdown-content a {
+      display: block;
+      color: #00ffff;
+      padding: 10px 18px;
+      text-decoration: none;
+      transition: background 0.1s, color 0.1s;
+      border-radius: 6px;
+    }
+    .dropdown-content a:hover {
+      background: #00ffff22;
+      color: #fff;
+    }
+    @media (max-width: 900px) {
+      .poster { max-width: 94vw; }
+      .fixed-sticker { right: 2vw; width: 130px;}
+      .fixed-egg { left: 1vw; width: 38px;}
+      #dropMenu { min-width: 155px; right: 2vw; }
+      .gameplay-float 
+      
+      /* Mobile footer styles removed - using unified footer */
+    }
+    
+    /* Additional mobile styles removed - using unified footer */
+    /* Gameplay dropdown fixes */
+    .gameplay-float {
+      position: fixed;
+      top: 38px;
+      left: 2vw;
+      z-index: 20;
+    }
+    .gameplay-float 
+    .gameplay-float 
+  </style>
+</head>
+<body>
+  <h2>WELCOME TO SEWER ALLEY</h2>
+  <!-- Fixed Next Drop Sticker -->
+  <img src="images/next_drop.png" class="fixed-sticker" id="dropSticker" alt="Next Drop" title="See all NFTs" onclick="toggleDropMenu()" />
+  <!-- Fixed Easter Egg on Left -->
+  <img src="images/egg_left.png" class="fixed-egg" id="eggLeft" alt="Easter Egg" title="Secret Link" onclick="window.location.href='joboffer.html';" />
+
+  <!-- Dropdown Menu for Next Drop -->
+  <div id="dropMenu">
+    <h3>💧 NEXT DROP</h3>
+    <div class="drop-item">
+      <img src="images/drop_muskrat.png" alt="MuskRats NFT" />
+      <a href='mint.html'>MuskRats NFT</a>
+    </div>
+    <div class="drop-item">
+      <img src="images/drop_gk�.png" alt="Gutter Punk Kids" />
+      <a href='mint.html'>Gutter Punk Kids</a>
+    </div>
+    <div class="drop-item">
+      <img src="images/drop_fam.png" alt="The F.A.M. Card" />
+      <a href='mint.html'>The F.A.M. Card</a>
+    </div>
+    <div class="drop-item">
+      <img src="images/crew/boss.png" alt="Crew Members" />
+      <a href='mint.html'>Crew Members</a>
+    </div>
+  </div>
+
+  <!-- Top-Left Gameplay Dropdown -->
+  <div class="gameplay-float">
+    <button class="footer-btn dropdown" id="gameplayDropdown" tabindex="0">Gameplay ▼</button>
+    <div class="dropdown-content" id="gameplayMenu">
+      <a href='/gate'>The Mission Gate</a>
+      <a href='/dossier_lobby'>Dossier Lobby</a>
+      <a href='/cellar'>Cellar Vault</a>
+      <a href='/codex'>Codex Manifesto</a>
+      <a href='/syndicate'>The Syndicate Terminal</a>
+    </div>
+  </div>
+
+  <div class="poster-main-area">
+    <div class="poster-container">
+      <div class="wind-hint">something's behind here...</div>
+      <img id="poster" src="images/operation_moon_vault_poster.png" class="poster" onclick="liftPoster()" />
+      <img id="trapCoin" src="images/muskrat_coin_cleaned.png" class="trap-coin" onclick="triggerDescent()" />
+    </div>
+    <div class="wallet-buttons">
+      <button onclick="connectWallet()" id="connectWalletBtn">🔗 Connect&nbsp;Wallet</button>
+      <button onclick="mintNFT()">🪙 Mint NFT</button>
+    </div>
+  </div>
+
+  <!-- Footer navigation with dropups for LORE and Marketplace -->
+  
+
+  <script>
+    function liftPoster() {
+      const poster = document.getElementById('poster');
+      const coin = document.getElementById('trapCoin');
+      const hint = document.querySelector('.wind-hint');
+      poster.classList.add('lifted');
+      if (hint) hint.classList.add('hide');
+      coin.style.opacity = 1;
+      coin.style.transform = 'translateX(-50%) scale(1)';
+    }
+    function triggerDescent() {
+      const audio = new Audio('audio/The_Bag.mp3');
+      audio.play();
+      setTimeout(() => {
+        window.location.href = 'descent.html';
+      }, 4500);
+    }
+
+    // Gameplay Dropdown Logic (top left)
+    document.addEventListener('DOMContentLoaded', function () {
+      const dropdownBtn = document.getElementById('gameplayDropdown');
+      const menu = document.getElementById('gameplayMenu');
+
+      dropdownBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+      });
+      document.addEventListener('click', function (e) {
+        if (!dropdownBtn.contains(e.target) && !menu.contains(e.target)) {
+          menu.style.display = 'none';
+        }
+      });
+    });
+
+    // DropDown Logic (Next Drop Sticker)
+    const sticker = document.getElementById('dropSticker');
+    const dropMenu = document.getElementById('dropMenu');
+    document.addEventListener('click', function (e) {
+      if (e.target === sticker) {
+        dropMenu.style.display = (dropMenu.style.display === "block") ? "none" : "block";
+      } else if (!dropMenu.contains(e.target) && e.target !== sticker) {
+        dropMenu.style.display = "none";
+      }
+    });
+
+    // Wallet Connect Logic (ETH/MetaMask & Solana/Phantom)
+    async function connectWallet() {
+      let use = null;
+      if (window.ethereum && window.solana && window.solana.isPhantom) {
+        use = prompt("Choose wallet to connect: Type 'M' for MetaMask or 'P' for Phantom", "M");
+      } else if (window.ethereum) {
+        use = "M";
+      } else if (window.solana && window.solana.isPhantom) {
+        use = "P";
+      }
+      // MetaMask
+      if (use && use.toUpperCase() === "M") {
+        try {
+          const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+          if (accounts && accounts.length > 0) {
+            alert("✅ MetaMask Connected:\n" + accounts[0]);
+            document.getElementById("connectWalletBtn").innerText = "🦊 Wallet Connected";
+            document.getElementById("connectWalletBtn").style.background = "#31ff80";
+          } else {
+            alert("❌ No accounts found in MetaMask.");
+          }
+        } catch (err) {
+          if (err.code === 4001) {
+            alert("⚠️ MetaMask connection rejected by user.");
+          } else {
+            alert("❌ Error connecting to MetaMask:\n" + err.message);
+          }
+        }
+        return;
+      }
+      // Phantom
+      if (use && use.toUpperCase() === "P") {
+        try {
+          const resp = await window.solana.connect();
+          if (resp && resp.publicKey) {
+            alert("✅ Phantom Connected:\n" + resp.publicKey.toString());
+            document.getElementById("connectWalletBtn").innerText = "🟣 Wallet Connected";
+            document.getElementById("connectWalletBtn").style.background = "#9931ff";
+          } else {
+            alert("❌ No accounts found in Phantom.");
+          }
+        } catch (err) {
+          if (err.code === 4001) {
+            alert("⚠️ Phantom connection rejected by user.");
+          } else {
+            alert("❌ Error connecting to Phantom:\n" + err.message);
+          }
+        }
+        return;
+      }
+      // Neither wallet detected
+      if (!window.ethereum && !(window.solana && window.solana.isPhantom)) {
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        let msg = "🦊 MetaMask (Ethereum) and 🟣 Phantom (Solana) wallets are not installed.\n";
+        msg += "Install MetaMask: https://metamask.io/download.html\n";
+        msg += "Install Phantom: https://phantom.app/download";
+        alert(msg);
+        if (!isMobile) {
+          window.open('https://metamask.io/download.html', '_blank');
+          window.open('https://phantom.app/download', '_blank');
+        }
+        return;
+      }
+    }
+
+    async function mintNFT() {
+      window.location.href = 'mint.html';
+    }
+  </script>
+<!-- Ambient Audio for Poster Alley -->
+<audio id="posterAmbient" src="audio/poster_ambient.mp3" autoplay loop></audio>
+<button id="muteAmbient" style="
+  position: fixed;
+  bottom: 22px; 
+  right: 26px; 
+  z-index: 1000;
+  background: rgba(20,20,40,0.87); 
+  color: #00ffff;
+  border: none; 
+  border-radius: 40px; 
+  padding: 10px 18px; 
+  font-size: 1.25rem; 
+  cursor: pointer;
+  box-shadow: 0 4px 18px #00ffff44;
+  ">
+  🔊
+</button>
+<script>
+const ambient = document.getElementById('posterAmbient');
+const muteBtn = document.getElementById('muteAmbient');
+let isMuted = false;
+
+muteBtn.onclick = function() {
+  isMuted = !isMuted;
+  ambient.muted = isMuted;
+  muteBtn.textContent = isMuted ? "🔈" : "🔊";
+}
+// Optional: Autoplay fix for browsers that block audio until user interacts
+document.addEventListener('click', () => { if (ambient.paused) ambient.play(); }, { once: true });
+</script>
+
+  <!-- Unified Footer -->
+  <script src="unified-footer.js"></script>
+
+</body>
+</html>
