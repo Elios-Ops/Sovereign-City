@@ -27,17 +27,26 @@ These are referenced in HTML but do not exist anywhere in the canonical `muskrat
 | `mint.html` | `styles.css` | Page still renders via inline styles; external stylesheet 404 |
 | `mint.html` | `images/favicon.png` | Cosmetic favicon 404 only |
 
-## Large Assets — Imported With Review Flag
+## Externalized Oversized Assets (Directive 005)
 
-Imported despite size; flagged for deploy bandwidth / repo weight review.
+These files are preserved outside Git. Restore locally before running pages that reference them.
+
+| Filename | Repo path | External path | Size | SHA-256 | Reason | Referenced by | Restoration |
+|---|---|---|---:|---|---|---|
+| `mansion_gate.mp4` | `apps/muskrats/video/mansion_gate.mp4` | `/Users/agentlab/AgenticLab/media-vault/Sovereign-City/Muskrats/video/mansion_gate.mp4` | 434,832,051 bytes (~415 MB) | `c35bff78c4a1c9d89703795e2ae4eb58c2fec12c6c1a516abfa1b2e0ebd1969b` | Exceeds GitHub 100 MB limit; externalized per Directive 005 | `gate.html` (`<video src="video/mansion_gate.mp4">`) | `cp /Users/agentlab/AgenticLab/media-vault/Sovereign-City/Muskrats/video/mansion_gate.mp4 apps/muskrats/video/mansion_gate.mp4` |
+
+Machine-readable manifest: `apps/muskrats/external-assets.json`
+
+Canonical source: `AI_APP/muskrats-io/` (Drive folder id `1NVtcstE4yoTcmFiac2hV5Kh1px4CVsWf`).
+
+## Large Assets — Retained in Git (Under 100 MB)
 
 | Path | Approx. size | Purpose |
 |---|---|---|
-| `video/mansion_gate.mp4` | ~415 MB | Background video on `gate.html` |
 | `video/Sewer_Fall_2.mp4` | ~47 MB | Descent animation on `descent.html` |
 | Multiple PNG/JPG backgrounds | 1–30 MB each | Page backgrounds and NFT art |
 
-Total app size on disk: ~981 MB (195 files).
+Total tracked app size reduced after externalization; full local runtime requires restoring external assets above.
 
 ## Route / Case-Sensitivity Note
 

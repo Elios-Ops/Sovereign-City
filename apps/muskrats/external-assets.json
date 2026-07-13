@@ -1,0 +1,13 @@
+{
+  "assets": [
+    {
+      "id": "muskrats.mansion-gate-video",
+      "repository_path": "apps/muskrats/video/mansion_gate.mp4",
+      "external_path": "/Users/agentlab/AgenticLab/media-vault/Sovereign-City/Muskrats/video/mansion_gate.mp4",
+      "sha256": "c35bff78c4a1c9d89703795e2ae4eb58c2fec12c6c1a516abfa1b2e0ebd1969b",
+      "size_bytes": 434832051,
+      "required_by": ["apps/muskrats/gate.html"],
+      "status": "preserved_external"
+    }
+  ]
+}
