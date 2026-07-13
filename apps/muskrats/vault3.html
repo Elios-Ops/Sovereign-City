@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vault 03 – DGX Spark-Brain MuskRats</title>
+  <style>
+    body { 
+      background: linear-gradient(to bottom, #000000, #1a001a);
+      color: #00ffff;
+      font-family: 'Courier New', monospace;
+      padding: 40px 20px;
+      min-height: 100vh;
+      margin: 0;
+    }
+    
+    h1 { 
+      font-size: 2.4rem;
+      text-shadow: 0 0 20px #ff00ff, 0 0 10px #00ffff;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .vault-card {
+      max-width: 1200px;
+      margin: auto;
+      background: rgba(255, 0, 255, 0.03);
+      border: 2px solid #ff00ff;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 0 30px rgba(255, 0, 255, 0.3);
+    }
+    
+    .lore {
+      text-align: center;
+      padding: 20px;
+      background: rgba(0, 255, 255, 0.05);
+      border: 1px solid #00ffff;
+      border-radius: 10px;
+      margin-bottom: 30px;
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+    
+    .rental-info {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      background: rgba(255, 234, 62, 0.05);
+      border: 2px solid #ffea3e;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    
+    .rental-option {
+      text-align: center;
+      flex: 1;
+      min-width: 200px;
+    }
+    
+    .rental-option h3 {
+      color: #ffea3e;
+      margin-bottom: 10px;
+      text-shadow: 0 0 10px #ffea3e;
+    }
+    
+    .price {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #00ffff;
+    }
+    
+    .nft-gallery {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 25px;
+      margin-bottom: 40px;
+      max-width: 1000px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .nft-item {
+      position: relative;
+      background: rgba(0, 0, 0, 0.5);
+      border: 2px solid #00ffff;
+      border-radius: 10px;
+      padding: 15px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .nft-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 255, 255, 0.5);
+      border-color: #ff00ff;
+    }
+    
+    .nft-item.selected {
+      border: 3px solid #ffea3e;
+      box-shadow: 0 0 20px #ffea3e;
+      background: rgba(255, 234, 62, 0.1);
+    }
+    
+    .nft-img {
+      width: 100%;
+      height: 200px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      background: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    
+    .nft-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    
+    .nft-label {
+      font-size: 1rem;
+      color: #00ffff;
+      margin-bottom: 10px;
+      text-align: center;
+      font-weight: bold;
+    }
+    
+    .nft-stats {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      color: #ff00ff;
+      padding: 10px;
+      background: rgba(255, 0, 255, 0.1);
+      border-radius: 5px;
+    }
+    
+    .selection-indicator {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #ffea3e;
+      color: #000;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-weight: bold;
+      display: none;
+    }
+    
+    .nft-item.selected .selection-indicator {
+      display: block;
+    }
+    
+    .action-buttons {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      margin-top: 30px;
+      flex-wrap: wrap;
+    }
+    
+    .btn {
+      padding: 15px 30px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .btn-rent {
+      background: linear-gradient(90deg, #00ffff 0%, #ff00ff 100%);
+      color: #000;
+      box-shadow: 0 5px 20px rgba(0, 255, 255, 0.4);
+    }
+    
+    .btn-rent:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0, 255, 255, 0.6);
+    }
+    
+    .btn-rent:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .btn-back {
+      background: transparent;
+      color: #00ffff;
+      border: 2px solid #00ffff;
+    }
+    
+    .btn-back:hover {
+      background: rgba(0, 255, 255, 0.1);
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+    }
+    
+    .selected-summary {
+      background: rgba(0, 255, 255, 0.05);
+      border: 2px solid #00ffff;
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 30px;
+      text-align: center;
+      display: none;
+    }
+    
+    .selected-summary.show {
+      display: block;
+    }
+    
+    .selected-summary h3 {
+      color: #ffea3e;
+      margin-bottom: 15px;
+    }
+    
+    .selected-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 10px;
+    }
+    
+    .selected-chip {
+      background: rgba(255, 234, 62, 0.2);
+      border: 1px solid #ffea3e;
+      padding: 5px 15px;
+      border-radius: 20px;
+      color: #ffea3e;
+    }
+    
+    @media (max-width: 968px) {
+      .nft-gallery {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+    }
+    
+    @media (max-width: 568px) {
+      .nft-gallery {
+        grid-template-columns: 1fr;
+        gap: 15px;
+      }
+    }
+  </style>
+  <!-- Web3.js for wallet integration -->
+  <script src="https://cdn.jsdelivr.net/npm/web3@1.9.0/dist/web3.min.js"></script>
+</head>
+<body>
+
+  <h1>🧠 Vault 03 – DGX Spark-Brain MuskRats</h1>
+
+  <div class="vault-card">
+    <div class="lore">
+      <strong>The Syndicate's Elite Enhancement Program</strong><br>
+      These MuskRats have undergone neural augmentation with DGX Spark-Brain implants.<br>
+      Each one possesses enhanced cognitive abilities and strategic thinking powers.<br>
+      <em>Rent them for your crew's most challenging heists.</em>
+    </div>
+
+    <div class="rental-info">
+      <div class="rental-option">
+        <h3>💰 ETH Rental</h3>
+        <div class="price">0.01 ETH</div>
+        <small>per MuskRat / 7 days</small>
+      </div>
+      <div class="rental-option">
+        <h3>🪙 $MUSKRAT Rental</h3>
+        <div class="price">500 $MUSKRAT</div>
+        <small>per MuskRat / 7 days</small>
+      </div>
+      <div class="rental-option">
+        <h3>⏱️ Rental Period</h3>
+        <div class="price">7 Days</div>
+        <small>Auto-returns to vault</small>
+      </div>
+    </div>
+
+    <div class="nft-gallery">
+      <div class="nft-item" onclick="selectItem(this, 'DGX-001', 'Chi Cha')">
+        <span class="selection-indicator">SELECTED</span>
+        <div class="nft-img">
+          <img src="images/hacker_rats/dgx1.png" alt="Chi Cha" />
+        </div>
+        <div class="nft-label">DGX Spark-Brain: Chi Cha</div>
+        <div class="nft-stats">
+          <span>+15% Strategy</span>
+          <span>+10% Speed</span>
+        </div>
+      </div>
+      
+      <div class="nft-item" onclick="selectItem(this, 'DGX-002', 'Whiskers')">
+        <span class="selection-indicator">SELECTED</span>
+        <div class="nft-img">
+          <img src="images/hacker_rats/dgx2.png" alt="Whiskers" />
+        </div>
+        <div class="nft-label">DGX Spark-Brain: Whiskers</div>
+        <div class="nft-stats">
+          <span>+20% Reflexes</span>
+          <span>+8% Stealth</span>
+        </div>
+      </div>
+      
+      <div class="nft-item" onclick="selectItem(this, 'DGX-003', 'Killer Bee')">
+        <span class="selection-indicator">SELECTED</span>
+        <div class="nft-img">
+          <img src="images/hacker_rats/dgx3.png" alt="Killer Bee" />
+        </div>
+        <div class="nft-label">DGX Spark-Brain: Killer Bee</div>
+        <div class="nft-stats">
+          <span>+12% Prediction</span>
+          <span>+15% Analysis</span>
+        </div>
+      </div>
+      
+      <div class="nft-item" onclick="selectItem(this, 'DGX-004', 'Alpha Engine')">
+        <span class="selection-indicator">SELECTED</span>
+        <div class="nft-img">
+          <img src="images/hacker_rats/dgx4.png" alt="Alpha Engine" />
+        </div>
+        <div class="nft-label">DGX Spark-Brain: Alpha Engine</div>
+        <div class="nft-stats">
+          <span>+18% Memory</span>
+          <span>+10% Learning</span>
+        </div>
+      </div>
+      
+      <div class="nft-item" onclick="selectItem(this, 'DGX-005', 'Vaultkeeper')">
+        <span class="selection-indicator">SELECTED</span>
+        <div class="nft-img">
+          <img src="images/hacker_rats/dgx5.png" alt="Vaultkeeper" />
+        </div>
+        <div class="nft-label">DGX Spark-Brain: Vaultkeeper</div>
+        <div class="nft-stats">
+          <span>+25% Tactics</span>
+          <span>+5% Leadership</span>
+        </div>
+      </div>
+      
+      <div class="nft-item" onclick="selectItem(this, 'DGX-006', 'Eldritch Coder')">
+        <span class="selection-indicator">SELECTED</span>
+        <div class="nft-img">
+          <img src="images/hacker_rats/dgx6.png" alt="Eldritch Coder" />
+        </div>
+        <div class="nft-label">DGX Spark-Brain: Eldritch Coder</div>
+        <div class="nft-stats">
+          <span>+30% Unpredictability</span>
+          <span>+10% Luck</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="selected-summary" id="selectedSummary">
+      <h3>Selected for FAM Card Slots</h3>
+      <div id="totalCost">Total Cost: 0 ETH / 0 $MUSKRAT</div>
+      <div class="selected-list" id="selectedList"></div>
+    </div>
+
+    <div class="action-buttons">
+      <button class="btn btn-back" onclick="window.location.href='marketplace.html'">⬅ Back to Marketplace</button>
+      <button class="btn btn-rent" id="rentBtn" onclick="rentSelected()" disabled>
+        Rent Selected Items
+      </button>
+    </div>
+  </div>
+
+  <script>
+    let selectedItems = new Set();
+    const ETH_PRICE = 0.01;
+    const MUSKRAT_PRICE = 500;
+    
+    function selectItem(element, itemId, itemName) {
+      element.classList.toggle('selected');
+      
+      if (element.classList.contains('selected')) {
+        selectedItems.add({ id: itemId, name: itemName });
+      } else {
+        selectedItems.delete([...selectedItems].find(item => item.id === itemId));
+      }
+      
+      updateSummary();
+    }
+    
+    function updateSummary() {
+      const summary = document.getElementById('selectedSummary');
+      const list = document.getElementById('selectedList');
+      const rentBtn = document.getElementById('rentBtn');
+      const totalCost = document.getElementById('totalCost');
+      
+      if (selectedItems.size > 0) {
+        summary.classList.add('show');
+        rentBtn.disabled = false;
+        
+        list.innerHTML = '';
+        selectedItems.forEach(item => {
+          const chip = document.createElement('div');
+          chip.className = 'selected-chip';
+          chip.textContent = item.name;
+          list.appendChild(chip);
+        });
+        
+        const ethTotal = (selectedItems.size * ETH_PRICE).toFixed(3);
+        const muskratTotal = selectedItems.size * MUSKRAT_PRICE;
+        totalCost.textContent = `Total Cost: ${ethTotal} ETH / ${muskratTotal} $MUSKRAT`;
+      } else {
+        summary.classList.remove('show');
+        rentBtn.disabled = true;
+      }
+    }
+    
+        async function rentSelected() {
+      if (selectedItems.size === 0) {
+        alert('Please select at least one item to rent.');
+        return;
+      }
+      
+      const itemNames = [...selectedItems].map(item => item.name).join(', ');
+      const ethTotal = (selectedItems.size * ETH_PRICE).toFixed(3);
+      const muskratTotal = selectedItems.size * MUSKRAT_PRICE;
+      
+      const message = `RENTAL CONFIRMATION\n\nDGX-Spark Brains: ${itemNames}\n\nTotal Cost:\n• ${ethTotal} ETH\nOR\n• ${muskratTotal} $MUSKRAT\n\nRental Period: 7 Days\n\nThese items will be added to your FAM Card slots.`;
+      
+      if (confirm(message)) {
+        // Multi-sig wallet address for marketplace purchases
+        const MARKETPLACE_WALLET = '0x223C2534ab0E451279F432F0a1B2756042888C06';
+        
+        // Check if MetaMask is installed
+        if (typeof window.ethereum !== 'undefined') {
+          try {
+            // Request account access
+            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+            const account = accounts[0];
+            
+            // Convert ETH to Wei
+            const valueInWei = Web3.utils.toWei(ethTotal, 'ether');
+            
+            // Send transaction
+            const transactionParameters = {
+              to: MARKETPLACE_WALLET,
+              from: account,
+              value: Web3.utils.toHex(valueInWei),
+              data: Web3.utils.utf8ToHex(`DGX-Spark Brains Rental: ${itemNames}`)
+            };
+            
+            const txHash = await window.ethereum.request({
+              method: 'eth_sendTransaction',
+              params: [transactionParameters],
+            });
+            
+            alert(`🎉 Rental Successful!\n\nTransaction Hash: ${txHash}\n\nYour DGX-Spark Brains have been added to your FAM Card.\n\nThey will automatically return to the vault after 7 days.`);
+            
+            // Store rental info
+            const rentals = JSON.parse(localStorage.getItem('muskrat_rentals') || '[]');
+            rentals.push({
+              vault: 'DGX-Spark Brains',
+              items: [...selectedItems],
+              timestamp: new Date().toISOString(),
+              duration: '7 days',
+              txHash: txHash,
+              ethAmount: ethTotal
+            });
+            localStorage.setItem('muskrat_rentals', JSON.stringify(rentals));
+            
+            // Reset selection
+            document.querySelectorAll('.nft-item.selected').forEach(el => el.classList.remove('selected'));
+            selectedItems.clear();
+            updateSummary();
+            
+          } catch (error) {
+            console.error('Transaction failed:', error);
+            alert('Transaction failed. Please try again.');
+          }
+        } else {
+          // Fallback for users without MetaMask
+          alert(`To complete your rental, please send ${ethTotal} ETH to:\n\n${MARKETPLACE_WALLET}\n\nInclude "DGX-Spark Brains Rental" in the transaction memo.`);
+        }
+      }
+    }
+  </script>
+
+  <!-- Unified Footer -->
+  <script src="unified-footer.js"></script>
+
+</body>
+</html>

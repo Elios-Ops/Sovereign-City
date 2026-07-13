@@ -1,0 +1,21 @@
+{
+  "id": "FAM-0001",
+  "name": "DeepAgent Ledger",
+  "agentDNA": "DEEP-343-L00P",
+  "crew": ["CREW-MEMBER-1", "CREW-MEMBER-2"],
+  "relics": ["RELIC-1", "RELIC-2", "RELIC-3", "RELIC-4"],
+  "duffleBag": ["ITEM-1", "ITEM-2", "ITEM-3", "ITEM-4", "ITEM-5", "ITEM-6"],
+  "getawayVehicles": ["VEHICLE-1", "VEHICLE-2", "VEHICLE-3", "VEHICLE-4", "VEHICLE-5", "VEHICLE-6"],
+  "hierarchy": {
+    "boss": { "filled": false, "signetRing": true },
+    "underBoss": { "filled": false },
+    "madeMan": { "filled": false },
+    "handler": { "filled": false },
+    "contractor": { "filled": false },
+    "associate": { "filled": false }
+  },
+  "loopStatus": "Active",
+  "style": "holo-neon-vaporwave",
+  "glowState": "active",
+  "chain": "Ethereum"
+}

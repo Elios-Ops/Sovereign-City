@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>F.A.M. CREW CARD</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Share+Tech+Mono|Montserrat:700&display=swap">
+  <style>
+    html, body {
+      min-height: 100vh; margin: 0; padding: 0;
+      font-family: 'Share Tech Mono', monospace;
+      background: url('images/crew_bg.png') center center / cover no-repeat fixed;
+      color: #00ffff;
+      box-sizing: border-box;
+    }
+    body {
+      display: flex; flex-direction: column; min-height: 100vh;
+    }
+    .main-content {
+      flex: 1 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding-bottom: 40px;
+    }
+    h1 {
+      font-family: 'Montserrat', monospace;
+      font-size: 2.6rem;
+      letter-spacing: 1px;
+      color: #22fff9;
+      margin-top: 32px;
+      margin-bottom: 0;
+      text-shadow: 0 0 18px #00fff9cc;
+      text-align: center;
+      font-weight: 900;
+    }
+    .fam-card-img {
+      display: block;
+      margin: 0 auto 18px auto;
+      max-width: 275px;  /* 25% bigger than 220px */
+      width: 28vw;
+      min-width: 200px;
+      background: none !important;
+      border: none !important;
+      box-shadow: none !important;
+      border-radius: 0 !important;
+    }
+    .desc-card {
+      margin: 12px 0 14px 0;
+      padding: 28px 32px 24px 32px;
+      background: rgba(10,12,28,0.91);
+      border-radius: 18px;
+      box-shadow: 0 0 32px #00fff788;
+      max-width: 540px;
+      border: 2.5px solid #00ffff33;
+      color: #fff;
+      font-size: 1.18rem;
+      position: relative;
+      text-align: center;
+      font-family: 'Share Tech Mono', monospace;
+      line-height: 1.54;
+    }
+    /* Keyword colors */
+    .desc-key-yellow { color: #fff563; font-weight: bold; text-shadow: 0 0 9px #ffe; }
+    .desc-key-blue   { color: #00e5ff; font-weight: bold; text-shadow: 0 0 9px #33f7ff; }
+    .desc-key-green  { color: #57ff86; font-weight: bold; text-shadow: 0 0 8px #2eff00; }
+    .desc-key-red    { color: #ff3559; font-weight: bold; text-shadow: 0 0 8px #ff3333; }
+    .desc-key-orange { color: #ffd24a; font-weight: bold; text-shadow: 0 0 8px #ffb300; }
+    .desc-key-vault  { color: #ffe141; font-weight: bold; text-shadow: 0 0 8px #ffd400; letter-spacing: 1px;}
+    /* Scoop Button */
+    .don-scoop-btn {
+      margin: 24px auto 4px auto;
+      display: block;
+      background: linear-gradient(90deg,#00fff7 0,#ff2bf5 100%);
+      color: #101628;
+      border: none;
+      border-radius: 99px;
+      font-size: 1.11rem;
+      font-family: 'Montserrat', monospace;
+      font-weight: 800;
+      padding: 11px 38px 11px 38px;
+      box-shadow: 0 0 14px #00fff755;
+      cursor: pointer;
+      transition: background 0.16s, color 0.14s, box-shadow 0.2s;
+    }
+    .don-scoop-btn:hover {
+      background: linear-gradient(90deg,#ff2bf5 0,#00fff7 100%);
+      color: #fff;
+      box-shadow: 0 0 26px #ff2bf588;
+    }
+    .crew-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px 32px;
+      max-width: 1140px;
+      margin: 0 auto 16px auto;
+      margin-top: 12px;
+      width: 100%;
+      z-index: 3;
+      align-items: start;
+    }
+    .crew-box {
+      background: rgba(18,20,33,0.92);
+      border: 2.5px solid #00ffff;
+      border-radius: 18px;
+      padding: 18px 10px 12px 10px;
+      box-shadow: 0 0 32px #00fff799;
+      text-align: center;
+      cursor: pointer;
+      transition: box-shadow .14s, border .14s, background .22s;
+      position: relative;
+      min-width: 240px; min-height: 235px; max-height: 335px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      overflow: hidden;
+    }
+    .crew-box:hover,
+    .crew-box.open { background: rgba(12,18,42,0.97); border: 2.5px solid #ff2bf5; box-shadow: 0 0 34px #ff00f788; z-index: 101; }
+    .crew-img {
+      width: 108px; height: 108px; object-fit: cover;
+      margin-bottom: 10px;
+      border-radius: 14px;
+      box-shadow: 0 0 18px #00fff755;
+      border: 2.5px solid #2328ff22;
+      background: #0a0e16;
+    }
+    .crew-title {
+      font-size: 1.14rem;
+      font-weight: 700;
+      margin-bottom: 2px;
+      margin-top: 0;
+      color: #00ffff;
+      letter-spacing: 1px;
+      text-shadow: 0 0 7px #00fff7;
+    }
+    .crew-sub {
+      font-size: 1.02rem; color: #ff67d8; margin-bottom: 0;
+      text-shadow: 0 0 3px #fff5;
+    }
+    .crew-box .slots-note {
+      color: #ff67d8; font-size: 0.99rem; margin-top: 2px;
+    }
+    .crew-box .grid-arrow {
+      margin-top: 13px; font-size: 1.7rem; color: #ff2bf5; opacity: 0.76;
+      pointer-events: none;
+    }
+    /* Modal */
+    .modal-bg {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(9,12,22,0.73);
+      z-index: 9999;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .modal-box {
+      display: flex; flex-direction: row;
+      align-items: flex-start; justify-content: flex-start;
+      background: rgba(15,19,35,0.98);
+      border: 2.8px solid #ff2bf5;
+      box-shadow: 0 0 38px #00fff7cc;
+      border-radius: 20px;
+      padding: 34px 46px 38px 38px;
+      min-width: 540px; max-width: 700px;
+      min-height: 260px; max-height: 82vh;
+      z-index: 99999;
+      position: relative;
+      gap: 32px;
+      animation: popIn .26s cubic-bezier(.44,1.5,.5,1) 1;
+    }
+    @keyframes popIn { 0% { transform: scale(.93); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+    .modal-close {
+      position: absolute; top: 20px; right: 32px;
+      background: none; border: none; color: #ff2bf5;
+      font-size: 2rem; cursor: pointer; z-index: 10;
+      font-family: inherit;
+      opacity: 0.84; transition: opacity .13s;
+    }
+    .modal-close:hover { opacity: 1; }
+    .modal-img {
+      width: 200px; height: 200px; object-fit: cover;
+      border-radius: 20px; margin-right: 12px;
+      box-shadow: 0 0 22px #00fff733;
+      border: 2.5px solid #2328ff22;
+      background: #151b26;
+      flex-shrink: 0;
+    }
+    .modal-content {
+      display: flex; flex-direction: column; align-items: flex-start;
+      justify-content: flex-start; flex: 1;
+      min-width: 240px;
+      color: #fff;
+    }
+    .modal-content h2 {
+      font-size: 1.32rem;
+      color: #00ffff;
+      margin: 0 0 16px 0;
+      font-family: 'Montserrat', monospace;
+    }
+    .slot-grid {
+      display: grid;
+      gap: 13px 18px;
+      margin-top: 10px;
+      margin-bottom: 8px;
+    }
+    .slot-grid.associate   { grid-template-columns: repeat(4, 1fr);}
+    .slot-grid.contractor  { grid-template-columns: repeat(4, 1fr);}
+    .slot-grid.handler     { grid-template-columns: repeat(2, 1fr);}
+    .slot-grid.made_man    { grid-template-columns: repeat(2, 1fr);}
+    .slot-grid.underboss   { grid-template-columns: repeat(2, 1fr);}
+    .slot-grid.boss        { grid-template-columns: repeat(2, 1fr);}
+    .slot-grid.relics      { grid-template-columns: repeat(2, 1fr);}
+    .slot-grid.duffle      { grid-template-columns: repeat(3, 1fr);}
+    .slot-grid.vehicles    { grid-template-columns: repeat(2, 1fr);}
+    .slot-label {
+      background: rgba(0,255,255,0.07);
+      color: #fff; border-radius: 9px; font-size: 1.02rem;
+      min-width: 85px; padding: 6px 7px 2px 7px;
+      display: flex; flex-direction: column; align-items: center;
+      border: 1.5px solid #2328ff33;
+      box-shadow: 0 0 12px #00fff73a;
+      margin-bottom: 2px;
+      position: relative;
+    }
+    .slot-label img {
+      width: 60px; height: 60px; border-radius: 12px; margin-bottom: 4px; object-fit: cover; background: #111;
+      box-shadow: 0 0 10px #00fff722;
+      cursor: pointer;
+      transition: box-shadow 0.15s, border 0.13s;
+    }
+    .slot-label img:hover {
+      box-shadow: 0 0 32px #ff00f7cc, 0 0 12px #00fff7cc;
+      border: 2.5px solid #ff2bf5;
+      z-index: 10;
+    }
+    .slot-name { font-size: 0.95rem; color: #ff7bc5; margin-bottom: 2px; text-align: center;}
+    .slot-assign-btn {
+      font-size: 1rem;
+      font-family: inherit;
+      padding: 6px 0;
+      width: 82px;
+      border-radius: 6px;
+      background: #00ffff;
+      color: #0c1635;
+      border: none;
+      font-weight: bold;
+      box-shadow: 0 0 10px #00fff7cc;
+      margin-top: 2px;
+      cursor: pointer;
+      transition: background .13s;
+    }
+    .slot-assign-btn:hover { background: #ff2bf5; color: #fff;}
+    #muteBtn {
+      position: fixed;
+      top: 26px; right: 32px; z-index: 10005;
+      background: rgba(22,22,40,0.86);
+      border: 2px solid #00ffff;
+      border-radius: 50%;
+      padding: 7px 8px 7px 9px;
+      cursor: pointer;
+      box-shadow: 0 0 10px #00fff7bb;
+      transition: background 0.13s, border 0.13s;
+    }
+    #muteBtn:hover { background: #00ffff; border-color: #111; }
+    #soundIcon[muted] { opacity: 0.36; filter: grayscale(90%);}
+    .cta-btn {
+      margin-top: 30px;
+      padding: 18px 54px;
+      font-size: 1.22rem;
+      font-family: 'Montserrat', monospace;
+      border-radius: 13px;
+      border: none;
+      background: linear-gradient(90deg,#00fff7,#b951f8 85%);
+      color: #101628;
+      font-weight: 700;
+      letter-spacing: 1px;
+      box-shadow: 0 0 22px #00fff766;
+      cursor: pointer;
+      transition: background .18s, color .12s, box-shadow .18s;
+      outline: none;
+      text-shadow: 0 0 5px #fff9;
+    }
+    .cta-btn:hover {
+      background: linear-gradient(90deg,#b951f8,#00fff7 90%);
+      color: #fff;
+      box-shadow: 0 0 32px #ff00f799;
+    }
+    /* Footer styles removed - using unified footer */
+    
+    /* Remove old copyright style that was causing footer issues */
+    @media (max-width: 1050px) {
+      .crew-grid { gap: 18px 12px; }
+      .modal-box { min-width: 340px; max-width: 95vw; flex-direction: column; gap: 10px; align-items: center;}
+      .modal-img { margin: 0 auto 16px auto;}
+      .modal-content { min-width: 160px; align-items: center; }
+      .cta-btn { padding: 12px 22px; font-size: 1.04rem;}
+      .fam-card-img { max-width: 215px; }
+    }
+    @media (max-width: 768px) {
+      .crew-grid { grid-template-columns: 1fr; }
+      .crew-box { min-width: 80vw; max-width: 95vw;}
+      .modal-box { flex-direction: column; padding: 18px 7vw 24px 7vw; min-width: 60vw; max-width: 97vw; }
+      .modal-img { width: 140px; height: 140px;}
+      .cta-btn { width: 97vw; }
+      .fam-card-img { max-width: 140px; }
+    }
+        /* Fullscreen slot preview modal */
+    #slotPreviewModal {
+      display: none; position: fixed; z-index: 20000;
+      top:0; left:0; width:100vw; height:100vh;
+      background:rgba(10,16,24,0.93);
+      align-items: center; justify-content: center;
+      animation: popIn .17s cubic-bezier(.44,1.5,.5,1) 1;
+    }
+    #slotPreviewModal.open {
+      display: flex;
+    }
+    .slot-preview-img {
+      width: 370px; max-width: 94vw; max-height: 94vh; border-radius: 21px;
+      box-shadow: 0 0 44px #00fff7cc, 0 0 22px #ff00f7cc;
+      background: #13161a; object-fit: contain;
+      border: 3.2px solid #00ffff88;
+      display: block;
+    }
+    .slot-preview-close {
+      position: absolute; top: 30px; right: 48px;
+      background: none; border: none; color: #ff2bf5;
+      font-size: 2.7rem; cursor: pointer; font-family: inherit;
+      opacity: 0.82; z-index: 10;
+    }
+    .slot-preview-close:hover { opacity: 1;}
+  </style>
+</head>
+<body>
+  <audio class="audio-bg" src="audio/bar_ambient.mp3" autoplay loop></audio>
+  <button id="muteBtn" aria-label="Toggle Sound">
+    <svg id="soundIcon" width="28" height="28" viewBox="0 0 24 24" fill="#00ffff">
+      <path d="M3 10v4h4l5 5V5l-5 5H3zm13.5 2c0-1.77-1.02-3.29-2.5-4.03v2.17l1.55 1.55c.26-.23.45-.54.55-.89zM16.5 12c0 .91-.18 1.77-.5 2.57l1.46 1.46C18.43 15.02 19 13.57 19 12c0-3.31-2.69-6-6-6V5.18c3.31.48 5.82 3.01 6.36 6.33.04.34.06.68.06 1.02z"/>
+    </svg>
+  </button>
+  <div class="main-content" style="padding-bottom: 120px;">
+    <h1>F.A.M. CREW CARD</h1>
+    <img src="images/the_fam_card.png" alt="THE FAM CARD" class="fam-card-img" />
+    <div class="desc-card">
+      Each <span class="desc-key-yellow">F.A.M. Card</span> comes with <span class="desc-key-blue">33 Crew Members</span> slots.<br>
+      Fill your FAM Card with Crew Members, Relics, Gear, and Getaway Vehicles to <span class="desc-key-green">Unlock Rewards</span>.<br>
+      Some jobs require <span class="desc-key-red">GPKs</span> or <span class="desc-key-blue">DGX Spark-Brain NFTs</span> for <span class="desc-key-green">Massive <span style="color:#0f0;font-weight:bold;">PAYOUTS</span></span>.<br>
+      Prepare your Duffel Bag before every JOB.<br>
+      <span class="desc-key-vault">The Vault Awaits…</span>
+    </div>
+    <button class="don-scoop-btn" onclick="document.getElementById('donAudio').play()">🎤 Get the Scoop</button>
+    <audio id="donAudio" src="audio/don_tutorial.mp3"></audio>
+    <div class="crew-grid">
+      <!-- Top row: Boss, Underboss, Made Man -->
+      <div class="crew-box" data-role="boss">
+        <img class="crew-img" src="images/crew/boss.png" alt="Boss">
+        <div class="crew-title">Boss</div>
+        <div class="crew-sub">1 Slot</div>
+        <div class="slots-note">Signet Ring unlocks when Crew Card is FULL</div>
+        <div class="grid-arrow">▼</div>
+      </div>
+      <div class="crew-box" data-role="underboss">
+        <img class="crew-img" src="images/crew/underboss.png" alt="UnderBoss">
+        <div class="crew-title">UnderBoss</div>
+        <div class="crew-sub">2 Slots</div>
+        <div class="grid-arrow">▼</div>
+      </div>
+      <div class="crew-box" data-role="made_man">
+        <img class="crew-img" src="images/crew/made_man.png" alt="Made Man">
+        <div class="crew-title">Made Man</div>
+        <div class="crew-sub">2 Slots</div>
+        <div class="grid-arrow">▼</div>
+      </div>
+      <!-- Middle row: Handler, Contractor, Associate -->
+      <div class="crew-box" data-role="handler">
+        <img class="crew-img" src="images/crew/handler.png" alt="Handler">
+        <div class="crew-title">Handler</div>
+        <div class="crew-sub">4 Slots</div>
+        <div class="grid-arrow">▼</div>
+      </div>
+      <div class="crew-box" data-role="contractor">
+        <img class="crew-img" src="images/crew/contractor.png" alt="Contractor">
+        <div class="crew-title">Contractor</div>
+        <div class="crew-sub">8 Slots</div>
+        <div class="grid-arrow">▼</div>
+      </div>
+      <div class="crew-box" data-role="associate">
+        <img class="crew-img" src="images/crew/associate.png" alt="Associate">
+        <div class="crew-title">Associate</div>
+        <div class="crew-sub">16 Slots</div>
+        <div class="grid-arrow">▼</div>
+      </div>
+      <!-- Bottom row: Relics, Duffle, Vehicles -->
+      <div class="crew-box" data-role="relics">
+        <img class="crew-img" src="images/relics/relic_1.png" alt="Relics">
+        <div class="crew-title">Relics</div>
+        <div class="crew-sub">4 Slots</div>
+        <div class="slots-note">Store rare relics to boost job rewards</div>
+        <div class="grid-arrow">▼</div>
+      </div>
+      <div class="crew-box" data-role="duffle">
+        <img class="crew-img" src="images/duffle_bag.png" alt="Duffle Bag">
+        <div class="crew-title">Duffle Bag</div>
+        <div class="crew-sub">6 Slots</div>
+        <div class="slots-note">Equip tools, relics & gear before jobs</div>
+        <div class="grid-arrow">▼</div>
+      </div>
+      <div class="crew-box" data-role="vehicles">
+        <img class="crew-img" src="images/vehicles/canam_side_by_side.png" alt="Getaway Vehicles">
+        <div class="crew-title">Getaway Vehicles</div>
+        <div class="crew-sub">Multiple Options</div>
+        <div class="slots-note">Upgrade your job's escape plan</div>
+        <div class="grid-arrow">▼</div>
+      </div>
+    </div>
+    <a href="mint.html" class="cta-btn" style="text-decoration: none; display: inline-block;">Fill Your Card→Become a Don</a>
+    
+    <!-- Skills Section -->
+    <div style="margin-top: 50px; padding: 30px; background: rgba(0, 255, 255, 0.05); border: 2px solid #00ffff; border-radius: 15px;">
+      <h2 style="color: #ff00ff; text-align: center; margin-bottom: 20px; text-shadow: 0 0 10px #ff00ff;">🎮 CREW SKILLS TRAINING</h2>
+      <p style="text-align: center; color: #ffea3e; margin-bottom: 30px;">Test your crew's abilities with these skill challenges!</p>
+      
+      <!-- Main Training Center Button -->
+      <div style="text-align: center; margin-bottom: 30px;">
+        <button onclick="window.location.href='skills-training.html'" style="
+          padding: 20px 40px;
+          background: linear-gradient(90deg, #ffea3e, #ff00ff);
+          color: #000;
+          border: none;
+          border-radius: 15px;
+          font-size: 1.3rem;
+          font-weight: bold;
+          cursor: pointer;
+          text-transform: uppercase;
+          transition: all 0.3s ease;
+          box-shadow: 0 5px 30px rgba(255, 234, 62, 0.5);
+          animation: pulse 2s infinite;
+        " onmouseover="this.style.transform='translateY(-3px) scale(1.05)'; this.style.boxShadow='0 10px 40px rgba(255, 234, 62, 0.7)';" 
+           onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 5px 30px rgba(255, 234, 62, 0.5)';">
+          ⚡ ENTER SKILLS TRAINING CENTER ⚡
+        </button>
+      </div>
+      
+      <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+        <button onclick="window.location.href='lockpick-game.html'" style="
+          padding: 15px 30px;
+          background: linear-gradient(90deg, #00ffff, #00ff00);
+          color: #000;
+          border: none;
+          border-radius: 10px;
+          font-size: 1.1rem;
+          font-weight: bold;
+          cursor: pointer;
+          text-transform: uppercase;
+          transition: all 0.3s ease;
+          box-shadow: 0 5px 20px rgba(0, 255, 255, 0.4);
+        " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 30px rgba(0, 255, 255, 0.6)';" 
+           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 5px 20px rgba(0, 255, 255, 0.4)';">
+          🔓 Lockpicking Challenge
+        </button>
+        
+        <button onclick="alert('Vehicle Hotwire skill coming soon!')" style="
+          padding: 15px 30px;
+          background: transparent;
+          color: #ff00ff;
+          border: 2px solid #ff00ff;
+          border-radius: 10px;
+          font-size: 1.1rem;
+          font-weight: bold;
+          cursor: pointer;
+          text-transform: uppercase;
+          transition: all 0.3s ease;
+          opacity: 0.7;
+        " onmouseover="this.style.background='rgba(255, 0, 255, 0.1)';" 
+           onmouseout="this.style.background='transparent';">
+          🚗 Hotwire (Coming Soon)
+        </button>
+        
+        <button onclick="alert('Hacking Terminal skill coming soon!')" style="
+          padding: 15px 30px;
+          background: transparent;
+          color: #ff00ff;
+          border: 2px solid #ff00ff;
+          border-radius: 10px;
+          font-size: 1.1rem;
+          font-weight: bold;
+          cursor: pointer;
+          text-transform: uppercase;
+          transition: all 0.3s ease;
+          opacity: 0.7;
+        " onmouseover="this.style.background='rgba(255, 0, 255, 0.1)';" 
+           onmouseout="this.style.background='transparent';">
+          💻 Hacking (Coming Soon)
+        </button>
+      </div>
+      
+      <p style="text-align: center; color: #00ffff; margin-top: 20px; font-size: 0.9rem;">
+        💡 Tip: Rent items from the Marketplace vaults to unlock these skills!
+      </p>
+    </div>
+    
+    <!-- Evolution Path Section -->
+    <div style="margin-top: 50px; text-align: center; padding: 40px; 
+         background: linear-gradient(135deg, rgba(0,0,0,0.9), rgba(128,0,255,0.1)); 
+         border: 2px solid #ff00ff; border-radius: 20px; position: relative; overflow: hidden;">
+      
+      <!-- Animated background effect -->
+      <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+           background: radial-gradient(circle at center, transparent, rgba(0,255,255,0.1)); 
+           animation: pulse 4s ease-in-out infinite; pointer-events: none;"></div>
+      
+      <h2 style="color: #00ffff; text-shadow: 0 0 20px #00ffff; margin-bottom: 10px; 
+           font-size: 2rem; letter-spacing: 3px; position: relative;">
+        🧠 YOUR EVOLUTION PATH 🧠
+      </h2>
+      
+      <p style="color: #ffea3e; margin-bottom: 30px; font-size: 1.1rem;">
+        Ascend from the sewers to neural supremacy
+      </p>
+      
+      <div style="display: flex; justify-content: space-around; margin-top: 30px; flex-wrap: wrap; gap: 20px;">
+        <div style="flex: 1; min-width: 200px; padding: 20px; background: rgba(0,255,255,0.1); 
+             border: 2px solid #00ffff; border-radius: 15px; transition: all 0.3s ease;"
+             onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 0 30px rgba(0,255,255,0.5)';"
+             onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';">
+          <h3 style="color: #00ff00; margin-bottom: 10px;">Level 1 ✅</h3>
+          <p style="color: #00ffff; font-weight: bold; margin-bottom: 5px;">$MUSKRAT</p>
+          <p style="color: #00ffff; font-weight: bold; margin-bottom: 5px;">MuskRats NFT</p>
+          <p style="color: #00ffff; font-weight: bold; margin-bottom: 5px;">Gutter Punk Kids NFT</p>
+          <small style="color: #fff;">Underground Community</small>
+        </div>
+        
+        <div style="flex: 1; min-width: 200px; padding: 20px; background: rgba(255,0,255,0.05); 
+             border: 2px solid #ff00ff; border-radius: 15px; opacity: 0.7; position: relative;"
+             onclick="alert('Ledger AI - Coming Soon! Exclusive for F.A.M. Card holders. Advanced crypto trading intelligence awaits.')">
+          <div style="position: absolute; top: -10px; right: -10px; background: #ffea3e; color: #000; 
+               padding: 5px 10px; border-radius: 20px; font-weight: bold; font-size: 0.8rem;">SOON</div>
+          <h3 style="color: #ff00ff; margin-bottom: 10px;">Level 2 🔒</h3>
+          <p style="color: #ff00ff; font-weight: bold; margin-bottom: 5px;">Ledger AI</p>
+          <small style="color: #ffea3e;">Requires F.A.M. Card</small>
+          <div style="margin-top: 10px; font-size: 0.9rem; color: #00ffff;">
+            • Multi-Agent Trading<br>
+            • Arbitrage Scanner<br>
+            • TradingView PineScript
+          </div>
+        </div>
+        
+        <div style="flex: 1; min-width: 200px; padding: 20px; background: rgba(128,0,255,0.03); 
+             border: 2px solid #9945ff; border-radius: 15px; opacity: 0.4; position: relative;"
+             onclick="alert('Cortex HUD - The ultimate neural interface. Achieve trading mastery with Ledger AI first to unlock.')">
+          <div style="position: absolute; top: -10px; right: -10px; background: #9945ff; color: #fff; 
+               padding: 5px 10px; border-radius: 20px; font-weight: bold; font-size: 0.8rem;">ELITE</div>
+          <h3 style="color: #9945ff; margin-bottom: 10px;">Level 3 🔒</h3>
+          <p style="color: #9945ff; font-weight: bold; margin-bottom: 5px;">Cortex HUD</p>
+          <small style="color: #00ffff;">Requires Neural Ascension</small>
+          <div style="margin-top: 10px; font-size: 0.9rem; color: #ff00ff;">
+            • 13+ Brain Regions<br>
+            • Neural Command Center<br>
+            • Meta-Intelligence OS
+          </div>
+        </div>
+      </div>
+      
+      <div style="margin-top: 40px; padding: 20px; background: rgba(255,234,62,0.05); 
+           border: 1px solid #ffea3e; border-radius: 10px;">
+        <p style="color: #ffea3e; margin: 0; font-size: 1rem;">
+          <strong>🚀 The Journey:</strong> Begin in the sewers → Master the markets → Transcend reality
+        </p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Slot Preview Modal -->
+  <div id="slotPreviewModal">
+    <img class="slot-preview-img" src="" alt="NFT Preview">
+    <button class="slot-preview-close" title="Close" onclick="closeSlotPreview()">&times;</button>
+  </div>
+  <script>
+    // Only one modal open at a time
+    const gridBoxes = document.querySelectorAll('.crew-box');
+    let openModal = null;
+
+    // Modal Content Data (EDIT slot images/names here)
+    const CREW_DATA = {
+      associate: {
+        name: "Associate", slots: 16, img: "images/crew/associate.png",
+        slotImages: Array(16).fill("images/fill_slot_placeholder.png"),
+        slotNames: [
+          "Gino 'The Fish'", "Frankie Knuckles", "Tony Zero", "Nicky Spoons",
+          "Vinnie Slick", "Mikey Stacks", "Donnie Grease", "Paulie Ice",
+          "Sal the Wise", "Johnny Quick", "Benny 'No Nose'", "Sammy Drift",
+          "Tommy Dimes", "Rocco Ghost", "Eddie Loops", "Louie Silence"
+        ]
+      },
+      contractor: {
+        name: "Contractor", slots: 8, img: "images/crew/contractor.png",
+        slotImages: Array(8).fill("images/fill_slot_placeholder.png"),
+        slotNames: [
+          "Big Leo", "Mad Mitch", "Viper Nick", "Artie Steel",
+          "Bullet Joe", "Lucky G", "Fast Lenny", "Ice Al"
+        ]
+      },
+      handler: {
+        name: "Handler", slots: 4, img: "images/crew/handler.png",
+        slotImages: Array(4).fill("images/fill_slot_placeholder.png"),
+        slotNames: [
+          "Cipher Kate", "Code Red", "Glitch Eddie", "Patch"
+        ]
+      },
+      made_man: {
+        name: "Made Man", slots: 2, img: "images/crew/made_man.png",
+        slotImages: Array(2).fill("images/fill_slot_placeholder.png"),
+        slotNames: ["Tony Blades", "Ray the Bat"]
+      },
+      underboss: {
+        name: "UnderBoss", slots: 2, img: "images/crew/underboss.png",
+        slotImages: Array(2).fill("images/fill_slot_placeholder.png"),
+        slotNames: ["Mister Black", "Silver Lou"]
+      },
+      boss: {
+        name: "Boss",
+        slots: 2,
+        img: "images/crew/boss.png",
+        slotImages: [
+          "images/fill_slot_placeholder.png",
+          "images/signet_ring.png"
+        ],
+        slotNames: [
+          "The Don",
+          "Signet Ring (SAMPLE)"
+        ]
+      },
+      relics: {
+        name: "Relics", slots: 4, img: "images/relics/relic_1.png",
+        slotImages: [
+          "images/relics/relic_1.png","images/relics/relic_2.png",
+          "images/relics/relic_3.png","images/relics/relic_4.png"
+        ],
+        slotNames: ["Omen Orb","Vault Scarab","Arcane Coin","Shadow Mask"]
+      },
+      duffle: {
+        name: "Duffle Bag", slots: 6, img: "images/duffle_bag.png",
+        slotImages: [
+          "images/gear/lockpick.png","images/gear/safedrill.png","images/gear/emp.png",
+          "images/gear/c4.png","images/gear/smokebomb.png","images/gear/silencer.png"
+        ],
+        slotNames: ["Lockpick Set","Safe Drill","EMP","C4","Smoke Bomb","Silencer"]
+      },
+      vehicles: {
+        name: "Getaway Vehicles", slots: 4, img: "images/vehicles/canam_side_by_side.png",
+        slotImages: [
+          "images/vehicles/canam_side_by_side.png","images/vehicles/motorcycle.png",
+          "images/vehicles/dons_yacht.png","images/vehicles/speed_boat.png"
+        ],
+        slotNames: [
+          "Can-Am Side by Side (2 Seats)","Motorcycle (1 Seat)",
+          "Don's Yacht (12 Seats)","Speed Boat (6 Seats)"
+        ]
+      }
+    };
+
+    function createModal(role) {
+      const data = CREW_DATA[role];
+      if (!data) return;
+      // Modal
+      const modalBg = document.createElement('div');
+      modalBg.className = 'modal-bg';
+      modalBg.innerHTML = `
+        <div class="modal-box">
+          <img class="modal-img" src="${data.img}" alt="${data.name}">
+          <div class="modal-content">
+            <h2>${data.name}${data.name !== "Getaway Vehicles" && data.name !== "Relics" && data.name !== "Duffle Bag" ? ` – ${data.slots} Slot${data.slots > 1 ? 's' : ''}` : ""}</h2>
+            <div class="slot-grid ${role}">
+              ${Array.from({length:data.slots}).map((_,i)=>`
+                <div class="slot-label">
+                  <img src="${data.slotImages[i]}" alt="" onclick="showSlotPreview('${data.slotImages[i]}')">
+                  <div class="slot-name">${data.slotNames[i]||'Open Slot'}</div>
+                  <button class="slot-assign-btn" onclick="handleAssignClick('${role}', ${i}); event.stopPropagation();">Assign</button>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+          <button class="modal-close" title="Close">&times;</button>
+        </div>
+      `;
+      document.body.appendChild(modalBg);
+      document.body.style.overflow = 'hidden';
+      modalBg.querySelector('.modal-close').onclick = () => {
+        modalBg.remove();
+        openModal = null;
+        document.body.style.overflow = '';
+      };
+      modalBg.onclick = (e) => {
+        if (e.target === modalBg) {
+          modalBg.remove();
+          openModal = null;
+          document.body.style.overflow = '';
+        }
+      };
+      openModal = modalBg;
+    }
+
+    // Image preview: pops out slot image fullscreen, bulletproof
+    window.showSlotPreview = function(imgUrl) {
+      const modal = document.getElementById('slotPreviewModal');
+      modal.querySelector('.slot-preview-img').src = imgUrl;
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    window.closeSlotPreview = function() {
+      const modal = document.getElementById('slotPreviewModal');
+      modal.classList.remove('open');
+      modal.querySelector('.slot-preview-img').src = '';
+      document.body.style.overflow = '';
+    }
+    document.getElementById('slotPreviewModal').onclick = function(e) {
+      if (e.target === this) closeSlotPreview();
+    }
+
+    gridBoxes.forEach(box => {
+      box.onclick = function() {
+        const role = this.getAttribute('data-role');
+        if (openModal) { openModal.remove(); openModal = null; document.body.style.overflow = ''; }
+        else createModal(role);
+      };
+    });
+
+    // Mute/unmute background audio
+    const muteBtn = document.getElementById('muteBtn');
+    const soundIcon = document.getElementById('soundIcon');
+    const bgAudio = document.querySelector('.audio-bg');
+    let isMuted = false;
+
+    muteBtn.addEventListener('click', function() {
+      isMuted = !isMuted;
+      bgAudio.muted = isMuted;
+      if(isMuted) soundIcon.setAttribute('muted','muted');
+      else soundIcon.removeAttribute('muted');
+      bgAudio.volume = isMuted ? 0 : 0.38;
+    });
+    bgAudio.loop = true;
+    bgAudio.volume = 0.38;
+    bgAudio.play().catch(()=>{});
+    if (bgAudio.muted) soundIcon.setAttribute('muted','muted');
+    else soundIcon.removeAttribute('muted');
+    
+    // Handle assign button clicks
+    function handleAssignClick(role, slotIndex) {
+      // Crew member roles go to mint page
+      const crewRoles = ['associate', 'contractor', 'handler', 'made_man', 'underboss', 'boss'];
+      // Item roles go to rent-items page
+      const itemRoles = ['relics', 'duffle', 'vehicles'];
+      
+      if (crewRoles.includes(role)) {
+        window.location.href = 'mint.html';
+      } else if (itemRoles.includes(role)) {
+        window.location.href = 'rent-items.html';
+      }
+    }
+  </script>
+
+  <!-- Unified Footer -->
+  <script src="unified-footer.js"></script>
+
+</body>
+</html>
+

@@ -1,0 +1,40 @@
+{
+  "name": "MUSKRAT",
+  "symbol": "MUSKRAT",
+  "description": "The treasury takeover has begun. Born from a senator's slip of the tongue about 'muskrats in the treasury,' $MUSKRAT is the viral meme coin with real gaming utility. Each GPK and Muskrat NFT includes 25,000 $MUSKRAT nested. Join the underground revolution at muskrats.io",
+  "image": "https://raw.githubusercontent.com/yourusername/muskrat/main/muskrat_coin_cleaned.png",
+  "external_url": "https://muskrats.io",
+  "attributes": [
+    {
+      "trait_type": "Type",
+      "value": "Meme Coin"
+    },
+    {
+      "trait_type": "Chain",
+      "value": "Solana"
+    },
+    {
+      "trait_type": "Utility",
+      "value": "Gaming Currency"
+    },
+    {
+      "trait_type": "Total Supply",
+      "value": "1,000,000,000"
+    }
+  ],
+  "properties": {
+    "files": [
+      {
+        "uri": "https://raw.githubusercontent.com/yourusername/muskrat/main/muskrat_coin_cleaned.png",
+        "type": "image/png"
+      }
+    ],
+    "category": "image",
+    "creators": [
+      {
+        "address": "YOUR_SOLANA_WALLET_ADDRESS",
+        "share": 100
+      }
+    ]
+  }
+}

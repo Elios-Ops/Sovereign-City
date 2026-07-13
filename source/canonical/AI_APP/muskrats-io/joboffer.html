@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Don Has a Job for You</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@solana/web3.js@1.76.0/lib/index.iife.js"></script>
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      color: #00ffff;
+      font-family: monospace;
+      text-align: center;
+      padding-bottom: 92px; /* Space for fixed footer */
+    }
+    .hero {
+      display: flex;
+      justify-content: center;
+      background: black;
+    }
+    .hero img {
+      width: 100%;
+      max-width: 1200px;
+      border-bottom: 2px solid #00ffff55;
+    }
+    section {
+      padding: 60px 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    h1, h2 {
+      text-shadow: 0 0 10px #00ffff;
+    }
+    p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+    .job-button {
+      background: #00ffff;
+      color: black;
+      font-weight: bold;
+      font-size: 1.1rem;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+    .job-button:hover {
+      background: white;
+      color: black;
+    }
+    #forge-section {
+      display: none;
+      border-top: 2px solid #00ffff55;
+      padding-top: 40px;
+      margin-top: 40px;
+    }
+    /* Footer Styles */
+    /* Footer styles removed - using unified footer */
+    
+    
+    
+    
+    
+    
+    .copyright { width: 100vw; background: rgba(5,5,10,0.95); color: #00ffff; text-align: center; padding: 8px 0; position: fixed; bottom: 0; left: 0; right: 0; font-size: 0.9rem; z-index: 3999; border-top: 1px solid #00ffff22;}
+    @media (max-width:650px) {
+      .muskrats-footer {
+        flex-direction: column !important;
+        gap: 10px 0 !important;
+        padding: 22px 0 8px 0 !important;
+      }
+      
+      body {
+        padding-bottom: 112px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="hero">
+  <img src="images/don_office_offer.png" alt="The Don's Office Offer" />
+</div>
+
+<audio id="donAudio" src="audio/1st_job_offer.mp3" preload="auto"></audio>
+<p style="margin-top: 12px; font-size: 0.9rem; color: #00ffffaa;">
+  <em>Touch to hear The Don</em>
+</p>
+<script>
+  const audio = document.getElementById("donAudio");
+  document.body.addEventListener('click', () => {
+    audio.play().catch(() => {});
+  }, { once: true });
+</script>
+
+<section>
+  <h1>The Don Has a Job for You</h1>
+  <p>
+    "Listen up, you filthy degenerate. Over 200 Ethereum and a bunch of other valuable stuff is going to be recovered."<br><br>
+    
+    <strong style="color: #ffea3e;">CREW MEMBER LOCKBOX PAYOUTS:</strong><br>
+    <table style="border: none; margin: 0 auto; color: inherit;">
+      <tr><td style="padding: 2px;">💰</td><td style="padding: 2px 10px; text-align: right;">5</td><td style="padding: 2px;">Lockboxes →</td><td style="padding: 2px 10px; text-align: right;">10</td><td style="padding: 2px;">ETH each (238x return!)</td></tr>
+      <tr><td style="padding: 2px;">💰</td><td style="padding: 2px 10px; text-align: right;">10</td><td style="padding: 2px;">Lockboxes →</td><td style="padding: 2px 10px; text-align: right;">5</td><td style="padding: 2px;">ETH each (119x return!)</td></tr>
+      <tr><td style="padding: 2px;">💰</td><td style="padding: 2px 10px; text-align: right;">15</td><td style="padding: 2px;">Lockboxes →</td><td style="padding: 2px 10px; text-align: right;">3</td><td style="padding: 2px;">ETH each (71x return!)</td></tr>
+      <tr><td style="padding: 2px;">💰</td><td style="padding: 2px 10px; text-align: right;">20</td><td style="padding: 2px;">Lockboxes →</td><td style="padding: 2px 10px; text-align: right;">1</td><td style="padding: 2px;">ETH each (24x return!)</td></tr>
+      <tr><td style="padding: 2px;">💰</td><td style="padding: 2px 10px; text-align: right;">25</td><td style="padding: 2px;">Lockboxes →</td><td style="padding: 2px 10px; text-align: right;">0.5</td><td style="padding: 2px;">ETH each (12x return!)</td></tr>
+      <tr><td style="padding: 2px;">💰</td><td style="padding: 2px 10px; text-align: right;">30</td><td style="padding: 2px;">Lockboxes →</td><td style="padding: 2px 10px; text-align: right;">0.4</td><td style="padding: 2px;">ETH each (9.5x return!)</td></tr>
+      <tr><td style="padding: 2px;">💰</td><td style="padding: 2px 10px; text-align: right;">40</td><td style="padding: 2px;">Lockboxes →</td><td style="padding: 2px 10px; text-align: right;">0.3</td><td style="padding: 2px;">ETH each (7x return!)</td></tr>
+      <tr><td style="padding: 2px;">💰</td><td style="padding: 2px 10px; text-align: right;">1,000</td><td style="padding: 2px;">Lockboxes →</td><td style="padding: 2px 10px; text-align: right;">0.013</td><td style="padding: 2px;">ETH each (minimum reward)</td></tr>
+    </table><br>
+    
+    <strong style="color: #00ffff;">To participate in the job, you'll need:</strong><br>
+    ✅ 1 F.A.M. Card (to receive job offers)<br>
+    ✅ 1 Crew Member NFT (0.042 ETH)<br>
+    ✅ GPKs and MUSKRAT NFTs each include 25,000 $MUSKRAT tokens nested<br>
+    ✅ 66% of Crew Members will receive rewards<br><br>
+    
+    "Miss the offer... miss the vault."
+  </p>
+  <button class="job-button" onclick="checkEligibility()">🔐 Check Wallet Eligibility</button>
+</section>
+
+<section id="forge-section">
+  <h2>MISSION OBJECTIVE</h2>
+  <p>
+    Mint a Relic. Combine it with a scroll fragment. Deliver it to the Don’s Terminal.<br>
+    The glyphs are watching. Only complete submissions will be logged.
+  </p>
+  <button onclick="alert('Relic minting system coming soon.')">🔨 Mint Relic</button>
+
+  <h2 style="margin-top: 50px;">REWARD PREVIEW</h2>
+  <p>
+    Verified job completion will unlock:<br>
+    📜 Scroll 7<br>
+    🪙 Vault Key Fragment<br>
+    🧠 F.A.M. Slot Bonus
+  </p>
+  <button onclick="alert('You’ve accepted the job. Watch your wallet.')">✅ ACCEPT THE JOB</button>
+</section>
+
+<!-- BEGIN: MUSKRATS FOOTER -->
+
+<div class="copyright">MuskRats © 2025. All rights reserved.</div>
+
+<script>
+  async function checkEligibility() {
+    try {
+      const ethProvider = new ethers.providers.Web3Provider(window.ethereum);
+      await ethProvider.send("eth_requestAccounts", []);
+      const ethSigner = ethProvider.getSigner();
+      const ethAddress = await ethSigner.getAddress();
+
+      const nftContract = new ethers.Contract(
+        "0xa810f0E95d6fcC10842933D2cd0441437a005df7",
+        ["function balanceOf(address) view returns (uint256)"],
+        ethProvider
+      );
+      const nftBalance = await nftContract.balanceOf(ethAddress);
+      if (nftBalance.toString() === "0") {
+        alert("No MuskRat NFT detected.");
+        return;
+      }
+
+      const solana = window.solana;
+      if (!solana || !solana.isPhantom) {
+        alert("Please install Phantom Wallet.");
+        return;
+      }
+
+      const response = await solana.connect();
+      const solanaAddress = response.publicKey.toString();
+
+      const connection = new solanaWeb3.Connection(
+        solanaWeb3.clusterApiUrl("mainnet-beta"),
+        "confirmed"
+      );
+      const tokenAccounts = await connection.getParsedTokenAccountsByOwner(
+        new solanaWeb3.PublicKey(solanaAddress),
+        {
+          programId: new solanaWeb3.PublicKey(
+            "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+          )
+        }
+      );
+
+      const muskratMint = "JDcMdQeEDQcsRjYKNJzLhGdbWqDLz4fKjuYvrwEz39fD";
+      const muskratToken = tokenAccounts.value.find(
+        acc => acc.account.data.parsed.info.mint === muskratMint
+      );
+
+      if (!muskratToken) {
+        alert("No $MUSKRAT tokens found.");
+        return;
+      }
+
+      const amount = parseFloat(muskratToken.account.data.parsed.info.tokenAmount.uiAmount);
+      if (amount < 13000) {
+        alert("You need at least 13,000 $MUSKRAT tokens (~$5).");
+        return;
+      }
+
+      document.querySelector('#forge-section').style.display = 'block';
+      alert("Access granted. The Don is watching.");
+    } catch (err) {
+      console.error(err);
+      alert("Wallet check failed.");
+    }
+  }
+</script>
+
+
+  <!-- Unified Footer -->
+  <script src="unified-footer.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAM Card Viewer - DeepAgent Ledger</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Additional inline styles for enhanced UI */
+    body {
+      background-color: #050510;
+      background-image: 
+        radial-gradient(circle at 50% 50%, rgba(0, 255, 170, 0.1) 0%, transparent 80%),
+        linear-gradient(to bottom, #05051f 0%, #050510 100%);
+      background-attachment: fixed;
+    }
+    
+    .header {
+      text-align: center;
+      margin: 20px 0;
+      position: relative;
+      z-index: 10;
+    }
+    
+    .title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 24px;
+      color: var(--primary-color);
+      text-shadow: 0 0 10px var(--glow-color);
+      margin: 0;
+      letter-spacing: 2px;
+    }
+    
+    .subtitle {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 14px;
+      color: rgba(var(--primary-rgb), 0.7);
+      margin: 5px 0 0;
+    }
+    
+    .card-wrapper {
+      position: relative;
+      margin: 40px auto;
+      max-width: 800px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      background-color: rgba(0, 0, 0, 0.4);
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(var(--primary-rgb), 0.3);
+    }
+    
+    .card-frame {
+      position: relative;
+      padding: 10px;
+      border: 1px dashed rgba(var(--primary-rgb), 0.4);
+      border-radius: 15px;
+      margin-bottom: 20px;
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+    
+    .card-container {
+      margin: 0;
+    }
+    
+    .card-controls {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    
+    .card-controls button {
+      background-color: rgba(0, 0, 0, 0.6);
+      border: 1px solid var(--primary-color);
+      color: var(--primary-color);
+      padding: 8px 15px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-family: 'Share Tech Mono', monospace;
+      transition: all 0.3s ease;
+    }
+    
+    .card-controls button:hover {
+      background-color: var(--primary-color);
+      color: #000;
+      box-shadow: 0 0 10px var(--glow-color);
+    }
+    
+    .control-panels {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .panel-tabs {
+      display: flex;
+      overflow-x: auto;
+      gap: 2px;
+      margin-bottom: 10px;
+      padding-bottom: 5px;
+    }
+    
+    .panel-tab {
+      background-color: rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(var(--primary-rgb), 0.3);
+      border-bottom: none;
+      color: var(--text-color);
+      padding: 8px 15px;
+      border-radius: 5px 5px 0 0;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    
+    .panel-tab.active {
+      background-color: rgba(var(--primary-rgb), 0.2);
+      border-color: var(--primary-color);
+      color: var(--primary-color);
+    }
+    
+    .panel {
+      display: none;
+      border: 1px solid rgba(var(--primary-rgb), 0.3);
+      border-radius: 5px;
+      padding: 15px;
+      background-color: rgba(0, 0, 0, 0.6);
+      margin-bottom: 20px;
+    }
+    
+    .panel.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    /* Circuit board background overlay */
+    .circuit-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M10 10 H90 V90 H10 Z" fill="none" stroke="rgba(0,255,170,0.05)" stroke-width="0.5"/><path d="M30 10 V90 M50 10 V90 M70 10 V90 M10 30 H90 M10 50 H90 M10 70 H90" stroke="rgba(0,255,170,0.03)" stroke-width="0.5"/><circle cx="10" cy="10" r="2" fill="rgba(0,255,170,0.1)"/><circle cx="30" cy="10" r="2" fill="rgba(0,255,170,0.1)"/><circle cx="50" cy="10" r="2" fill="rgba(0,255,170,0.1)"/><circle cx="70" cy="10" r="2" fill="rgba(0,255,170,0.1)"/><circle cx="90" cy="10" r="2" fill="rgba(0,255,170,0.1)"/><circle cx="10" cy="30" r="2" fill="rgba(0,255,170,0.1)"/><circle cx="10" cy="50" r="2" fill="rgba(0,255,170,0.1)"/><circle cx="10" cy="70" r="2" fill="rgba(0,255,170,0.1)"/><circle cx="10" cy="90" r="2" fill="rgba(0,255,170,0.1)"/><circle cx="30" cy="30" r="2" fill="rgba(0,255,170,0.1)"/><circle cx="50" cy="50" r="4" fill="rgba(0,255,170,0.1)"/><circle cx="70" cy="70" r="2" fill="rgba(0,255,170,0.1)"/></svg>');
+      pointer-events: none;
+      z-index: -1;
+      opacity: 0.7;
+    }
+    
+    /* Improved 3D effect for card */
+    #card-canvas {
+      transform-style: preserve-3d;
+      transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 
+        0 0 var(--glow-strength) var(--glow-color),
+        0 20px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+    
+    /* Enhanced UI for assets panel */
+    .asset-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      gap: 10px;
+      max-height: 300px;
+      overflow-y: auto;
+      padding: 10px;
+      background-color: rgba(0, 0, 0, 0.3);
+      border-radius: 5px;
+      border: 1px solid rgba(var(--primary-rgb), 0.2);
+    }
+    
+    .asset-library-item {
+      position: relative;
+      background-color: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(var(--primary-rgb), 0.3);
+      border-radius: 5px;
+      padding: 5px;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .asset-library-item:hover {
+      transform: translateY(-2px);
+      border-color: var(--primary-color);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+    
+    /* Enhanced loading animation */
+    .loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    
+    .loading-text {
+      font-family: 'Share Tech Mono', monospace;
+      color: var(--primary-color);
+      margin-top: 20px;
+      font-size: 18px;
+      letter-spacing: 2px;
+    }
+    
+    .loading-bar {
+      width: 200px;
+      height: 4px;
+      background-color: rgba(var(--primary-rgb), 0.2);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+    
+    .loading-progress {
+      height: 100%;
+      width: 0%;
+      background-color: var(--primary-color);
+      animation: loading 3s ease-in-out forwards;
+    }
+    
+    @keyframes loading {
+      0% { width: 0%; }
+      50% { width: 70%; }
+      100% { width: 100%; }
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    /* Connection indicator pulse */
+    .status-indicator.connected {
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(0, 255, 0, 0.7); }
+      70% { box-shadow: 0 0 0 5px rgba(0, 255, 0, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(0, 255, 0, 0); }
+    }
+    
+    /* Custom scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 3px;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: rgba(var(--primary-rgb), 0.5);
+      border-radius: 3px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--primary-color);
+    }
+    
+    /* Accessibility improvements */
+    button:focus, input:focus, select:focus, textarea:focus {
+      outline: 2px solid var(--primary-color);
+      outline-offset: 2px;
+    }
+    
+    .screen-reader-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- Circuit board background -->
+  <div class="circuit-overlay"></div>
+
+  <!-- Loading screen -->
+  <div class="loading" id="loading-screen">
+    <div class="loading-text">INITIALIZING FAM CARD SYSTEM</div>
+    <div class="loading-bar">
+      <div class="loading-progress"></div>
+    </div>
+  </div>
+
+  <!-- Admin gate overlay -->
+  <div id="admin-gate" class="admin-gate-overlay">
+    <div class="admin-gate-container">
+      <h2>FAM SYNDICATE ACCESS</h2>
+      <div class="access-input-container">
+        <input type="password" id="access-code" placeholder="ENTER ACCESS CODE">
+        <button id="access-submit">VERIFY</button>
+      </div>
+      <div class="access-options">
+        <button id="admin-access" data-code="FAM343">ADMIN</button>
+        <button id="community-access" data-code="community">COMMUNITY</button>
+        <button id="guest-access">GUEST (VIEW ONLY)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="header">
+    <h1 class="title">FAM SYNDICATE CARD VIEWER</h1>
+    <p class="subtitle">DEEP-343-L00P | AUTHORIZATION REQUIRED</p>
+  </header>
+
+  <!-- Main content -->
+  <main>
+    <!-- Card Wrapper -->
+    <div class="card-wrapper">
+      <div class="card-controls">
+        <button id="flip-card-btn">Flip Card</button>
+        <button id="reset-card-btn">Reset View</button>
+        <button id="connect-wallet-btn" class="connect-wallet-btn">Connect Wallet</button>
+      </div>
+      
+      <div class="card-frame">
+        <!-- Main card container -->
+        <div class="card-container">
+          <div id="card-canvas">
+            <div class="card-front">
+              <div id="card-id">FAM-0001</div>
+              <div id="card-name">DeepAgent Ledger</div>
+              <div id="agent-dna">DEEP-343-L00P</div>
+              
+              <!-- NFT slots will be dynamically inserted here -->
+              <div class="nft-slots"></div>
+              
+              <!-- Assets will be dynamically positioned here -->
+              <div class="asset-container"></div>
+            </div>
+            <div class="card-back">
+              <!-- Back content -->
+              <div class="card-details">
+                <div class="card-detail-row">
+                  <span class="detail-label">LOOP STATUS:</span>
+                  <span class="detail-value" id="loop-status">Active</span>
+                </div>
+                <div class="card-detail-row">
+                  <span class="detail-label">CHAIN:</span>
+                  <span class="detail-value" id="chain">Ethereum</span>
+                </div>
+                <div class="card-detail-row">
+                  <span class="detail-label">WALLET:</span>
+                  <span class="detail-value" id="wallet-display">Not Connected</span>
+                </div>
+              </div>
+              
+              <!-- NFT slots for the back -->
+              <div class="nft-slots-back"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="wallet-info">
+        <div id="eth-balance"></div>
+        <div id="muskrat-balance"></div>
+        <div id="network-name"></div>
+      </div>
+    </div>
+
+    <!-- Control Panels -->
+    <div class="control-panels">
+      <div class="panel-tabs">
+        <button class="panel-tab active" data-panel="aspect-ratio">Aspect Ratio</button>
+        <button class="panel-tab" data-panel="rgb-controls">RGB Controls</button>
+        <button class="panel-tab" data-panel="assets">Assets</button>
+        <button class="panel-tab" data-panel="nft">NFT Slots</button>
+      </div>
+      
+      <!-- Aspect Ratio Panel -->
+      <div class="panel active" id="aspect-ratio-panel">
+        <div class="aspect-ratio-controls">
+          <div class="aspect-ratio-title">Aspect Ratio</div>
+          <div class="aspect-ratio-buttons">
+            <button class="aspect-btn" data-ratio="16:9">16:9</button>
+            <button class="aspect-btn" data-ratio="9:16">9:16</button>
+            <button class="aspect-btn" data-ratio="1:1">1:1</button>
+            <button class="aspect-btn" data-ratio="freeform">Freeform</button>
+            <button class="aspect-btn active" data-ratio="card">Credit Card</button>
+          </div>
+          <div class="aspect-ratio-custom">
+            <input type="number" id="custom-width" min="200" max="1200" step="10" value="600">
+            <span>×</span>
+            <input type="number" id="custom-height" min="200" max="1200" step="10" value="377">
+            <button id="apply-custom-size">Apply</button>
+          </div>
+          <div class="aspect-ratio-display">
+            <span id="current-size">600 × 377px</span>
+            <span id="current-ratio">(card)</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- RGB Controls Panel -->
+      <div class="panel" id="rgb-controls-panel">
+        <div class="rgb-control-panel">
+          <div class="rgb-panel-header">
+            <h3>RGB Color Adjustments</h3>
+            <div class="rgb-target-selector">
+              <label><input type="checkbox" id="target-viewer" checked> Viewer</label>
+              <label><input type="checkbox" id="target-assets"> Assets</label>
+              <label><input type="checkbox" id="target-ui"> UI Elements</label>
+            </div>
+          </div>
+          
+          <div class="rgb-sliders">
+            <div class="rgb-slider-group">
+              <label>R <span id="r-value">128</span></label>
+              <input type="range" id="r-slider" min="0" max="255" value="128">
+              <input type="number" id="r-input" min="0" max="255" value="128">
+            </div>
+            <div class="rgb-slider-group">
+              <label>G <span id="g-value">128</span></label>
+              <input type="range" id="g-slider" min="0" max="255" value="128">
+              <input type="number" id="g-input" min="0" max="255" value="128">
+            </div>
+            <div class="rgb-slider-group">
+              <label>B <span id="b-value">128</span></label>
+              <input type="range" id="b-slider" min="0" max="255" value="128">
+              <input type="number" id="b-input" min="0" max="255" value="128">
+            </div>
+          </div>
+          
+          <div class="rgb-preview">
+            <div class="preview-before" id="rgb-preview-before"></div>
+            <div class="preview-after" id="rgb-preview-after"></div>
+          </div>
+          
+          <div class="rgb-presets">
+            <button data-preset="original">Original</button>
+            <button data-preset="cyberpunk">Cyberpunk</button>
+            <button data-preset="neon">Neon</button>
+            <button data-preset="vaporwave">Vaporwave</button>
+            <button data-preset="noir">Noir</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Assets Panel -->
+      <div class="panel" id="assets-panel">
+        <div class="asset-library">
+          <h4>Asset Library</h4>
+          <div class="asset-grid">
+            <!-- Assets will be added dynamically -->
+          </div>
+        </div>
+        
+        <div class="asset-positioning">
+          <h4>Asset Positioning</h4>
+          <div class="position-controls">
+            <button id="toggle-grid-btn">Toggle Grid</button>
+            <button id="reset-positions-btn">Reset Positions</button>
+          </div>
+          <div class="position-indicators">
+            <div>X: <span id="position-x">0.00</span></div>
+            <div>Y: <span id="position-y">0.00</span></div>
+            <div>Scale: <span id="position-scale">1.00</span></div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- NFT Panel -->
+      <div class="panel" id="nft-panel">
+        <div class="nft-management">
+          <h4>NFT Slots</h4>
+          <div class="nft-controls">
+            <button id="refresh-nfts-btn">Refresh NFTs</button>
+            <button id="clear-nfts-btn">Clear All</button>
+          </div>
+          <div class="nft-categories">
+            <!-- NFT categories will be added dynamically -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Ecosystem Toolbar -->
+  <div class="ecosystem-toolbar">
+    <div class="toolbar-section">
+      <div class="toolbar-title">FAM SYNDICATE</div>
+      <div class="toolbar-links">
+        <a href="https://muskrats-io.netlify.app/syndicate" target="_blank" class="toolbar-link">
+          <span>Terminal</span>
+        </a>
+        <a href="https://muskrats-io.netlify.app/marketplace" target="_blank" class="toolbar-link">
+          <span>Market</span>
+        </a>
+        <a href="https://muskrats-io.netlify.app/mint" target="_blank" class="toolbar-link">
+          <span>$MUSKRAT</span>
+        </a>
+      </div>
+    </div>
+    
+    <div class="toolbar-section">
+      <div class="toolbar-status">
+        <div class="ledger-ai-status" id="ledger-ai-status">
+          <div class="status-indicator disconnected"></div>
+          <span>Ledger-AI Offline</span>
+        </div>
+        <div class="wallet-status" id="wallet-status">
+          <div class="status-indicator disconnected"></div>
+          <span>Wallet Disconnected</span>
+        </div>
+      </div>
+      <div class="toolbar-actions">
+        <button id="toolbar-admin-btn" class="toolbar-btn" title="Admin Panel">Admin</button>
+        <button id="toolbar-card-btn" class="toolbar-btn" title="Card Controls">Card</button>
+        <button id="toolbar-assets-btn" class="toolbar-btn" title="Asset Library">Assets</button>
+        <button id="toolbar-save-btn" class="toolbar-btn" title="Save Configuration">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Voice Interface -->
+  <div class="voice-interface" id="microphone-btn">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 15C13.66 15 15 13.66 15 12V5C15 3.34 13.66 2 12 2C10.34 2 9 3.34 9 5V12C9 13.66 10.34 15 12 15Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M19 10V12C19 15.87 15.87 19 12 19C8.13 19 5 15.87 5 12V10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M12 19V22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M8 22H16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  
+  <div class="voice-dialog" id="voice-dialog">
+    <div class="voice-dialog-header">
+      <h3>Ledger-AI Interface</h3>
+      <button id="voice-dialog-close">×</button>
+    </div>
+    <div class="voice-visualizer" id="voice-visualizer"></div>
+    <div class="voice-content">
+      <div class="voice-response" id="voice-response">How can I assist you with your FAM card?</div>
+      <div class="voice-input-container">
+        <input type="text" id="voice-input" placeholder="Type your message...">
+        <button id="voice-send-btn">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Debug Panel -->
+  <div id="debug-panel" class="debug-panel">
+    <div class="debug-panel-header">
+      <h3 class="debug-panel-title">🔧 ADMIN DEBUG CONTROLS</h3>
+      <div class="debug-panel-tabs">
+        <button class="debug-tab active" data-tab="card">Card</button>
+        <button class="debug-tab" data-tab="assets">Assets</button>
+        <button class="debug-tab" data-tab="voice">Voice</button>
+        <button class="debug-tab" data-tab="nft">NFT</button>
+        <button class="debug-tab" data-tab="state">State</button>
+        <button class="debug-tab" data-tab="export">Export</button>
+      </div>
+      <button class="debug-close-btn" id="debug-close-btn">×</button>
+    </div>
+    
+    <div class="debug-panel-content">
+      <!-- Card Tab -->
+      <div class="debug-tab-content active" data-tab="card">
+        <!-- Card texture controls -->
+        <div class="debug-section">
+          <h4>Texture Controls</h4>
+          <div class="debug-controls">
+            <!-- Texture controls will be added dynamically -->
+          </div>
+        </div>
+        
+        <!-- Card glow controls -->
+        <div class="debug-section">
+          <h4>Glow Controls</h4>
+          <div class="debug-controls">
+            <button class="glow-btn" data-glow="active">Active</button>
+            <button class="glow-btn" data-glow="inactive">Inactive</button>
+            <button class="glow-btn" data-glow="pulse">Pulse</button>
+          </div>
+        </div>
+        
+        <!-- Aspect ratio controls -->
+        <div class="debug-section">
+          <h4>Aspect Ratio</h4>
+          <div class="debug-controls">
+            <!-- Aspect ratio controls will be added dynamically -->
+          </div>
+        </div>
+      </div>
+      
+      <!-- Assets Tab -->
+      <div class="debug-tab-content" data-tab="assets">
+        <!-- Asset library and controls -->
+        <div class="asset-library">
+          <h4>Asset Library</h4>
+          <div class="asset-grid">
+            <!-- Assets will be added dynamically -->
+          </div>
+        </div>
+      </div>
+      
+      <!-- Voice Tab -->
+      <div class="debug-tab-content" data-tab="voice">
+        <!-- Voice controls -->
+        <div class="voice-settings">
+          <h4>Voice Settings</h4>
+          <div class="voice-controls">
+            <div class="control-group">
+              <label for="voice-type">Voice Type</label>
+              <select id="voice-type">
+                <option value="default">Default</option>
+                <option value="synthetic">Synthetic</option>
+                <option value="robotic">Robotic</option>
+              </select>
+            </div>
+            <div class="control-group">
+              <label for="voice-volume">Volume</label>
+              <input type="range" id="voice-volume" min="0" max="1" step="0.1" value="0.8">
+            </div>
+            <div class="control-group">
+              <label for="voice-pitch">Pitch</label>
+              <input type="range" id="voice-pitch" min="0.5" max="2" step="0.1" value="1">
+            </div>
+          </div>
+        </div>
+        
+        <div class="voice-test">
+          <h4>Test Voice</h4>
+          <div class="test-controls">
+            <input type="text" id="test-voice-input" placeholder="Enter text to test voice">
+            <button id="test-voice-btn">Test</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- NFT Tab -->
+      <div class="debug-tab-content" data-tab="nft">
+        <!-- NFT management -->
+        <div class="nft-management">
+          <h4>NFT Slots</h4>
+          <div class="nft-controls">
+            <button id="refresh-nfts-btn">Refresh NFTs</button>
+            <button id="clear-nfts-btn">Clear All</button>
+          </div>
+          <div class="nft-categories">
+            <!-- NFT categories will be added dynamically -->
+          </div>
+        </div>
+      </div>
+      
+      <!-- State Tab -->
+      <div class="debug-tab-content" data-tab="state">
+        <!-- State display and controls -->
+        <div class="state-display">
+          <h4>Current State</h4>
+          <pre id="card-state-debug"></pre>
+        </div>
+        <div class="state-controls">
+          <button id="reset-state-btn">Reset State</button>
+          <button id="save-state-btn">Save State</button>
+        </div>
+      </div>
+      
+      <!-- Export Tab -->
+      <div class="debug-tab-content" data-tab="export">
+        <!-- Export/Import options -->
+        <div class="export-section">
+          <h4>Export Configuration</h4>
+          <button id="export-all-btn">Export All</button>
+          <button id="export-assets-btn">Export Assets</button>
+          <button id="export-settings-btn">Export Settings</button>
+          <button id="export-nft-btn">Export NFTs</button>
+        </div>
+        <div class="import-section">
+          <h4>Import Configuration</h4>
+          <input type="file" id="import-config-file" accept=".json">
+          <button id="import-config-btn">Import</button>
+        </div>
+        <div class="export-output">
+          <textarea id="export-output" readonly></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel control script (added inline for simplicity) -->
+  <script>
+    // Hide loading screen after everything is loaded
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        const loadingScreen = document.getElementById('loading-screen');
+        if (loadingScreen) {
+          loadingScreen.style.opacity = '0';
+          loadingScreen.style.transition = 'opacity 0.5s ease';
+          setTimeout(function() {
+            loadingScreen.style.display = 'none';
+          }, 500);
+        }
+      }, 1000);
+    });
+    
+    // Panel tabs functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const panelTabs = document.querySelectorAll('.panel-tab');
+      
+      panelTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+          // Deactivate all tabs
+          panelTabs.forEach(t => t.classList.remove('active'));
+          
+          // Activate clicked tab
+          this.classList.add('active');
+          
+          // Hide all panels
+          const panels = document.querySelectorAll('.panel');
+          panels.forEach(panel => panel.classList.remove('active'));
+          
+          // Show selected panel
+          const panelId = this.getAttribute('data-panel');
+          const panel = document.getElementById(panelId + '-panel');
+          if (panel) panel.classList.add('active');
+        });
+      });
+      
+      // Flip card button functionality
+      const flipCardBtn = document.getElementById('flip-card-btn');
+      if (flipCardBtn) {
+        flipCardBtn.addEventListener('click', function() {
+          const cardCanvas = document.getElementById('card-canvas');
+          if (cardCanvas) {
+            cardCanvas.classList.toggle('flipped');
+          }
+        });
+      }
+      
+      // Reset card button functionality
+      const resetCardBtn = document.getElementById('reset-card-btn');
+      if (resetCardBtn) {
+        resetCardBtn.addEventListener('click', function() {
+          const cardCanvas = document.getElementById('card-canvas');
+          if (cardCanvas) {
+            cardCanvas.classList.remove('flipped');
+            cardCanvas.style.transform = '';
+          }
+        });
+      }
+    });
+  </script>
+
+  <!-- JavaScript libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+  
+  <!-- Application scripts -->
+  <script src="notification.js"></script>
+  <script src="utilities.js"></script>
+  <script src="fam-card-integration.js"></script>
+  <script src="nft-slot-system.js"></script>
+  <script src="asset-positioning-system.js"></script>
+  <script src="aspect-ratio-controls.js"></script>
+  <script src="rgb-control-system.js"></script>
+  <script src="wallet-integration.js"></script>
+  <script src="voice-interface.js"></script>
+  <script src="admin-debug-system.js"></script>
+</body>
+</html>
