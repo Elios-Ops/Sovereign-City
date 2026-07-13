@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAM Card Viewer</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Admin gate overlay -->
+  <div id="admin-gate" class="admin-gate-overlay">
+    <div class="admin-gate-container">
+      <h2>FAM SYNDICATE ACCESS</h2>
+      <div class="access-input-container">
+        <input type="password" id="access-code" placeholder="ENTER ACCESS CODE">
+        <button id="access-submit">VERIFY</button>
+      </div>
+      <div class="access-options">
+        <button id="admin-access" data-code="FAM343">ADMIN</button>
+        <button id="community-access" data-code="community">COMMUNITY</button>
+        <button id="guest-access">GUEST (VIEW ONLY)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main card container -->
+  <div class="card-container">
+    <div id="card-canvas">
+      <div class="card-front">
+        <div id="card-id">FAM-0001</div>
+        <div id="card-name">DeepAgent Ledger</div>
+        <div id="agent-dna">DEEP-343-L00P</div>
+        
+        <!-- NFT slots will be dynamically inserted here -->
+        <div class="nft-slots"></div>
+        
+        <!-- Assets will be dynamically positioned here -->
+        <div class="asset-container"></div>
+      </div>
+      <div class="card-back">
+        <!-- Back content -->
+        <div class="card-details">
+          <div class="card-detail-row">
+            <span class="detail-label">LOOP STATUS:</span>
+            <span class="detail-value" id="loop-status">Active</span>
+          </div>
+          <div class="card-detail-row">
+            <span class="detail-label">CHAIN:</span>
+            <span class="detail-value" id="chain">Ethereum</span>
+          </div>
+        </div>
+        
+        <!-- NFT slots for the back -->
+        <div class="nft-slots-back"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Wallet Connection Button -->
+  <div class="wallet-connection">
+    <button id="connect-wallet-btn" class="connect-wallet-btn">Connect Wallet</button>
+    <div class="wallet-info">
+      <div id="eth-balance"></div>
+      <div id="muskrat-balance"></div>
+      <div id="network-name"></div>
+    </div>
+  </div>
+
+  <!-- Aspect ratio controls -->
+  <div class="aspect-ratio-controls">
+    <div class="aspect-ratio-title">Aspect Ratio</div>
+    <div class="aspect-ratio-buttons">
+      <button class="aspect-btn" data-ratio="16:9">16:9</button>
+      <button class="aspect-btn" data-ratio="9:16">9:16</button>
+      <button class="aspect-btn" data-ratio="1:1">1:1</button>
+      <button class="aspect-btn" data-ratio="freeform">Freeform</button>
+      <button class="aspect-btn" data-ratio="card">Credit Card</button>
+    </div>
+    <div class="aspect-ratio-custom">
+      <input type="number" id="custom-width" min="200" max="1200" step="10" value="600">
+      <span>×</span>
+      <input type="number" id="custom-height" min="200" max="1200" step="10" value="377">
+      <button id="apply-custom-size">Apply</button>
+    </div>
+    <div class="aspect-ratio-display">
+      <span id="current-size">600 × 377px</span>
+      <span id="current-ratio">(16:9)</span>
+    </div>
+  </div>
+
+  <!-- RGB Color Controls -->
+  <div class="rgb-control-panel">
+    <div class="rgb-panel-header">
+      <h3>RGB Color Adjustments</h3>
+      <div class="rgb-target-selector">
+        <label><input type="checkbox" id="target-viewer" checked> Viewer</label>
+        <label><input type="checkbox" id="target-assets"> Assets</label>
+        <label><input type="checkbox" id="target-ui"> UI Elements</label>
+      </div>
+    </div>
+    
+    <div class="rgb-sliders">
+      <div class="rgb-slider-group">
+        <label>R <span id="r-value">128</span></label>
+        <input type="range" id="r-slider" min="0" max="255" value="128">
+        <input type="number" id="r-input" min="0" max="255" value="128">
+      </div>
+      <div class="rgb-slider-group">
+        <label>G <span id="g-value">128</span></label>
+        <input type="range" id="g-slider" min="0" max="255" value="128">
+        <input type="number" id="g-input" min="0" max="255" value="128">
+      </div>
+      <div class="rgb-slider-group">
+        <label>B <span id="b-value">128</span></label>
+        <input type="range" id="b-slider" min="0" max="255" value="128">
+        <input type="number" id="b-input" min="0" max="255" value="128">
+      </div>
+    </div>
+    
+    <div class="rgb-preview">
+      <div class="preview-before" id="rgb-preview-before"></div>
+      <div class="preview-after" id="rgb-preview-after"></div>
+    </div>
+    
+    <div class="rgb-presets">
+      <button data-preset="original">Original</button>
+      <button data-preset="cyberpunk">Cyberpunk</button>
+      <button data-preset="neon">Neon</button>
+      <button data-preset="vaporwave">Vaporwave</button>
+      <button data-preset="noir">Noir</button>
+    </div>
+  </div>
+
+  <!-- Ecosystem Toolbar -->
+  <div class="ecosystem-toolbar">
+    <div class="toolbar-section">
+      <div class="toolbar-title">FAM SYNDICATE</div>
+      <div class="toolbar-links">
+        <a href="https://muskrats-io.netlify.app/syndicate" target="_blank" class="toolbar-link">
+          <span>Terminal</span>
+        </a>
+        <a href="https://muskrats-io.netlify.app/marketplace" target="_blank" class="toolbar-link">
+          <span>Market</span>
+        </a>
+        <a href="https://muskrats-io.netlify.app/mint" target="_blank" class="toolbar-link">
+          <span>$MUSKRAT</span>
+        </a>
+      </div>
+    </div>
+    
+    <div class="toolbar-section">
+      <div class="toolbar-status">
+        <div class="ledger-ai-status" id="ledger-ai-status">
+          <div class="status-indicator disconnected"></div>
+          <span>Ledger-AI Offline</span>
+        </div>
+        <div class="wallet-status" id="wallet-status">
+          <div class="status-indicator disconnected"></div>
+          <span>Wallet Disconnected</span>
+        </div>
+      </div>
+      <div class="toolbar-actions">
+        <button id="toolbar-admin-btn" class="toolbar-btn" title="Admin Panel">Admin</button>
+        <button id="toolbar-card-btn" class="toolbar-btn" title="Card Controls">Card</button>
+        <button id="toolbar-assets-btn" class="toolbar-btn" title="Asset Library">Assets</button>
+        <button id="toolbar-save-btn" class="toolbar-btn" title="Save Configuration">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Voice Interface -->
+  <div class="voice-interface" id="microphone-btn">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 15C13.66 15 15 13.66 15 12V5C15 3.34 13.66 2 12 2C10.34 2 9 3.34 9 5V12C9 13.66 10.34 15 12 15Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M19 10V12C19 15.87 15.87 19 12 19C8.13 19 5 15.87 5 12V10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M12 19V22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M8 22H16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  
+  <div class="voice-dialog" id="voice-dialog">
+    <div class="voice-dialog-header">
+      <h3>Ledger-AI Interface</h3>
+      <button id="voice-dialog-close">×</button>
+    </div>
+    <div class="voice-visualizer" id="voice-visualizer"></div>
+    <div class="voice-content">
+      <div class="voice-response" id="voice-response">How can I assist you with your FAM card?</div>
+      <div class="voice-input-container">
+        <input type="text" id="voice-input" placeholder="Type your message...">
+        <button id="voice-send-btn">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Debug Panel -->
+  <div id="debug-panel" class="debug-panel">
+    <div class="debug-panel-header">
+      <h3 class="debug-panel-title">🔧 ADMIN DEBUG CONTROLS</h3>
+      <div class="debug-panel-tabs">
+        <button class="debug-tab active" data-tab="card">Card</button>
+        <button class="debug-tab" data-tab="assets">Assets</button>
+        <button class="debug-tab" data-tab="voice">Voice</button>
+        <button class="debug-tab" data-tab="nft">NFT</button>
+        <button class="debug-tab" data-tab="state">State</button>
+        <button class="debug-tab" data-tab="export">Export</button>
+      </div>
+      <button class="debug-close-btn" id="debug-close-btn">×</button>
+    </div>
+    
+    <div class="debug-panel-content">
+      <!-- Card Tab -->
+      <div class="debug-tab-content active" data-tab="card">
+        <!-- Card texture controls -->
+        <div class="debug-section">
+          <h4>Texture Controls</h4>
+          <div class="debug-controls">
+            <!-- Texture controls will be added dynamically -->
+          </div>
+        </div>
+        
+        <!-- Card glow controls -->
+        <div class="debug-section">
+          <h4>Glow Controls</h4>
+          <div class="debug-controls">
+            <button class="glow-btn" data-glow="active">Active</button>
+            <button class="glow-btn" data-glow="inactive">Inactive</button>
+            <button class="glow-btn" data-glow="pulse">Pulse</button>
+          </div>
+        </div>
+        
+        <!-- Aspect ratio controls -->
+        <div class="debug-section">
+          <h4>Aspect Ratio</h4>
+          <div class="debug-controls">
+            <!-- Aspect ratio controls will be added dynamically -->
+          </div>
+        </div>
+      </div>
+      
+      <!-- Assets Tab -->
+      <div class="debug-tab-content" data-tab="assets">
+        <!-- Asset library and controls -->
+        <div class="asset-library">
+          <h4>Asset Library</h4>
+          <div class="asset-grid">
+            <!-- Assets will be added dynamically -->
+          </div>
+        </div>
+        
+        <div class="asset-positioning">
+          <h4>Asset Positioning</h4>
+          <div class="position-controls">
+            <button id="toggle-grid-btn">Toggle Grid</button>
+            <button id="reset-positions-btn">Reset Positions</button>
+          </div>
+          <div class="position-indicators">
+            <div>X: <span id="position-x">0.00</span></div>
+            <div>Y: <span id="position-y">0.00</span></div>
+            <div>Scale: <span id="position-scale">1.00</span></div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Voice Tab -->
+      <div class="debug-tab-content" data-tab="voice">
+        <!-- Voice controls -->
+        <div class="voice-settings">
+          <h4>Voice Settings</h4>
+          <div class="voice-controls">
+            <div class="control-group">
+              <label for="voice-type">Voice Type</label>
+              <select id="voice-type">
+                <option value="default">Default</option>
+                <option value="synthetic">Synthetic</option>
+                <option value="robotic">Robotic</option>
+              </select>
+            </div>
+            <div class="control-group">
+              <label for="voice-volume">Volume</label>
+              <input type="range" id="voice-volume" min="0" max="1" step="0.1" value="0.8">
+            </div>
+            <div class="control-group">
+              <label for="voice-pitch">Pitch</label>
+              <input type="range" id="voice-pitch" min="0.5" max="2" step="0.1" value="1">
+            </div>
+          </div>
+        </div>
+        
+        <div class="voice-test">
+          <h4>Test Voice</h4>
+          <div class="test-controls">
+            <input type="text" id="test-voice-input" placeholder="Enter text to test voice">
+            <button id="test-voice-btn">Test</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- NFT Tab -->
+      <div class="debug-tab-content" data-tab="nft">
+        <!-- NFT management -->
+        <div class="nft-management">
+          <h4>NFT Slots</h4>
+          <div class="nft-controls">
+            <button id="refresh-nfts-btn">Refresh NFTs</button>
+            <button id="clear-nfts-btn">Clear All</button>
+          </div>
+          <div class="nft-categories">
+            <!-- NFT categories will be added dynamically -->
+          </div>
+        </div>
+      </div>
+      
+      <!-- State Tab -->
+      <div class="debug-tab-content" data-tab="state">
+        <!-- State display and controls -->
+        <div class="state-display">
+          <h4>Current State</h4>
+          <pre id="card-state-debug"></pre>
+        </div>
+        <div class="state-controls">
+          <button id="reset-state-btn">Reset State</button>
+          <button id="save-state-btn">Save State</button>
+        </div>
+      </div>
+      
+      <!-- Export Tab -->
+      <div class="debug-tab-content" data-tab="export">
+        <!-- Export/Import options -->
+        <div class="export-section">
+          <h4>Export Configuration</h4>
+          <button id="export-all-btn">Export All</button>
+          <button id="export-assets-btn">Export Assets</button>
+          <button id="export-settings-btn">Export Settings</button>
+          <button id="export-nft-btn">Export NFTs</button>
+        </div>
+        <div class="import-section">
+          <h4>Import Configuration</h4>
+          <input type="file" id="import-config-file" accept=".json">
+          <button id="import-config-btn">Import</button>
+        </div>
+        <div class="export-output">
+          <textarea id="export-output" readonly></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+  
+  <!-- Application scripts -->
+  <script src="notification.js"></script>
+  <script src="fam-card-integration.js"></script>
+  <script src="nft-slot-system.js"></script>
+  <script src="asset-positioning-system.js"></script>
+  <script src="aspect-ratio-controls.js"></script>
+  <script src="rgb-control-system.js"></script>
+  <script src="wallet-integration.js"></script>
+  <script src="voice-interface.js"></script>
+  <script src="admin-debug-system.js"></script>
+</body>
+</html>

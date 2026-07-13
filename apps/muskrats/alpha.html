@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Alpha Terminal – The Don's Feed</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+    body.terminal-bg {
+      min-height: 100vh;
+      background: url('alpha_skin_bg.jpg') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Courier New', monospace;
+      color: #00ffcc;
+      position: relative;
+      padding-bottom: 90px; /* Footer space */
+    }
+    .terminal-screen {
+      position: absolute;
+      background: rgba(0, 0, 0, 0.98);
+      border: 1px solid #00ffff44;
+      box-shadow: 0 0 12px #00ffff88;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      padding: 12px;
+    }
+    .center-monitor {
+      top: 10%;
+      left: 24.5%;
+      width: 46%;
+      height: 41.5%;
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+    .left-monitor {
+      top: 10%;
+      left: 0.5%;
+      width: 26.5%;
+      height: 42%;
+      transform: perspective(1000px) rotateY(14deg);
+      transform-origin: left center;
+      z-index: 5;
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .left-monitor:hover {
+      transform: perspective(1000px) rotateY(5deg) scale(1.05);
+    }
+    .right-monitor {
+      top: 10%;
+      right: 0.5%;
+      width: 30.5%;
+      height: 42%;
+      transform: perspective(1000px) rotateY(-14deg);
+      transform-origin: right center;
+      z-index: 5;
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .right-monitor:hover {
+      transform: perspective(1000px) rotateY(-5deg) scale(1.05);
+    }
+    .terminal-screen-inner {
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+    }
+    .terminal-text {
+      font-size: 0.85rem;
+      line-height: 1.4;
+      max-height: 100%;
+      overflow-y: auto;
+    }
+    .terminal-buttons {
+      text-align: center;
+      margin-top: 10px;
+    }
+    .glitch-btn {
+      background: #00ffcc10;
+      border: 1px solid #00ffff;
+      padding: 10px 20px;
+      color: #00ffff;
+      text-decoration: none;
+      margin: 6px;
+      display: inline-block;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      transition: 0.2s ease;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+    .glitch-btn:hover {
+      background: #00ffff33;
+      color: black;
+      box-shadow: 0 0 12px #00ffff88;
+    }
+    .fullscreen-active {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      z-index: 9999;
+      background: rgba(0, 0, 0, 0.92);
+      backdrop-filter: blur(3px);
+      overflow-y: auto;
+      box-shadow: 0 0 25px #00ffff55;
+      padding: 30px;
+      transform: none !important;
+    }
+    /* Footer styles removed - using unified footer */
+    @media (max-width:650px) {
+      body.terminal-bg {
+        padding-bottom: 112px;
+      }
+      .center-monitor, .left-monitor, .right-monitor {
+        top: 4vw !important;
+        left: 2vw !important;
+        right: 2vw !important;
+        width: 94vw !important;
+        height: 31vw !important;
+        min-width: unset !important;
+        max-width: unset !important;
+        transform: none !important;
+      }
+      .left-monitor { top: 36vw !important; }
+      .right-monitor { top: 68vw !important; }
+    }
+  </style>
+</head>
+<body class="terminal-bg">
+
+  <!-- Center Monitor -->
+  <div class="terminal-screen center-monitor" onclick="expandTerminal(this)">
+    <div class="terminal-screen-inner">
+      <iframe 
+        src="https://dexscreener.com/solana/4qbRKDirQKeXoSC8JkpRdK9uQj3wKQVTwa644N22rBPw?embed=1&theme=dark" 
+        width="100%" height="100%" frameborder="0"></iframe>
+      <div class="terminal-buttons">
+        <a href="https://dexscreener.com/solana/4qbRKDirQKeXoSC8JkpRdK9uQj3wKQVTwa644N22rBPw" target="_blank" class="glitch-btn">View Chart</a>
+        <a href="https://www.coingecko.com/en/coins/4qbRKDirQKeXoSC8JkpRdK9uQj3wKQVTwa644N22rBPw" target="_blank" class="glitch-btn">CoinGecko</a>
+        <a href="https://jup.ag/tokens/4qbRKDirQKeXoSC8JkpRdK9uQj3wKQVTwa644N22rBPw" target="_blank" class="glitch-btn">Buy $MUSKRAT</a>
+      </div>
+    </div>
+  </div>
+  <!-- Left Monitor -->
+  <div class="terminal-screen left-monitor">
+    <div class="terminal-screen-inner">
+      <div id="typewriter" class="terminal-text"></div>
+    </div>
+  </div>
+  <!-- Right Monitor (AI Agent) -->
+  <div class="terminal-screen right-monitor">
+    <div class="terminal-screen-inner">
+      <div class="terminal-text" id="ai-agent"></div>
+    </div>
+  </div>
+
+  <!-- BEGIN: MUSKRATS FOOTER -->
+  <div style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 4000;">
+    <!-- Unified Footer will be injected here -->
+  </div>
+
+  <script>
+    function expandTerminal(el) {
+      el.classList.toggle('fullscreen-active');
+    }
+
+    // Typewriter/AI Feed Logic
+    const feed = [
+      "Initializing Don's Alpha Terminal...",
+      "Connected to RatBrain v1.3",
+      "Scanning ETH pool activity...",
+      "Detected surge: $PEPE +17% on LP inflow",
+      "Upper Bollinger Band touched. Squeeze forming.",
+      "Wallet 0x13a2... setting sniping traps.",
+      "Signal: Meme pair $DEGEN showing RSI 84. Fade incoming.",
+      "Liquidity node breach. Suggesting flip within 2 hours."
+    ];
+
+    const aiFeed = [
+      "🧠 AI AGENT ONLINE...",
+      "Analyzing meme token trendline vs RSI...",
+      "Whale wallet 0x42f1... deployed LP to $FLOKI",
+      "Detected staking bridge into Solana pool.",
+      "Vault access key: 13-GLYPH confirmed.",
+      "Buy window forming: $MUSKRAT sweep predicted in 30m.",
+      "Node sync complete. Encrypted order flow injected."
+    ];
+
+    let line = 0;
+    const output = document.getElementById("typewriter");
+
+    function typeNextLine() {
+      if (line >= feed.length) return;
+      let text = feed[line];
+      let i = 0;
+      let interval = setInterval(() => {
+        output.innerHTML += text.charAt(i);
+        i++;
+        if (i >= text.length) {
+          clearInterval(interval);
+          output.innerHTML += "<br/>🧩 ~~~ <br/>";
+          line++;
+          setTimeout(typeNextLine, 1200);
+        }
+      }, 35);
+    }
+
+    let aiLine = 0;
+    const aiOutput = document.getElementById("ai-agent");
+
+    function runAI() {
+      if (aiLine >= aiFeed.length) aiLine = 0;
+      aiOutput.innerHTML += aiFeed[aiLine] + "<br/>🔻 ~~~ <br/>";
+      aiLine++;
+      setTimeout(runAI, 2500);
+    }
+
+    window.onload = function() {
+      typeNextLine();
+      runAI();
+    }
+  </script>
+
+  <!-- Unified Footer -->
+  <script src="unified-footer.js"></script>
+
+</body>
+</html>
