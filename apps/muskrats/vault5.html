@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vault 05 – Duffle Bags</title>
+  <style>
+    body { 
+      background: linear-gradient(to bottom, #000000, #001a1a);
+      color: #00ffff;
+      font-family: 'Courier New', monospace;
+      padding: 40px 20px;
+      min-height: 100vh;
+      margin: 0;
+    }
+    
+    h1 { 
+      font-size: 2.4rem;
+      text-shadow: 0 0 20px #00ff00, 0 0 10px #00ffff;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .vault-card {
+      max-width: 1200px;
+      margin: auto;
+      background: rgba(0, 255, 0, 0.03);
+      border: 2px solid #00ff00;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 0 30px rgba(0, 255, 0, 0.3);
+    }
+    
+    .lore {
+      text-align: center;
+      padding: 20px;
+      background: rgba(0, 255, 255, 0.05);
+      border: 1px solid #00ffff;
+      border-radius: 10px;
+      margin-bottom: 30px;
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+    
+    .rental-info {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      background: rgba(0, 255, 0, 0.05);
+      border: 2px solid #00ff00;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    
+    .rental-option {
+      text-align: center;
+      flex: 1;
+      min-width: 200px;
+    }
+    
+    .rental-option h3 {
+      color: #00ff00;
+      margin-bottom: 10px;
+      text-shadow: 0 0 10px #00ff00;
+    }
+    
+    .price {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #00ffff;
+    }
+    
+    .nft-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+      margin-bottom: 40px;
+    }
+    
+    .nft-item {
+      position: relative;
+      background: rgba(0, 0, 0, 0.5);
+      border: 2px solid #00ff00;
+      border-radius: 10px;
+      padding: 15px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .nft-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 255, 0, 0.5);
+      border-color: #00ffff;
+    }
+    
+    .nft-item.selected {
+      border: 3px solid #ffea3e;
+      box-shadow: 0 0 20px #ffea3e;
+      background: rgba(255, 234, 62, 0.1);
+      transform: scale(1.05);
+    }
+    
+    .nft-img {
+      width: 100%;
+      height: 200px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      background: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+    }
+    
+    .nft-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    
+    .nft-label {
+      font-size: 1rem;
+      color: #00ff00;
+      margin-bottom: 10px;
+      text-align: center;
+      font-weight: bold;
+    }
+    
+    .nft-stats {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      color: #ffea3e;
+      padding: 10px;
+      background: rgba(255, 234, 62, 0.1);
+      border-radius: 5px;
+    }
+    
+    .selection-indicator {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #ffea3e;
+      color: #000;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-weight: bold;
+      display: none;
+    }
+    
+    .nft-item.selected .selection-indicator {
+      display: block;
+    }
+    
+    .action-buttons {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      margin-top: 30px;
+      flex-wrap: wrap;
+    }
+    
+    .btn {
+      padding: 15px 30px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .btn-rent {
+      background: linear-gradient(90deg, #00ff00 0%, #00ffff 100%);
+      color: #000;
+      box-shadow: 0 5px 20px rgba(0, 255, 0, 0.4);
+    }
+    
+    .btn-rent:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0, 255, 0, 0.6);
+    }
+    
+    .btn-rent:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .btn-back {
+      background: transparent;
+      color: #00ffff;
+      border: 2px solid #00ffff;
+    }
+    
+    .btn-back:hover {
+      background: rgba(0, 255, 255, 0.1);
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+    }
+    
+    .selected-summary {
+      background: rgba(0, 255, 255, 0.05);
+      border: 2px solid #00ffff;
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 30px;
+      text-align: center;
+      display: none;
+    }
+    
+    .selected-summary.show {
+      display: block;
+    }
+    
+    .selected-summary h3 {
+      color: #00ff00;
+      margin-bottom: 15px;
+    }
+    
+    .selected-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 10px;
+    }
+    
+    .selected-chip {
+      background: rgba(0, 255, 0, 0.2);
+      border: 1px solid #00ff00;
+      padding: 5px 15px;
+      border-radius: 20px;
+      color: #00ff00;
+    }
+    
+    @media (max-width: 768px) {
+      .nft-gallery {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      }
+    }
+  </style>
+  <!-- Web3.js for wallet integration -->
+  <script src="https://cdn.jsdelivr.net/npm/web3@1.9.0/dist/web3.min.js"></script>
+</head>
+<body>
+
+  <h1>🎒 Vault 05 – Duffle Bag Items</h1>
+
+  <div class="vault-card">
+    <div class="lore">
+      <strong>Essential Gear for Your Duffle Bag</strong><br>
+      Stock your duffle bag with specialized equipment for the heist.<br>
+      Each duffle bag on your FAM Card can hold up to 6 items.<br>
+      <em>Choose wisely - the right tools can make or break a mission.</em>
+    </div>
+
+    <div class="rental-info">
+      <div class="rental-option">
+        <h3>💰 ETH Rental</h3>
+        <div class="price">0.0018 ETH</div>
+        <small>per Item / 7 days</small>
+      </div>
+      <div class="rental-option">
+        <h3>🪙 $MUSKRAT Rental</h3>
+        <div class="price">90 $MUSKRAT</div>
+        <small>per Item / 7 days</small>
+      </div>
+      <div class="rental-option">
+        <h3>⏱️ Rental Period</h3>
+        <div class="price">7 Days</div>
+        <small>Auto-returns to vault</small>
+      </div>
+    </div>
+
+    <div class="nft-gallery">
+      <div class="nft-item" onclick="selectItem(this, 'GEAR-001', 'Smoke Bomb')">
+        <span class="selection-indicator">SELECTED</span>
+        <div class="nft-img">
+          <img src="images/gear/smokebomb.png" alt="Smoke Bomb" />
+        </div>
+        <div class="nft-label">Smoke Bomb Kit</div>
+        <div class="nft-stats">
+          <span>+40% Escape</span>
+          <span>3 Uses/Heist</span>
+        </div>
+      </div>
+      
+      <div class="nft-item" onclick="selectItem(this, 'GEAR-002', 'Lock Pick Set')">
+        <span class="selection-indicator">SELECTED</span>
+        <div class="nft-img">
+          <img src="images/gear/lockpick.png" alt="Lock Pick" />
+        </div>
+        <div class="nft-label">Master Lock Pick Set</div>
+        <div class="nft-stats">
+          <span>+50% Lock Success</span>
+          <span>Silent Entry</span>
+        </div>
+      </div>
+      
+      <div class="nft-item" onclick="selectItem(this, 'GEAR-003', 'C4 Explosives')">
+        <span class="selection-indicator">SELECTED</span>
+        <div class="nft-img">
+          <img src="images/gear/c4.png" alt="C4 Explosives" />
+        </div>
+        <div class="nft-label">C4 Explosive Pack</div>
+        <div class="nft-stats">
+          <span>+100% Breach</span>
+          <span>Loud Entry</span>
+        </div>
+      </div>
+      
+      <div class="nft-item" onclick="selectItem(this, 'GEAR-004', 'EMP Device')">
+        <span class="selection-indicator">SELECTED</span>
+        <div class="nft-img">
+          <img src="images/gear/emp.png" alt="EMP Device" />
+        </div>
+        <div class="nft-label">EMP Disruptor</div>
+        <div class="nft-stats">
+          <span>Disable Electronics</span>
+          <span>30sec Duration</span>
+        </div>
+      </div>
+      
+      <div class="nft-item" onclick="selectItem(this, 'GEAR-005', 'Safe Drill')">
+        <span class="selection-indicator">SELECTED</span>
+        <div class="nft-img">
+          <img src="images/gear/safedrill.png" alt="Safe Drill" />
+        </div>
+        <div class="nft-label">Diamond Safe Drill</div>
+        <div class="nft-stats">
+          <span>+80% Vault Access</span>
+          <span>Silent Operation</span>
+        </div>
+      </div>
+      
+      <div class="nft-item" onclick="selectItem(this, 'GEAR-006', 'Silencer')">
+        <span class="selection-indicator">SELECTED</span>
+        <div class="nft-img">
+          <img src="images/gear/silencer.png" alt="Silencer" />
+        </div>
+        <div class="nft-label">Tactical Silencer</div>
+        <div class="nft-stats">
+          <span>+90% Stealth</span>
+          <span>Quiet Takedowns</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="selected-summary" id="selectedSummary">
+      <h3>Selected Items for Your Duffle Bag</h3>
+      <div id="totalCost">Total Cost: 0 ETH / 0 $MUSKRAT</div>
+      <div class="selected-list" id="selectedList"></div>
+    </div>
+
+    <div class="action-buttons">
+      <button class="btn btn-back" onclick="window.location.href='marketplace.html'">⬅ Back to Marketplace</button>
+      <button class="btn btn-rent" id="rentBtn" onclick="rentSelected()" disabled>
+        Rent Selected Items
+      </button>
+    </div>
+  </div>
+
+  <script>
+    let selectedItems = new Set();
+    const ETH_PRICE = 0.0018;  // ~$7.85 at current rates
+    const MUSKRAT_PRICE = 90;
+    
+    function selectItem(element, itemId, itemName) {
+      element.classList.toggle('selected');
+      
+      if (element.classList.contains('selected')) {
+        selectedItems.add({ id: itemId, name: itemName });
+      } else {
+        selectedItems.delete([...selectedItems].find(item => item.id === itemId));
+      }
+      
+      updateSummary();
+    }
+    
+    function updateSummary() {
+      const summary = document.getElementById('selectedSummary');
+      const list = document.getElementById('selectedList');
+      const rentBtn = document.getElementById('rentBtn');
+      const totalCost = document.getElementById('totalCost');
+      
+      if (selectedItems.size > 0) {
+        summary.classList.add('show');
+        rentBtn.disabled = false;
+        
+        list.innerHTML = '';
+        selectedItems.forEach(item => {
+          const chip = document.createElement('div');
+          chip.className = 'selected-chip';
+          chip.textContent = item.name;
+          list.appendChild(chip);
+        });
+        
+        const ethTotal = (selectedItems.size * ETH_PRICE).toFixed(3);
+        const muskratTotal = selectedItems.size * MUSKRAT_PRICE;
+        totalCost.textContent = `Total Cost: ${ethTotal} ETH / ${muskratTotal} $MUSKRAT`;
+      } else {
+        summary.classList.remove('show');
+        rentBtn.disabled = true;
+      }
+    }
+    
+        async function rentSelected() {
+      if (selectedItems.size === 0) {
+        alert('Please select at least one item to rent.');
+        return;
+      }
+      
+      const itemNames = [...selectedItems].map(item => item.name).join(', ');
+      const ethTotal = (selectedItems.size * ETH_PRICE).toFixed(3);
+      const muskratTotal = selectedItems.size * MUSKRAT_PRICE;
+      
+      const message = `RENTAL CONFIRMATION\n\nDuffle Bags: ${itemNames}\n\nTotal Cost:\n• ${ethTotal} ETH\nOR\n• ${muskratTotal} $MUSKRAT\n\nRental Period: 7 Days\n\nThese items will be added to your FAM Card slots.`;
+      
+      if (confirm(message)) {
+        // Multi-sig wallet address for marketplace purchases
+        const MARKETPLACE_WALLET = '0x223C2534ab0E451279F432F0a1B2756042888C06';
+        
+        // Check if MetaMask is installed
+        if (typeof window.ethereum !== 'undefined') {
+          try {
+            // Request account access
+            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+            const account = accounts[0];
+            
+            // Convert ETH to Wei
+            const valueInWei = Web3.utils.toWei(ethTotal, 'ether');
+            
+            // Send transaction
+            const transactionParameters = {
+              to: MARKETPLACE_WALLET,
+              from: account,
+              value: Web3.utils.toHex(valueInWei),
+              data: Web3.utils.utf8ToHex(`Duffle Bags Rental: ${itemNames}`)
+            };
+            
+            const txHash = await window.ethereum.request({
+              method: 'eth_sendTransaction',
+              params: [transactionParameters],
+            });
+            
+            alert(`🎉 Rental Successful!\n\nTransaction Hash: ${txHash}\n\nYour Duffle Bags have been added to your FAM Card.\n\nThey will automatically return to the vault after 7 days.`);
+            
+            // Store rental info
+            const rentals = JSON.parse(localStorage.getItem('muskrat_rentals') || '[]');
+            rentals.push({
+              vault: 'Duffle Bags',
+              items: [...selectedItems],
+              timestamp: new Date().toISOString(),
+              duration: '7 days',
+              txHash: txHash,
+              ethAmount: ethTotal
+            });
+            localStorage.setItem('muskrat_rentals', JSON.stringify(rentals));
+            
+            // Reset selection
+            document.querySelectorAll('.nft-item.selected').forEach(el => el.classList.remove('selected'));
+            selectedItems.clear();
+            updateSummary();
+            
+          } catch (error) {
+            console.error('Transaction failed:', error);
+            alert('Transaction failed. Please try again.');
+          }
+        } else {
+          // Fallback for users without MetaMask
+          alert(`To complete your rental, please send ${ethTotal} ETH to:\n\n${MARKETPLACE_WALLET}\n\nInclude "Duffle Bags Rental" in the transaction memo.`);
+        }
+      }
+    }
+  </script>
+
+  <!-- Unified Footer -->
+  <script src="unified-footer.js"></script>
+
+</body>
+</html>

@@ -43,3 +43,11 @@ Thumbs.db
 *.rar
 *.tar
 *.tar.gz
+
+# Muskrats.io promoted copy lives in apps/muskrats/. Drive sync may duplicate
+# assets under source/canonical; only the partial HTML/JS/CSS/JSON set is tracked.
+source/canonical/AI_APP/muskrats-io/*
+!source/canonical/AI_APP/muskrats-io/*.html
+!source/canonical/AI_APP/muskrats-io/*.css
+!source/canonical/AI_APP/muskrats-io/*.js
+!source/canonical/AI_APP/muskrats-io/*.json

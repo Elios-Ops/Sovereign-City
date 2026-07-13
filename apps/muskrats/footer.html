@@ -1,0 +1,85 @@
+<div class="footer" style="
+  margin-top: 60px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  padding: 40px 20px;
+  background: url('images/sewer_brick_bg.jpg') no-repeat center center;
+  background-size: cover;
+  position: relative;
+">
+
+  <a href="muskrats.html" target="_blank" style="color: #00ffff; border: 2px solid #00ffff;
+    padding: 10px 16px; text-decoration: none; border-radius: 6px;">🐀 MuskRats</a>
+
+  <a href="poster.html" id="posterLink" style="color: #00ffff; border: 2px solid #00ffff;
+    padding: 10px 16px; text-decoration: none; border-radius: 6px;">🚪 Sewer Alley Poster</a>
+
+  <a href="thefam.html" style="color: #00ffff; border: 2px solid #00ffff;
+    padding: 10px 16px; text-decoration: none; border-radius: 6px;">🧔🏽‍♂️ The F.A.M.</a>
+
+  <a href="gate.html" style="color: #00ffff; border: 2px solid #00ffff;
+    padding: 10px 16px; text-decoration: none; border-radius: 6px;">🚫 The Mansion Gate</a>
+
+  <a href="dossier_lobby.html" style="color: #00ffff; border: 2px solid #00ffff;
+    padding: 10px 16px; text-decoration: none; border-radius: 6px;">📂 Dossier Lobby</a>
+
+  <a href="relic_machine.html" style="color: #00ffff; border: 2px solid #00ffff;
+    padding: 10px 16px; text-decoration: none; border-radius: 6px;">🔧 Relic Machine</a>
+
+  <a href="cellar.html" style="color: #00ffff; border: 2px solid #00ffff;
+    padding: 10px 16px; text-decoration: none; border-radius: 6px;">🔻 Cellar Vault</a>
+
+  <a href="moonvault.html" target="_blank" style="color: #00ffff; border: 2px solid #00ffff;
+    padding: 10px 16px; text-decoration: none; border-radius: 6px;">🪙 Operation Moon Vault</a>
+
+  <a href="marketplace.html" target="_blank" style="color: #00ffff; border: 2px solid #00ffff;
+    padding: 10px 16px; text-decoration: none; border-radius: 6px;">🛒 Marketplace</a>
+
+  <a href="codex.html" target="_blank" style="color: #00ffff; border: 2px solid #00ffff;
+    padding: 10px 16px; text-decoration: none; border-radius: 6px;">📜 Codex Manifesto</a>
+
+  <a href="alpha.html" target="_blank" style="color: #00ffff; border: 2px solid #00ffff;
+    padding: 10px 16px; text-decoration: none; border-radius: 6px;">👑🐍 Quetzalcoatl (Alpha)</a>
+
+  <a href="tokenomics.html" target="_blank" style="color: #00ffff; border: 2px solid #00ffff;
+    padding: 10px 16px; text-decoration: none; border-radius: 6px;">💰 Tokenomics</a>
+
+  <a href="syndicate.html" target="_blank" style="color: #00ffff; border: 2px solid #00ffff;
+    padding: 10px 16px; text-decoration: none; border-radius: 6px;">🏢 The Syndicate Terminal</a>
+
+  <a href="lore.html" target="_blank" style="color: #00ffff; border: 2px solid #00ffff;
+    padding: 10px 16px; text-decoration: none; border-radius: 6px;">📚 Lore</a>
+
+  <a href="joboffer.html" target="_blank" style="color: #00ffff; border: 2px solid #00ffff;
+    padding: 10px 16px; text-decoration: none; border-radius: 6px;">🧾 The Don’s Job Board</a>
+
+  <a href="roadmap.html" target="_blank" style="color: #00ffff; border: 2px solid #00ffff;
+    padding: 10px 16px; text-decoration: none; border-radius: 6px;">🗺️ Roadmap</a>
+
+  <a href="https://etherscan.io/address/0xa810f0E95d6fcC10842933D2cd0441437a005df7" target="_blank" style="color: #00ffff; border: 2px solid #00ffff;
+    padding: 10px 16px; text-decoration: none; border-radius: 6px;">🔗 Etherscan</a>
+
+  <a href="https://solscan.io/token/JDcMdQeEDQcsRjYKNJzLhGdbWqDLz4fKjuYvrwEz39fD" target="_blank" style="color: #00ffff; border: 2px solid #00ffff;
+    padding: 10px 16px; text-decoration: none; border-radius: 6px;">🔎 Solscan</a>
+
+  <!-- Hidden Glyph Easter Egg -->
+  <div id="glyph-secret" style="position: absolute; bottom: 10px; right: 10px; opacity: 0.05; transition: opacity 0.4s;">
+    <img src="images/glyph13.png" width="40" alt="Secret Glyph" onclick="window.location.href='scroll13.html'" style="cursor: pointer;" />
+  </div>
+</div>
+
+<script>
+  window.addEventListener("DOMContentLoaded", function () {
+    const isPosterPage = window.location.pathname.includes("poster.html");
+    const posterLink = document.getElementById("posterLink");
+    if (isPosterPage && posterLink) {
+      posterLink.style.display = "none";
+    }
+
+    const glyph = document.getElementById('glyph-secret');
+    glyph.addEventListener('mouseenter', () => glyph.style.opacity = 0.7);
+    glyph.addEventListener('mouseleave', () => glyph.style.opacity = 0.05);
+  });
+</script>

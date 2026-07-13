@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lockpicking Challenge - MuskRats</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #000000, #0a0a1a, #000033);
+      color: #00ffff;
+      font-family: 'Courier New', monospace;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    /* Animated background */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('images/brick_wall_poster_bg.png') no-repeat center center fixed;
+      background-size: cover;
+      opacity: 0.1;
+      z-index: -1;
+    }
+    
+    .game-container {
+      background: rgba(0, 0, 0, 0.9);
+      border: 3px solid #00ffff;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 0 40px rgba(0, 255, 255, 0.4);
+      max-width: 800px;
+      width: 90%;
+      position: relative;
+    }
+    
+    h1 {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      text-shadow: 0 0 20px #00ffff, 0 0 10px #ff00ff;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { text-shadow: 0 0 20px #00ffff, 0 0 10px #ff00ff; }
+      50% { text-shadow: 0 0 30px #00ffff, 0 0 20px #ff00ff; }
+    }
+    
+    .instructions {
+      text-align: center;
+      color: #ffea3e;
+      margin-bottom: 30px;
+      font-size: 1.1rem;
+      line-height: 1.5;
+    }
+    
+    /* Lock Display */
+    .lock-display {
+      background: linear-gradient(135deg, #1a1a2e, #0f0f1e);
+      border: 2px solid #ff00ff;
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 30px;
+      position: relative;
+      box-shadow: inset 0 0 20px rgba(255, 0, 255, 0.2);
+    }
+    
+    .lock-name {
+      text-align: center;
+      color: #ff00ff;
+      font-size: 1.3rem;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px #ff00ff;
+    }
+    
+    /* Pin System */
+    .pins-container {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin: 30px 0;
+      position: relative;
+    }
+    
+    .pin-column {
+      width: 60px;
+      height: 200px;
+      background: linear-gradient(to bottom, #0a0a0a, #1a1a1a);
+      border: 2px solid #00ffff;
+      border-radius: 10px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+    
+    .pin {
+      position: absolute;
+      width: 100%;
+      height: 40px;
+      background: linear-gradient(135deg, #ff00ff, #ff00ff80);
+      border: 1px solid #ffea3e;
+      border-radius: 5px;
+      transition: bottom 0.3s ease;
+      box-shadow: 0 2px 10px rgba(255, 0, 255, 0.5);
+    }
+    
+    .pin.set {
+      background: linear-gradient(135deg, #00ff00, #00ff0080);
+      box-shadow: 0 0 20px rgba(0, 255, 0, 0.8);
+    }
+    
+    .sweet-spot {
+      position: absolute;
+      width: 100%;
+      height: 30px;
+      background: rgba(255, 234, 62, 0.2);
+      border-top: 2px dashed #ffea3e;
+      border-bottom: 2px dashed #ffea3e;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    
+    /* Tension Wrench */
+    .tension-display {
+      text-align: center;
+      margin: 20px 0;
+    }
+    
+    .tension-bar {
+      width: 100%;
+      height: 30px;
+      background: rgba(0, 0, 0, 0.5);
+      border: 2px solid #00ffff;
+      border-radius: 15px;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .tension-level {
+      height: 100%;
+      background: linear-gradient(90deg, #ff0000, #ffea3e, #00ff00);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+    
+    .tension-indicator {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      left: 50%;
+      width: 4px;
+      height: 100%;
+      background: #fff;
+      box-shadow: 0 0 10px #fff;
+    }
+    
+    /* Controls */
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 30px;
+      flex-wrap: wrap;
+    }
+    
+    .control-btn {
+      padding: 12px 25px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .pick-btn {
+      background: linear-gradient(90deg, #00ffff, #00ff00);
+      color: #000;
+      box-shadow: 0 5px 20px rgba(0, 255, 255, 0.4);
+    }
+    
+    .pick-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0, 255, 255, 0.6);
+    }
+    
+    .pick-btn:active:not(:disabled) {
+      transform: translateY(1px);
+    }
+    
+    .pick-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .reset-btn {
+      background: transparent;
+      color: #ff0000;
+      border: 2px solid #ff0000;
+    }
+    
+    .reset-btn:hover {
+      background: rgba(255, 0, 0, 0.1);
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+    }
+    
+    .back-btn {
+      background: transparent;
+      color: #00ffff;
+      border: 2px solid #00ffff;
+    }
+    
+    .back-btn:hover {
+      background: rgba(0, 255, 255, 0.1);
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+    }
+    
+    /* Timer */
+    .timer-display {
+      text-align: center;
+      font-size: 1.5rem;
+      color: #ffea3e;
+      margin: 20px 0;
+      text-shadow: 0 0 10px #ffea3e;
+    }
+    
+    .timer.warning {
+      color: #ff0000;
+      animation: blink 0.5s infinite;
+    }
+    
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    /* Success/Failure Messages */
+    .message-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.9);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    
+    .message-overlay.show {
+      display: flex;
+    }
+    
+    .message-box {
+      background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(255, 0, 255, 0.1));
+      border: 3px solid #00ffff;
+      border-radius: 20px;
+      padding: 40px;
+      text-align: center;
+      box-shadow: 0 0 50px rgba(0, 255, 255, 0.5);
+    }
+    
+    .message-box.success {
+      border-color: #00ff00;
+      box-shadow: 0 0 50px rgba(0, 255, 0, 0.5);
+    }
+    
+    .message-box.failure {
+      border-color: #ff0000;
+      box-shadow: 0 0 50px rgba(255, 0, 0, 0.5);
+    }
+    
+    .message-title {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      text-shadow: 0 0 20px currentColor;
+    }
+    
+    .message-text {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+    }
+    
+    /* Difficulty Levels */
+    .difficulty-selector {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+    
+    .difficulty-btn {
+      padding: 10px 20px;
+      background: transparent;
+      border: 2px solid #00ffff;
+      color: #00ffff;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: bold;
+    }
+    
+    .difficulty-btn:hover {
+      background: rgba(0, 255, 255, 0.1);
+    }
+    
+    .difficulty-btn.active {
+      background: #00ffff;
+      color: #000;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+    }
+    
+    .difficulty-btn.easy { border-color: #00ff00; color: #00ff00; }
+    .difficulty-btn.easy.active { background: #00ff00; }
+    
+    .difficulty-btn.medium { border-color: #ffea3e; color: #ffea3e; }
+    .difficulty-btn.medium.active { background: #ffea3e; color: #000; }
+    
+    .difficulty-btn.hard { border-color: #ff0000; color: #ff0000; }
+    .difficulty-btn.hard.active { background: #ff0000; color: #fff; }
+    
+    /* Skill Check Indicator */
+    .skill-check {
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #ffea3e;
+      color: #000;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-weight: bold;
+      display: none;
+      animation: skillPulse 0.5s ease;
+    }
+    
+    @keyframes skillPulse {
+      0% { transform: translateX(-50%) scale(0); }
+      50% { transform: translateX(-50%) scale(1.2); }
+      100% { transform: translateX(-50%) scale(1); }
+    }
+    
+    .skill-check.show {
+      display: block;
+    }
+    
+    @media (max-width: 768px) {
+      .game-container {
+        padding: 20px;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .pins-container {
+        gap: 10px;
+      }
+      
+      .pin-column {
+        width: 50px;
+      }
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="game-container">
+    <h1>🔓 LOCKPICKING CHALLENGE 🔓</h1>
+    
+    <div class="instructions">
+      Click the pins at the right moment to set them in place.<br>
+      <span style="color: #ff00ff;">All pins must be in the sweet spot to unlock!</span>
+    </div>
+    
+    <!-- Difficulty Selection -->
+    <div class="difficulty-selector">
+      <button class="difficulty-btn easy" onclick="setDifficulty('easy')">EASY (3 Pins)</button>
+      <button class="difficulty-btn medium active" onclick="setDifficulty('medium')">MEDIUM (4 Pins)</button>
+      <button class="difficulty-btn hard" onclick="setDifficulty('hard')">HARD (5 Pins)</button>
+    </div>
+    
+    <div class="lock-display">
+      <div class="lock-name" id="lockName">Digital Vault Lock v2.3</div>
+      
+      <!-- Timer -->
+      <div class="timer-display" id="timer">Time: 30s</div>
+      
+      <!-- Pins -->
+      <div class="pins-container" id="pinsContainer">
+        <!-- Pins will be generated by JavaScript -->
+      </div>
+      
+      <!-- Tension Display -->
+      <div class="tension-display">
+        <div style="color: #ffea3e; margin-bottom: 10px;">Tension Applied</div>
+        <div class="tension-bar">
+          <div class="tension-level" id="tensionLevel"></div>
+          <div class="tension-indicator"></div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Controls -->
+    <div class="controls">
+      <button class="control-btn back-btn" onclick="window.location.href='crew.html'">← Back to Crew</button>
+      <button class="control-btn pick-btn" onclick="startPicking()" id="startBtn">Start Picking</button>
+      <button class="control-btn reset-btn" onclick="resetLock()">Reset Lock</button>
+    </div>
+  </div>
+  
+  <!-- Success/Failure Overlay -->
+  <div class="message-overlay" id="messageOverlay">
+    <div class="message-box" id="messageBox">
+      <div class="message-title" id="messageTitle"></div>
+      <div class="message-text" id="messageText"></div>
+      <button class="control-btn pick-btn" onclick="hideMessage()">Try Again</button>
+    </div>
+  </div>
+  
+  <script>
+    // Game Variables
+    let difficulty = 'medium';
+    let numPins = 4;
+    let pins = [];
+    let isPlaying = false;
+    let timeLeft = 30;
+    let timerInterval = null;
+    let tensionLevel = 50;
+    let successfulPicks = 0;
+    
+    // Lock types for variety
+    const lockTypes = [
+      "Digital Vault Lock v2.3",
+      "Syndicate Security System",
+      "Don's Personal Safe",
+      "Sewer Gate Mechanism",
+      "Ancient Relic Chamber"
+    ];
+    
+    // Initialize the game
+    function init() {
+      generatePins();
+      updateLockName();
+      checkInventory();
+    }
+    
+    // Check if player has lockpick in inventory
+    function checkInventory() {
+      const rentals = JSON.parse(localStorage.getItem('muskrat_rentals') || '[]');
+      const hasLockpick = rentals.some(rental => 
+        rental.items && rental.items.some(item => 
+          item.name && item.name.toLowerCase().includes('lock pick')
+        )
+      );
+      
+      if (!hasLockpick) {
+        document.getElementById('messageTitle').textContent = '🔒 LOCKPICK REQUIRED';
+        document.getElementById('messageText').innerHTML = 
+          'You need a Lock Pick Set from the Duffle Bag vault to attempt this!<br><br>' +
+          '<a href="vault5.html" style="color: #00ffff;">Visit Vault 5 to rent one</a>';
+        document.getElementById('messageBox').classList.add('failure');
+        document.getElementById('messageOverlay').classList.add('show');
+      }
+    }
+    
+    // Set difficulty
+    function setDifficulty(level) {
+      difficulty = level;
+      document.querySelectorAll('.difficulty-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      switch(level) {
+        case 'easy':
+          numPins = 3;
+          timeLeft = 45;
+          break;
+        case 'medium':
+          numPins = 4;
+          timeLeft = 30;
+          break;
+        case 'hard':
+          numPins = 5;
+          timeLeft = 20;
+          break;
+      }
+      
+      resetLock();
+    }
+    
+    // Generate pins
+    function generatePins() {
+      const container = document.getElementById('pinsContainer');
+      container.innerHTML = '';
+      pins = [];
+      
+      for (let i = 0; i < numPins; i++) {
+        const pinColumn = document.createElement('div');
+        pinColumn.className = 'pin-column';
+        
+        const sweetSpot = document.createElement('div');
+        sweetSpot.className = 'sweet-spot';
+        
+        const pin = document.createElement('div');
+        pin.className = 'pin';
+        pin.id = `pin-${i}`;
+        pin.style.bottom = '0px';
+        pin.dataset.index = i;
+        pin.dataset.set = 'false';
+        pin.dataset.targetPos = Math.random() * 60 + 70; // Random sweet spot position
+        
+        // Skill check indicator
+        const skillCheck = document.createElement('div');
+        skillCheck.className = 'skill-check';
+        skillCheck.textContent = 'PERFECT!';
+        
+        pinColumn.appendChild(sweetSpot);
+        pinColumn.appendChild(pin);
+        pinColumn.appendChild(skillCheck);
+        
+        pin.onclick = () => attemptSetPin(i);
+        
+        container.appendChild(pinColumn);
+        pins.push({
+          element: pin,
+          isSet: false,
+          position: 0,
+          targetPosition: parseFloat(pin.dataset.targetPos),
+          speed: 2 + Math.random() * 2 // Variable speed for each pin
+        });
+      }
+    }
+    
+    // Start the picking process
+    function startPicking() {
+      if (isPlaying) return;
+      
+      isPlaying = true;
+      successfulPicks = 0;
+      document.getElementById('startBtn').disabled = true;
+      
+      // Start timer
+      startTimer();
+      
+      // Start pin movement
+      animatePins();
+      
+      // Start tension animation
+      animateTension();
+    }
+    
+    // Animate pins up and down
+    function animatePins() {
+      if (!isPlaying) return;
+      
+      pins.forEach((pin, index) => {
+        if (!pin.isSet) {
+          // Oscillate the pin
+          pin.position += pin.speed;
+          if (pin.position > 160 || pin.position < 0) {
+            pin.speed = -pin.speed;
+            pin.position = Math.max(0, Math.min(160, pin.position));
+          }
+          pin.element.style.bottom = `${pin.position}px`;
+        }
+      });
+      
+      requestAnimationFrame(animatePins);
+    }
+    
+    // Attempt to set a pin
+    function attemptSetPin(index) {
+      if (!isPlaying || pins[index].isSet) return;
+      
+      const pin = pins[index];
+      const currentPos = pin.position;
+      const targetPos = pin.targetPosition;
+      const tolerance = difficulty === 'easy' ? 20 : difficulty === 'medium' ? 15 : 10;
+      
+      if (Math.abs(currentPos - targetPos) <= tolerance) {
+        // Success!
+        pin.isSet = true;
+        pin.element.classList.add('set');
+        successfulPicks++;
+        
+        // Show skill check
+        const skillCheck = pin.element.parentElement.querySelector('.skill-check');
+        skillCheck.classList.add('show');
+        setTimeout(() => skillCheck.classList.remove('show'), 1000);
+        
+        // Check if all pins are set
+        if (successfulPicks === numPins) {
+          lockPicked();
+        }
+      } else {
+        // Failed - reset this pin
+        pin.position = 0;
+        pin.speed = Math.abs(pin.speed) * 1.2; // Increase speed on failure
+        
+        // Flash red
+        pin.element.style.background = 'linear-gradient(135deg, #ff0000, #ff000080)';
+        setTimeout(() => {
+          pin.element.style.background = 'linear-gradient(135deg, #ff00ff, #ff00ff80)';
+        }, 500);
+        
+        // Reduce time as penalty
+        timeLeft = Math.max(0, timeLeft - 2);
+      }
+    }
+    
+    // Animate tension bar
+    function animateTension() {
+      if (!isPlaying) return;
+      
+      tensionLevel = 50 + Math.sin(Date.now() / 1000) * 30;
+      document.getElementById('tensionLevel').style.width = `${tensionLevel}%`;
+      
+      requestAnimationFrame(animateTension);
+    }
+    
+    // Timer function
+    function startTimer() {
+      const timerDisplay = document.getElementById('timer');
+      
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        timerDisplay.textContent = `Time: ${timeLeft}s`;
+        
+        if (timeLeft <= 10) {
+          timerDisplay.classList.add('warning');
+        }
+        
+        if (timeLeft <= 0) {
+          lockFailed();
+        }
+      }, 1000);
+    }
+    
+    // Lock successfully picked
+    function lockPicked() {
+      isPlaying = false;
+      clearInterval(timerInterval);
+      
+      // Store success in localStorage
+      const successes = parseInt(localStorage.getItem('locks_picked') || '0');
+      localStorage.setItem('locks_picked', successes + 1);
+      
+      // Show success message
+      document.getElementById('messageTitle').textContent = '🎉 LOCK PICKED!';
+      document.getElementById('messageText').textContent = 
+        `You successfully picked the ${lockTypes[Math.floor(Math.random() * lockTypes.length)]}!
+        Time remaining: ${timeLeft}s
+        Locks picked total: ${successes + 1}`;
+      document.getElementById('messageBox').classList.remove('failure');
+      document.getElementById('messageBox').classList.add('success');
+      document.getElementById('messageOverlay').classList.add('show');
+      
+      // Add reward to inventory
+      const reward = {
+        type: 'loot',
+        item: 'Vault Access Card',
+        timestamp: new Date().toISOString()
+      };
+      const rewards = JSON.parse(localStorage.getItem('lockpick_rewards') || '[]');
+      rewards.push(reward);
+      localStorage.setItem('lockpick_rewards', JSON.stringify(rewards));
+    }
+    
+    // Lock picking failed
+    function lockFailed() {
+      isPlaying = false;
+      clearInterval(timerInterval);
+      
+      document.getElementById('messageTitle').textContent = '💔 LOCK JAMMED!';
+      document.getElementById('messageText').textContent = 
+        'The lock mechanism jammed! The alarm has been triggered!';
+      document.getElementById('messageBox').classList.remove('success');
+      document.getElementById('messageBox').classList.add('failure');
+      document.getElementById('messageOverlay').classList.add('show');
+    }
+    
+    // Reset the lock
+    function resetLock() {
+      isPlaying = false;
+      clearInterval(timerInterval);
+      successfulPicks = 0;
+      
+      // Reset timer based on difficulty
+      switch(difficulty) {
+        case 'easy': timeLeft = 45; break;
+        case 'medium': timeLeft = 30; break;
+        case 'hard': timeLeft = 20; break;
+      }
+      
+      document.getElementById('timer').textContent = `Time: ${timeLeft}s`;
+      document.getElementById('timer').classList.remove('warning');
+      document.getElementById('startBtn').disabled = false;
+      
+      generatePins();
+    }
+    
+    // Hide message overlay
+    function hideMessage() {
+      document.getElementById('messageOverlay').classList.remove('show');
+      resetLock();
+    }
+    
+    // Update lock name randomly
+    function updateLockName() {
+      const lockName = lockTypes[Math.floor(Math.random() * lockTypes.length)];
+      document.getElementById('lockName').textContent = lockName;
+    }
+    
+    // Initialize on load
+    window.onload = init;
+  </script>
+  
+  <!-- Unified Footer -->
+  <script src="unified-footer.js"></script>
+  
+</body>
+</html>

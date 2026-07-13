@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Scroll 1: The Sewer Cipher</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 40px 20px;
+      background: black;
+      color: #00ffff;
+      font-family: 'Courier New', monospace;
+      text-align: center;
+    
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    h1 {
+      font-size: 2.4rem;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px #00ffff;
+    }
+    .scroll-container {
+      max-width: 800px;
+      margin: auto;
+      padding: 30px;
+      border: 2px solid #00ffff;
+      border-radius: 12px;
+      background-color: rgba(0, 255, 255, 0.05);
+      box-shadow: 0 0 15px #00ffff50;
+      text-align: left;
+    }
+    .scroll-container p {
+      font-size: 1rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .glyph {
+      font-family: monospace;
+      color: #ffffffb0;
+      font-size: 1.1rem;
+      margin-top: 10px;
+    }
+    .nav {
+      margin-top: 40px;
+    }
+    .nav a {
+      color: #00ffff;
+      text-decoration: none;
+      border: 1px solid #00ffff;
+      padding: 10px 20px;
+      border-radius: 4px;
+      margin: 0 10px;
+    }
+    .nav a:hover {
+      background-color: #00ffff;
+      color: black;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📜 Scroll 1: The Sewer Cipher</h1>
+
+  <div class="scroll-container">
+    <p>The pipes are not what they seem.</p>
+    <p>Beneath the rune lies the code.</p>
+    <p><strong>WILL FILL</strong> becomes <strong>WIFI</strong> — but only for those who lose the Ls.</p>
+    <p>The 13th glyph is a lie... or a map.</p>
+    <p class="glyph">🧩 Look through the crack in the drain, and the vault may blink back.</p>
+  </div>
+
+  <div class="nav">
+    <a href="codex.html">⬅ Back to Codex</a>
+    <a href="don.html">🧔 The Don</a>
+  </div>
+
+  <div id="footer"></div>
+  <script>
+    fetch("footer.html")
+      .then(res => res.text())
+      .then(html => document.getElementById("footer").innerHTML = html);
+  </script>
+
+
+  <!-- Unified Footer -->
+  <script src="unified-footer.js"></script>
+
+</body>
+</html>
+

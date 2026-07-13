@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MuskRats Lore</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #111;
+      color: #00ffff;
+      font-family: 'Courier New', monospace;
+      min-height: 100vh;
+      width: 100vw;
+      box-sizing: border-box;
+      text-align: center;
+      overflow-x: hidden;
+    }
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 32px 8vw 0 8vw;
+      text-align: center;
+      min-height: 70vh;
+      box-sizing: border-box;
+    }
+    .comic-title {
+      font-size: 2.6rem;
+      text-shadow: 0 0 14px #00ffffcc, 0 0 4px #ff8fff88;
+      margin-bottom: 38px;
+      letter-spacing: 2px;
+      font-family: 'Bangers', 'Impact', 'Courier New', monospace;
+      text-transform: uppercase;
+      text-align: center;
+    }
+    .comic-spread {
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      gap: 4vw;
+      margin-bottom: 44px;
+      position: relative;
+      min-height: 520px;
+      width: 100%;
+      max-width: 1100px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .comic-page {
+      background: #141f25;
+      border-radius: 19px;
+      box-shadow: 0 6px 46px #00ffff44, 0 2px 30px #ff00ff44 inset;
+      flex: 1 1 0;
+      padding: 34px 18px 24px 18px;
+      min-width: 300px;
+      display: flex;
+      flex-direction: column;
+      gap: 26px;
+      position: relative;
+      border: 2.5px solid #00ffff66;
+      box-sizing: border-box;
+      align-items: center;
+    }
+    .comic-gutter {
+      width: 36px;
+      background: linear-gradient(180deg, #1a2332 80%, #222b 100%);
+      box-shadow: 0 0 16px #00ffff44, 0 0 6px #ff00ff55;
+      border-radius: 12px;
+      margin: 0 2vw;
+      position: relative;
+      z-index: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 36px;
+    }
+    .panel {
+      background: #171e26;
+      border-radius: 12px;
+      border: 2px solid #00ffff44;
+      box-shadow: 0 2px 18px #00ffff22 inset;
+      padding: 18px 18px 14px 18px;
+      margin-bottom: 0;
+      text-align: left;
+      min-height: 128px;
+      position: relative;
+      width: 100%;
+      box-sizing: border-box;
+      max-width: 390px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .panel h2 {
+      font-size: 1.23rem;
+      color: #00ffff;
+      margin: 0 0 10px 0;
+      text-shadow: 0 0 6px #00ffff88;
+      border-bottom: 1px solid #00ffff33;
+      padding-bottom: 4px;
+    }
+    .panel p {
+      font-size: 1.05rem;
+      line-height: 1.7;
+      margin: 0;
+      color: #f1ffff;
+      text-shadow: 0 0 4px #222b;
+    }
+    .panel .don-link {
+      color: #ff8fff;
+      font-weight: bold;
+      text-shadow: 0 0 8px #ff00ff99;
+      cursor: pointer;
+      transition: color 0.15s;
+    }
+    .panel .don-link:hover { color: #fff; text-shadow: 0 0 14px #ff8fff; }
+    .back-link {
+      display: block;
+      margin-top: 28px;
+      color: #00ffff;
+      text-decoration: none;
+      text-align: center;
+      font-size: 1.07rem;
+      margin-bottom: 8px;
+    }
+    /* Footer Styles (unchanged) */
+        /* Footer styles removed - using unified footer */
+    
+    
+    
+    
+    
+    
+    .copyright { width: 100vw; background: rgba(5,5,10,0.95); color: #00ffff; text-align: center; padding: 8px 0; position: fixed; bottom: 0; left: 0; right: 0; font-size: 0.9rem; z-index: 3999; border-top: 1px solid #00ffff22;}
+    @media (max-width: 1100px) {
+      .container { padding: 26px 2vw 0 2vw; }
+      .comic-spread {
+        flex-direction: column;
+        gap: 24px;
+        min-height: unset;
+        max-width: 98vw;
+      }
+      .comic-gutter { display: none; }
+      .comic-page { margin-bottom: 14px; }
+    }
+    @media (max-width:650px) {
+      .container { padding: 8px 0 0 0; }
+      .comic-title { font-size: 1.3rem; }
+      .comic-spread { gap: 12px; }
+      .comic-page { padding: 10px 4px 10px 4px; border-radius: 10px; min-width: 0; }
+      .panel { border-radius: 7px; padding: 11px 7px 8px 9px; max-width: 98vw; }
+      .muskrats-footer {
+        flex-direction: column !important;
+        gap: 10px 0 !important;
+        padding: 22px 0 8px 0 !important;
+      }
+      
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="comic-title">The Lore of MuskRats.io — Sewer Prophecy</div>
+    <div class="comic-spread">
+      <div class="comic-page">
+        <div class="panel">
+          <h2>📜 Origins of the Sewer</h2>
+          <p>Deep beneath the city, far from the algorithmic gaze of the surface world, lies the OpenSewer. A glitch in the grid. A sanctuary for those born from chaos. This is where the MuskRats emerged—creatures of satire, survival, and subversion.</p>
+        </div>
+        <div class="panel">
+          <h2>🧬 The Glyphborn & Bloodborn</h2>
+          <p>The Glyphborn trace their ancestry to the first glitch—a burst of corrupted code that cracked the Treasury’s firewalls. In contrast, the Bloodborn are forged from sacrificial lore and ancient sewer rites. One born from digital decay, the other from ritual mutation.</p>
+        </div>
+      </div>
+      <div class="comic-gutter"></div>
+      <div class="comic-page">
+        <div class="panel">
+          <h2>🧔 The Don’s Rise</h2>
+          <p>
+            Once a sewer thief, The Don witnessed the BloodMoon Sacrifice and was marked by a Rune. That Rune, hung around his neck, transformed him from a gutter ghost into the ruler of the underground. He formed The F.A.M.—the Financial Ascent Mob—to protect the prophecy.<br><br>
+            <a href="don.html" class="don-link">Read The Don’s full origin story &rarr;</a>
+          </p>
+        </div>
+        <div class="panel">
+          <h2>🌀 Codex & Prophecy</h2>
+          <p>The Codex Scrolls document events yet to come. They whisper riddles, reveal vaults, and grant access to bounties. The MuskRats follow the prophecy: "From the sewer to the stars… till the cheese drips off these walls."</p>
+        </div>
+      </div>
+    </div>
+    <a class="back-link" href="poster.html">⬅ Back to Sewer Alley</a>
+  </div>
+  <!-- BEGIN: MUSKRATS FOOTER -->
+      
+  <div class="copyright">MuskRats © 2025. All rights reserved.</div>
+  <!-- END: MUSKRATS FOOTER -->
+
+  <!-- Unified Footer -->
+  <script src="unified-footer.js"></script>
+
+</body>
+</html>
+

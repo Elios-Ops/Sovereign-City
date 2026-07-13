@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MuskRat AI Assistant</title>
+  <style>
+    /* Chat Widget Styles */
+    .chat-widget {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 10000;
+      font-family: 'Courier New', monospace;
+    }
+    
+    .chat-toggle {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #00ffff, #ff00ff);
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0, 255, 255, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    
+    .chat-toggle:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 30px rgba(255, 0, 255, 0.7);
+    }
+    
+    .chat-toggle.active {
+      background: linear-gradient(135deg, #ff00ff, #ffea3e);
+    }
+    
+    .chat-icon {
+      font-size: 30px;
+    }
+    
+    .chat-container {
+      display: none;
+      position: fixed;
+      bottom: 90px;
+      right: 20px;
+      width: 380px;
+      height: 600px;
+      background: rgba(10, 10, 20, 0.98);
+      border: 2px solid #00ffff;
+      border-radius: 20px;
+      box-shadow: 0 0 40px rgba(0, 255, 255, 0.4);
+      overflow: hidden;
+      animation: slideUp 0.3s ease;
+    }
+    
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .chat-container.active {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .chat-header {
+      background: linear-gradient(90deg, #00ffff, #ff00ff);
+      padding: 15px;
+      color: #000;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .chat-title {
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .chat-close {
+      background: none;
+      border: none;
+      color: #000;
+      font-size: 24px;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    
+    .chat-close:hover {
+      transform: rotate(90deg);
+    }
+    
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.5);
+    }
+    
+    .message {
+      margin-bottom: 15px;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .message.user {
+      text-align: right;
+    }
+    
+    .message.bot {
+      text-align: left;
+    }
+    
+    .message-bubble {
+      display: inline-block;
+      max-width: 80%;
+      padding: 10px 15px;
+      border-radius: 15px;
+      word-wrap: break-word;
+    }
+    
+    .user .message-bubble {
+      background: linear-gradient(135deg, #00ffff, #00ff00);
+      color: #000;
+      border-bottom-right-radius: 5px;
+    }
+    
+    .bot .message-bubble {
+      background: rgba(255, 0, 255, 0.2);
+      color: #00ffff;
+      border: 1px solid #ff00ff;
+      border-bottom-left-radius: 5px;
+    }
+    
+    .typing-indicator {
+      display: none;
+      padding: 10px 15px;
+      background: rgba(255, 0, 255, 0.1);
+      border-radius: 15px;
+      border: 1px solid #ff00ff;
+      margin-bottom: 10px;
+      width: fit-content;
+    }
+    
+    .typing-indicator.active {
+      display: inline-block;
+    }
+    
+    .typing-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #00ffff;
+      margin: 0 2px;
+      animation: typing 1.4s infinite;
+    }
+    
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+    
+    @keyframes typing {
+      0%, 60%, 100% {
+        transform: translateY(0);
+        opacity: 0.7;
+      }
+      30% {
+        transform: translateY(-10px);
+        opacity: 1;
+      }
+    }
+    
+    .chat-input-container {
+      padding: 15px;
+      background: rgba(0, 0, 0, 0.8);
+      border-top: 1px solid #00ffff;
+      display: flex;
+      gap: 10px;
+    }
+    
+    .chat-input {
+      flex: 1;
+      padding: 10px;
+      background: rgba(0, 255, 255, 0.05);
+      border: 1px solid #00ffff;
+      border-radius: 25px;
+      color: #00ffff;
+      font-family: inherit;
+      font-size: 14px;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+    
+    .chat-input:focus {
+      background: rgba(0, 255, 255, 0.1);
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+    }
+    
+    .chat-send {
+      padding: 10px 20px;
+      background: linear-gradient(90deg, #00ffff, #ff00ff);
+      color: #000;
+      border: none;
+      border-radius: 25px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .chat-send:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 20px rgba(255, 0, 255, 0.5);
+    }
+    
+    .quick-actions {
+      padding: 10px;
+      background: rgba(0, 0, 0, 0.5);
+      border-top: 1px solid rgba(0, 255, 255, 0.3);
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    
+    .quick-btn {
+      padding: 5px 10px;
+      background: rgba(255, 234, 62, 0.1);
+      border: 1px solid #ffea3e;
+      border-radius: 15px;
+      color: #ffea3e;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .quick-btn:hover {
+      background: rgba(255, 234, 62, 0.3);
+      transform: scale(1.05);
+    }
+    
+    @media (max-width: 768px) {
+      .chat-container {
+        width: calc(100vw - 40px);
+        height: calc(100vh - 150px);
+        right: 20px;
+        left: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  
+  <!-- Chat Widget -->
+  <div class="chat-widget">
+    <button class="chat-toggle" id="chatToggle" onclick="toggleChat()">
+      <span class="chat-icon">🤖</span>
+    </button>
+    
+    <div class="chat-container" id="chatContainer">
+      <div class="chat-header">
+        <div class="chat-title">
+          <span>🐀</span>
+          <span>MuskRat Assistant</span>
+        </div>
+        <button class="chat-close" onclick="toggleChat()">×</button>
+      </div>
+      
+      <div class="chat-messages" id="chatMessages">
+        <div class="message bot">
+          <div class="message-bubble">
+            Welcome to the sewers! 🐀 I'm your MuskRat AI assistant. I can help you navigate the ecosystem, explain the vaults, guide you through minting, or answer questions about the F.A.M. Card system. What would you like to know?
+          </div>
+        </div>
+      </div>
+      
+      <div class="typing-indicator" id="typingIndicator">
+        <span class="typing-dot"></span>
+        <span class="typing-dot"></span>
+        <span class="typing-dot"></span>
+      </div>
+      
+      <div class="quick-actions">
+        <button class="quick-btn" onclick="sendQuickMessage('How do I mint?')">How to Mint</button>
+        <button class="quick-btn" onclick="sendQuickMessage('What is FAM Card?')">FAM Card</button>
+        <button class="quick-btn" onclick="sendQuickMessage('Explain vaults')">Vaults</button>
+        <button class="quick-btn" onclick="sendQuickMessage('Tokenomics')">Tokenomics</button>
+        <button class="quick-btn" onclick="sendQuickMessage('Roadmap')">Roadmap</button>
+      </div>
+      
+      <div class="chat-input-container">
+        <input 
+          type="text" 
+          class="chat-input" 
+          id="chatInput" 
+          placeholder="Ask me anything about MuskRats..."
+          onkeypress="handleKeyPress(event)"
+        />
+        <button class="chat-send" onclick="sendMessage()">Send</button>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Knowledge Base - Add all MuskRats info here
+    const knowledgeBase = {
+      minting: {
+        keywords: ['mint', 'how to mint', 'minting', 'buy', 'purchase', 'get nft'],
+        response: `To mint MuskRats NFTs:
+        
+1. **Connect Wallet** - Use MetaMask or any Web3 wallet
+2. **Choose Your NFT**:
+   • MuskRats NFT: 0.033 ETH (WL: 0.028 ETH)
+   • F.A.M. Card: 0.13-0.15 ETH
+   • Crew Members: 0.042 ETH
+3. **Select Quantity** - Single or bundle packs available
+4. **Confirm Transaction** - Approve in your wallet
+5. **Receive NFT** - Appears in your wallet
+
+💡 Pro tip: Join whitelist for discounted prices!`
+      },
+      
+      famCard: {
+        keywords: ['fam card', 'f.a.m', 'family card', 'what is fam'],
+        response: `The F.A.M. Card is your elite membership to the MuskRats ecosystem:
+
+🎯 **Features:**
+• 33 Crew Member slots
+• Vault access privileges
+• Job board participation
+• Leaderboard placement
+• Enhanced rewards
+
+💰 **Price:** 0.13-0.15 ETH
+📊 **Supply:** 1,111 total
+
+The F.A.M. Card is essential for serious players wanting to maximize earnings and access exclusive content. "You're not family until you hold the card!"`
+      },
+      
+      vaults: {
+        keywords: ['vault', 'vaults', 'what are vaults', 'rental'],
+        response: `MuskRats has 6 unique vaults for rentals:
+
+🏦 **Available Vaults:**
+1. **Vault 1** - Ancient Relics (Strategy boosts)
+2. **Vault 2** - Bloodborn Collection (Exclusive NFTs)
+3. **Vault 3** - DGX Spark-Brain (AI-enhanced rats)
+4. **Vault 4** - Glitchborn Series (Rare variants)
+5. **Vault 5** - Duffle Bag Items (Tools & gear)
+6. **Vault 6** - Getaway Vehicles (Transport options)
+
+💸 **Rental Prices:**
+• 0.01 ETH or 500 $MUSKRAT per item
+• 7-day rental period
+• Auto-returns after expiration`
+      },
+      
+      tokenomics: {
+        keywords: ['tokenomics', 'token', '$muskrat', 'coin', 'supply'],
+        response: `$MUSKRAT Token Economics:
+
+📊 **Supply:** 1 Billion total
+🔥 **Distribution:**
+• 40% - Community rewards
+• 20% - Liquidity pool
+• 15% - Team (vested)
+• 15% - Marketing
+• 10% - Reserve
+
+💰 **Utility:**
+• Vault rentals
+• Marketplace transactions
+• Governance voting
+• Staking rewards
+• Exclusive access
+
+The token powers the entire ecosystem!`
+      },
+      
+      crew: {
+        keywords: ['crew', 'crew members', 'ranks', 'hierarchy'],
+        response: `MuskRats Crew Hierarchy:
+
+👑 **Boss** (1 slot) - Ultimate authority
+🎖️ **Underboss** (2 slots) - Second in command
+💼 **Made Man** (2 slots) - Trusted lieutenants
+🔧 **Handler** (4 slots) - Operations managers
+⚡ **Contractor** (8 slots) - Skilled specialists
+🐀 **Associate** (16 slots) - Entry level
+
+Each rank provides different benefits and earning potential. Fill your F.A.M. Card with 33 crew members to unlock the Signet Ring!`
+      },
+      
+      roadmap: {
+        keywords: ['roadmap', 'future', 'plans', 'what next', 'upcoming'],
+        response: `MuskRats Roadmap:
+
+**Q1 2025:**
+✅ Website launch
+✅ NFT minting begins
+⏳ $MUSKRAT token launch
+
+**Q2 2025:**
+• Marketplace v2
+• Staking platform
+• Mobile app
+
+**Q3 2025:**
+• P2E game launch
+• DAO governance
+• Cross-chain bridge
+
+**Q4 2025:**
+• Metaverse integration
+• Major partnerships
+• Global expansion
+
+The sewer is expanding! 🚀`
+      },
+      
+      jobs: {
+        keywords: ['job', 'jobs', 'missions', 'earn', 'rewards'],
+        response: `Don's Job Board System:
+
+💼 **How Jobs Work:**
+1. Hold required NFTs/items
+2. Accept job offers
+3. Complete missions
+4. Earn ETH rewards
+
+🎯 **Job Types:**
+• Heists - High risk, high reward
+• Deliveries - Quick steady income
+• Protection - Defensive missions
+• Intel - Information gathering
+
+💰 **Rewards:** 0.001 - 0.5 ETH per job
+⚡ **Boost:** Use relics & gear for better payouts!`
+      },
+      
+      help: {
+        keywords: ['help', 'guide', 'tutorial', 'how to start', 'beginner'],
+        response: `Welcome to MuskRats! Here's how to get started:
+
+**Step 1:** Visit the Mint page
+**Step 2:** Connect your Web3 wallet
+**Step 3:** Mint your first MuskRat NFT
+**Step 4:** Explore the vaults for rentals
+**Step 5:** Get a F.A.M. Card for full access
+**Step 6:** Build your crew
+**Step 7:** Take on jobs for rewards
+
+Need specific help? Ask me about:
+• Minting process
+• F.A.M. Card benefits
+• Vault rentals
+• Tokenomics
+• Crew building`
+      }
+    };
+    
+    // Chat functionality
+    let chatOpen = false;
+    
+    function toggleChat() {
+      chatOpen = !chatOpen;
+      const container = document.getElementById('chatContainer');
+      const toggle = document.getElementById('chatToggle');
+      
+      if (chatOpen) {
+        container.classList.add('active');
+        toggle.classList.add('active');
+        document.getElementById('chatInput').focus();
+      } else {
+        container.classList.remove('active');
+        toggle.classList.remove('active');
+      }
+    }
+    
+    function sendMessage() {
+      const input = document.getElementById('chatInput');
+      const message = input.value.trim();
+      
+      if (!message) return;
+      
+      // Add user message
+      addMessage(message, 'user');
+      input.value = '';
+      
+      // Show typing indicator
+      showTyping();
+      
+      // Process and respond
+      setTimeout(() => {
+        const response = processMessage(message);
+        hideTyping();
+        addMessage(response, 'bot');
+      }, 1000 + Math.random() * 1000);
+    }
+    
+    function sendQuickMessage(message) {
+      document.getElementById('chatInput').value = message;
+      sendMessage();
+    }
+    
+    function processMessage(message) {
+      const lowerMessage = message.toLowerCase();
+      
+      // Check knowledge base
+      for (const topic in knowledgeBase) {
+        const { keywords, response } = knowledgeBase[topic];
+        for (const keyword of keywords) {
+          if (lowerMessage.includes(keyword)) {
+            return response;
+          }
+        }
+      }
+      
+      // Default responses for common queries
+      if (lowerMessage.includes('hello') || lowerMessage.includes('hi')) {
+        return "Welcome to the sewers, friend! 🐀 How can I assist you today? Feel free to ask about minting, vaults, the F.A.M. Card, or anything else about MuskRats!";
+      }
+      
+      if (lowerMessage.includes('price') || lowerMessage.includes('cost')) {
+        return `Current MuskRats prices:
+        
+• **MuskRats NFT:** 0.033 ETH (0.028 WL)
+• **F.A.M. Card:** 0.13-0.15 ETH
+• **Crew Members:** 0.042 ETH
+• **Vault Rentals:** 0.01 ETH / 500 $MUSKRAT
+
+Need help with minting? Just ask!`;
+      }
+      
+      if (lowerMessage.includes('discord') || lowerMessage.includes('twitter') || lowerMessage.includes('social')) {
+        return "Join our community! Find our social links in the Contact section of the website. The sewers are more fun with friends! 🐀";
+      }
+      
+      // Fallback response
+      return `I'm not sure about that specific topic, but I can help you with:
+
+• **Minting** - How to get your NFTs
+• **F.A.M. Card** - Elite membership benefits
+• **Vaults** - Rental system explained
+• **Crew** - Building your team
+• **Jobs** - Earning rewards
+• **Tokenomics** - $MUSKRAT details
+
+What would you like to know more about?`;
+    }
+    
+    function addMessage(text, sender) {
+      const messagesContainer = document.getElementById('chatMessages');
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `message ${sender}`;
+      
+      const bubble = document.createElement('div');
+      bubble.className = 'message-bubble';
+      bubble.textContent = text;
+      
+      messageDiv.appendChild(bubble);
+      messagesContainer.appendChild(messageDiv);
+      
+      // Scroll to bottom
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+    
+    function showTyping() {
+      document.getElementById('typingIndicator').classList.add('active');
+    }
+    
+    function hideTyping() {
+      document.getElementById('typingIndicator').classList.remove('active');
+    }
+    
+    function handleKeyPress(event) {
+      if (event.key === 'Enter') {
+        sendMessage();
+      }
+    }
+    
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Optional: Auto-open after delay
+      setTimeout(() => {
+        // Uncomment to auto-open
+        // toggleChat();
+      }, 3000);
+    });
+  </script>
+  
+</body>
+</html>

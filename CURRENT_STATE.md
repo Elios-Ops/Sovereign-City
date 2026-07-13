@@ -16,7 +16,7 @@ Restore and reconnect the Sovereign City ecosystem from the canonical recovered 
 
 ## Current Applications
 
-- **Muskrats.io** — source selected (`AI_APP/muskrats-io/`), promoted to `apps/muskrats/`. Entry point verified to serve and render (`index.html`, 200 OK). "ENTER THE SEWER" → `poster.html` navigation now verified **end-to-end** (both files present, both HTTP 200, byte-exact). Import is still **partial**: roughly 14 of ~60 site pages transferred so far (see `docs/recovery/MUSKRATS_LOCAL_VERIFICATION.md`); the rest is a documented follow-up, not invented.
+- **Muskrats.io** — source selected (`AI_APP/muskrats-io/`), promoted to `apps/muskrats/`. **Import complete and committed** — 44 HTML pages, 195 files (~981 MB). Entry point, "ENTER THE SEWER" → `poster.html`, and all 30 verified routes (including clean URLs) return HTTP 200 locally. Tagged `muskrats-recovery-baseline`. Two pre-existing canonical gaps remain (`mint.html` → `styles.css`, `images/favicon.png`). Full detail in `docs/recovery/MUSKRATS_LOCAL_VERIFICATION.md`.
 - **Historical Ledger AI / future Gus** — source selected (`AI_APP/ledger-ai-v1-v2-integrated/`), promoted to `apps/gus/`. **Fully imported and verified locally** (200 OK, byte-exact). Outbound navigation to Muskrats.io/The Sewer and to the Infinite Agentic Loop dashboard confirmed by grepping the actual served HTML. Four background images (1-6MB each) were not transferred and are logged in `apps/gus/NOT_IMPORTED_ASSETS.md`.
 - **Ledger AI V2 (backend/services)** — a distinct source tree (`AI_APP/ledger-ai-v2/`) houses the Agent Router, Production Orchestrator, LLM Router, and Infinite Agentic Loop engine referenced by Directive 002. Partially imported into `source/canonical/` only; not promoted to `apps/` yet.
 - **F.A.M.** — source selected (`AI_APP/fam-card-viewer/`), promoted to `apps/fam/`. **Fully imported and verified locally** — all 17 known source files present, entry point and every referenced JS/CSS/JSON asset returns HTTP 200. Confirmed outbound navigation to Muskrats.io marketplace/mint/syndicate pages. See `docs/recovery/FAM_LOCAL_VERIFICATION.md`.
@@ -29,7 +29,7 @@ Restore and reconnect the Sovereign City ecosystem from the canonical recovered 
 - `apps/gus/` (Ledger AI / Gus) runs locally as a static site and its outbound navigation to Muskrats.io and the Infinite Agentic Loop dashboard is confirmed in source.
 - `apps/fam/` (F.A.M.) runs locally as a static site with all assets resolving; outbound navigation to Muskrats.io confirmed.
 - `apps/infinite-agentic-loop/` runs locally as a static site (all files byte-exact); confirmed as the same deployed identity Gus links to.
-- `apps/muskrats/` entry point and "ENTER THE SEWER" destination both run locally and are confirmed end-to-end; most of the rest of the site (~18/60 pages so far) is still pending import.
+- `apps/muskrats/` fully imported, verified locally (30/30 routes HTTP 200), and committed at tag `muskrats-recovery-baseline`.
 - Repository foundation (structure, canon, registries, ADR-0001, verification scripts) is established, committed, and pushed to `claude/sovereign-city-foundation-t3b452`.
 
 ## Active Work
@@ -45,7 +45,7 @@ Restore and reconnect the Sovereign City ecosystem from the canonical recovered 
 
 ## Immediate Next Action
 
-Finish importing the remaining ~42 Muskrats.io pages/assets (the only application left with an incomplete import) from Drive folder `1NVtcstE4yoTcmFiac2hV5Kh1px4CVsWf` (see `docs/recovery/CANONICAL_SOURCE_MAP.md` for the full mechanism and safety rules, already established and repeatable). Then extend the connection registry to cover the remainder of Muskrats.io's internal navigation.
+Review `docs/recovery/MUSKRATS_RECONNECT_PLAN.md` and approve the ecosystem reconnection pass (Netlify → local architecture). No route changes have been applied yet.
 
 ## Blockers
 

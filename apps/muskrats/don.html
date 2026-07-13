@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>The Don: BloodMoon Origins</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #111;
+      color: #00ffff;
+      font-family: 'Oxanium', 'Courier New', monospace;
+      text-align: center;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+    .comic-title {
+      font-size: 2.3rem;
+      text-shadow: 0 0 14px #00ffffcc, 0 0 4px #ff8fff88;
+      margin: 48px 0 38px 0;
+      letter-spacing: 2px;
+      font-family: 'Bangers', 'Impact', 'Oxanium', 'Courier New', monospace;
+      text-transform: uppercase;
+    }
+    .comic-spread-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      width: 100vw;
+      min-height: 80vh;
+      box-sizing: border-box;
+    }
+    .comic-spread {
+      width: 92vw;
+      max-width: 1320px;
+      min-width: 310px;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: stretch;
+      gap: 0;
+      background: linear-gradient(90deg, #191c23 0%, #151b22 100%);
+      border-radius: 26px;
+      box-shadow: 0 0 90px #00ffff33, 0 6px 60px #ff00ff24 inset;
+      position: relative;
+      overflow: hidden;
+      border: 3px solid #00ffff55;
+    }
+    .comic-page {
+      flex: 1 1 0;
+      padding: 38px 24px 32px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      background: transparent;
+      min-width: 0;
+      box-sizing: border-box;
+      z-index: 1;
+    }
+    .comic-gutter {
+      width: 44px;
+      background: linear-gradient(180deg, #232a3a 80%, #222b 100%);
+      border-left: 2px solid #00ffff55;
+      border-right: 2px solid #ff00ff55;
+      box-shadow: 0 0 16px #00ffff44, 0 0 6px #ff00ff44;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .gutter-label {
+      color: #ff00ffbb;
+      font-size: 1.9rem;
+      font-family: 'Bangers', 'Impact', 'Oxanium', monospace;
+      letter-spacing: 1.7px;
+      text-shadow: 0 0 8px #00ffff, 0 0 3px #ff00ff99;
+      transform: rotate(-12deg);
+      pointer-events: none;
+      opacity: 0.38;
+    }
+    .panel {
+      background: #171e26;
+      border-radius: 13px;
+      border: 2px solid #00ffff44;
+      box-shadow: 0 2px 18px #00ffff22 inset;
+      padding: 15px 16px 13px 16px;
+      text-align: left;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .panel img {
+      width: 100%;
+      max-width: 370px;
+      display: block;
+      border-radius: 10px;
+      border: 2px solid #00ffff;
+      margin-bottom: 12px;
+      box-shadow: 0 0 12px #00ffff40;
+    }
+    .caption {
+      font-size: 1.08rem;
+      line-height: 1.6;
+      text-align: left;
+      padding: 12px;
+      background-color: rgba(0, 255, 255, 0.08);
+      border-left: 4px solid #00ffff;
+      border-radius: 4px;
+      color: #f1ffff;
+      box-shadow: 0 0 8px #00ffff33;
+      margin-bottom: 0;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .back-link {
+      display: block;
+      margin: 38px auto 0 auto;
+      color: #00ffff;
+      text-decoration: none;
+      font-size: 1.08rem;
+    }
+    /* --- Footer Styles Start --- */
+    /* Footer styles removed - using unified footer */
+    
+    
+    
+    
+    
+    
+    .copyright { width: 100vw; background: rgba(5,5,10,0.95); color: #00ffff; text-align: center; padding: 8px 0; position: fixed; bottom: 0; left: 0; right: 0; font-size: 0.9rem; z-index: 3999; border-top: 1px solid #00ffff22;}
+    @media (max-width: 1200px) {
+      .comic-spread { max-width: 98vw; }
+    }
+    @media (max-width: 950px) {
+      .comic-spread { flex-direction: column; max-width: 97vw; min-width: unset; }
+      .comic-page { width: 100%; min-width: 0; border-radius: 17px; }
+      .comic-gutter { width: 100%; height: 24px; min-height: 24px; min-width: unset; border-left: none; border-right: none; margin: 0 0 12px 0;}
+      .gutter-label { font-size: 1.4rem; transform: none;}
+    }
+    @media (max-width:650px) {
+      body { padding: 16px 0 0 0; }
+      .comic-title { font-size: 1.25rem; margin-top:18px; }
+      .comic-spread-wrapper { min-height: unset; }
+      .comic-spread { box-shadow: none; padding: 0; border-radius: 0; }
+      .comic-page { padding: 8px 2px 6px 2px; border-radius: 8px; gap: 16px;}
+      .panel { border-radius: 6px; padding: 7px 4px 6px 6px; }
+      .caption { font-size: 0.99rem; }
+    }
+    /* --- Footer Styles End --- */
+  </style>
+</head>
+<body>
+
+  <div class="comic-title">The Don: BloodMoon Origins</div>
+  <div class="comic-spread-wrapper">
+    <div class="comic-spread">
+      <!-- LEFT PAGE -->
+      <div class="comic-page">
+        <div class="panel">
+          <img src="images/don_bloodmoon.jpg" alt="The Don as a boy witnessing the BloodMoon Sacrifice">
+          <div class="caption">
+            As a boy, he crept beneath the Mansion. Through a crack in the wall, he saw them — the robed figures. Chanting.
+            The glyphs were red. The moon was low. Something died that night. Something was offered.
+          </div>
+        </div>
+        <div class="panel">
+          <img src="images/don_ritual_site.jpg" alt="The Don returns to the site of the ritual">
+          <div class="caption">
+            He came back alone. The wax had melted. The blood had dried. But the glyphs were still glowing.
+            The echoes had not left. And in the center, it waited.
+          </div>
+        </div>
+      </div>
+      <!-- GUTTER -->
+      <div class="comic-gutter">
+        <span class="gutter-label">// //</span>
+      </div>
+      <!-- RIGHT PAGE -->
+      <div class="comic-page">
+        <div class="panel">
+          <img src="images/don_rune.jpg" alt="The Rune Stone appears on the ritual slab">
+          <div class="caption">
+            A stone. Smooth. Marked. Still warm. The Rune whispered, even in silence. He tied it to a shoelace and made it his.
+          </div>
+        </div>
+        <div class="panel">
+          <img src="images/don_ascension.jpg" alt="The Don fully formed, glyphs glowing as he walks">
+          <div class="caption">
+            He never left the sewers. He learned their rhythm. Their voice. The glyphs react now when he walks past.
+            The Don doesn’t need to speak. The pipes speak for him.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <a class="back-link" href="lore.html">⬅ Back to Lore</a>
+
+  <!-- BEGIN: MUSKRATS FOOTER -->
+    
+  <div class="copyright">MuskRats © 2025. All rights reserved.</div>
+
+
+  <!-- Unified Footer -->
+  <script src="unified-footer.js"></script>
+
+</body>
+</html>

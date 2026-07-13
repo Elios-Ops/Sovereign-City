@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Skills Training Center - MuskRats</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #000000, #0a0a1a, #1a0033);
+      color: #00ffff;
+      font-family: 'Courier New', monospace;
+      min-height: 100vh;
+      padding-bottom: 100px;
+    }
+    
+    /* Animated background */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('images/brick_wall_poster_bg.png') no-repeat center center fixed;
+      background-size: cover;
+      opacity: 0.08;
+      z-index: -1;
+    }
+    
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+    
+    h1 {
+      text-align: center;
+      font-size: 3rem;
+      margin-bottom: 10px;
+      text-shadow: 0 0 30px #ff00ff, 0 0 15px #00ffff;
+      letter-spacing: 3px;
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+    
+    @keyframes glow {
+      from { text-shadow: 0 0 30px #ff00ff, 0 0 15px #00ffff; }
+      to { text-shadow: 0 0 40px #00ffff, 0 0 20px #ff00ff; }
+    }
+    
+    .subtitle {
+      text-align: center;
+      color: #ffea3e;
+      font-size: 1.2rem;
+      margin-bottom: 40px;
+      text-shadow: 0 0 10px #ffea3e;
+    }
+    
+    /* Skills Grid */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 30px;
+      margin-bottom: 50px;
+    }
+    
+    .skill-card {
+      background: rgba(0, 0, 0, 0.8);
+      border: 2px solid #00ffff;
+      border-radius: 15px;
+      padding: 25px;
+      position: relative;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+    }
+    
+    .skill-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 40px rgba(0, 255, 255, 0.4);
+    }
+    
+    .skill-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .skill-name {
+      font-size: 1.5rem;
+      color: #ff00ff;
+      text-shadow: 0 0 10px #ff00ff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .skill-level {
+      background: linear-gradient(90deg, #ffea3e, #ff00ff);
+      color: #000;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+    
+    /* XP Bar */
+    .xp-container {
+      margin-bottom: 20px;
+    }
+    
+    .xp-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+      color: #ffea3e;
+    }
+    
+    .xp-bar {
+      width: 100%;
+      height: 25px;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid #00ffff;
+      border-radius: 15px;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .xp-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #00ffff, #00ff00);
+      transition: width 0.5s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .xp-fill::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      animation: shimmer 2s infinite;
+    }
+    
+    @keyframes shimmer {
+      to { left: 100%; }
+    }
+    
+    /* Skill Stats */
+    .skill-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .stat-item {
+      background: rgba(255, 0, 255, 0.1);
+      padding: 8px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    .stat-label {
+      color: #ff00ff;
+    }
+    
+    .stat-value {
+      color: #00ffff;
+      font-weight: bold;
+    }
+    
+    /* Missions Section */
+    .missions-container {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(0, 255, 255, 0.3);
+    }
+    
+    .missions-header {
+      color: #ffea3e;
+      font-size: 1.2rem;
+      margin-bottom: 15px;
+      text-shadow: 0 0 5px #ffea3e;
+    }
+    
+    .mission-item {
+      background: rgba(0, 255, 255, 0.05);
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .mission-item:hover {
+      background: rgba(0, 255, 255, 0.1);
+      transform: translateX(5px);
+    }
+    
+    .mission-item.completed {
+      opacity: 0.5;
+      border-color: #00ff00;
+    }
+    
+    .mission-info {
+      flex: 1;
+    }
+    
+    .mission-name {
+      color: #00ffff;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    
+    .mission-desc {
+      color: #888;
+      font-size: 0.9rem;
+      margin-bottom: 5px;
+    }
+    
+    .mission-reward {
+      color: #ffea3e;
+      font-size: 0.9rem;
+    }
+    
+    .mission-status {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .mission-progress {
+      color: #ff00ff;
+      font-weight: bold;
+    }
+    
+    .mission-btn {
+      padding: 8px 16px;
+      background: linear-gradient(90deg, #00ffff, #00ff00);
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+    }
+    
+    .mission-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 20px rgba(0, 255, 255, 0.5);
+    }
+    
+    .mission-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    /* Skills Unlock */
+    .skill-locked {
+      opacity: 0.6;
+      position: relative;
+    }
+    
+    .skill-locked::after {
+      content: '🔒 LOCKED';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.9);
+      color: #ff0000;
+      padding: 20px 40px;
+      border: 2px solid #ff0000;
+      border-radius: 10px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-shadow: 0 0 10px #ff0000;
+    }
+    
+    /* Rank Display */
+    .rank-display {
+      text-align: center;
+      margin-bottom: 40px;
+      padding: 20px;
+      background: rgba(255, 0, 255, 0.05);
+      border: 2px solid #ff00ff;
+      border-radius: 15px;
+    }
+    
+    .rank-title {
+      font-size: 1.3rem;
+      color: #ffea3e;
+      margin-bottom: 10px;
+    }
+    
+    .rank-name {
+      font-size: 2rem;
+      color: #ff00ff;
+      text-shadow: 0 0 15px #ff00ff;
+      margin-bottom: 10px;
+    }
+    
+    .rank-progress {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    
+    .rank-star {
+      font-size: 2rem;
+      color: #333;
+      transition: all 0.3s ease;
+    }
+    
+    .rank-star.earned {
+      color: #ffea3e;
+      text-shadow: 0 0 10px #ffea3e;
+      animation: starPulse 1s infinite;
+    }
+    
+    @keyframes starPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+    
+    /* Action Buttons */
+    .action-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 40px;
+      flex-wrap: wrap;
+    }
+    
+    .action-btn {
+      padding: 15px 30px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .btn-back {
+      background: transparent;
+      color: #00ffff;
+      border: 2px solid #00ffff;
+    }
+    
+    .btn-back:hover {
+      background: rgba(0, 255, 255, 0.1);
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+    }
+    
+    .btn-reset {
+      background: transparent;
+      color: #ff0000;
+      border: 2px solid #ff0000;
+    }
+    
+    .btn-reset:hover {
+      background: rgba(255, 0, 0, 0.1);
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+    }
+    
+    @media (max-width: 768px) {
+      .skills-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .skill-stats {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="container">
+    <h1>⚡ SKILLS TRAINING CENTER ⚡</h1>
+    <p class="subtitle">Complete missions to level up your crew's abilities</p>
+    
+    <!-- Rank Display -->
+    <div class="rank-display">
+      <div class="rank-title">Current Rank</div>
+      <div class="rank-name" id="rankName">Street Rat</div>
+      <div class="rank-progress" id="rankStars">
+        <span class="rank-star earned">⭐</span>
+        <span class="rank-star">⭐</span>
+        <span class="rank-star">⭐</span>
+        <span class="rank-star">⭐</span>
+        <span class="rank-star">⭐</span>
+      </div>
+    </div>
+    
+    <!-- Skills Grid -->
+    <div class="skills-grid">
+      
+      <!-- Lockpicking Skill -->
+      <div class="skill-card" id="lockpickSkill">
+        <div class="skill-header">
+          <div class="skill-name">
+            <span>🔓</span>
+            <span>Lockpicking</span>
+          </div>
+          <div class="skill-level">Lv. <span id="lockpickLevel">1</span></div>
+        </div>
+        
+        <div class="xp-container">
+          <div class="xp-label">
+            <span>XP Progress</span>
+            <span id="lockpickXP">0 / 100</span>
+          </div>
+          <div class="xp-bar">
+            <div class="xp-fill" id="lockpickXPBar" style="width: 0%"></div>
+          </div>
+        </div>
+        
+        <div class="skill-stats">
+          <div class="stat-item">
+            <span class="stat-label">Success Rate:</span>
+            <span class="stat-value" id="lockpickSuccess">60%</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Speed Bonus:</span>
+            <span class="stat-value" id="lockpickSpeed">+0s</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Locks Picked:</span>
+            <span class="stat-value" id="lockpickTotal">0</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Best Time:</span>
+            <span class="stat-value" id="lockpickBest">--</span>
+          </div>
+        </div>
+        
+        <div class="missions-container">
+          <div class="missions-header">📋 Available Missions</div>
+          
+          <div class="mission-item" onclick="startMission('lockpick', 'beginner')">
+            <div class="mission-info">
+              <div class="mission-name">Beginner's Lock</div>
+              <div class="mission-desc">Pick 3 easy locks without failing</div>
+              <div class="mission-reward">Reward: +50 XP, +5s time bonus</div>
+            </div>
+            <div class="mission-status">
+              <div class="mission-progress">0/3</div>
+              <button class="mission-btn" onclick="window.location.href='lockpick-game.html'; event.stopPropagation();">START</button>
+            </div>
+          </div>
+          
+          <div class="mission-item" onclick="startMission('lockpick', 'speed')">
+            <div class="mission-info">
+              <div class="mission-name">Speed Challenge</div>
+              <div class="mission-desc">Pick a medium lock in under 15 seconds</div>
+              <div class="mission-reward">Reward: +75 XP, Speed +2s</div>
+            </div>
+            <div class="mission-status">
+              <div class="mission-progress">0/1</div>
+              <button class="mission-btn" onclick="window.location.href='lockpick-game.html'; event.stopPropagation();">START</button>
+            </div>
+          </div>
+          
+          <div class="mission-item" onclick="startMission('lockpick', 'master')">
+            <div class="mission-info">
+              <div class="mission-name">Master Thief</div>
+              <div class="mission-desc">Pick 5 hard locks in a row</div>
+              <div class="mission-reward">Reward: +200 XP, Unlock Silent Pick</div>
+            </div>
+            <div class="mission-status">
+              <div class="mission-progress">0/5</div>
+              <button class="mission-btn" onclick="window.location.href='lockpick-game.html'; event.stopPropagation();">START</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Hotwiring Skill -->
+      <div class="skill-card skill-locked" id="hotwireSkill">
+        <div class="skill-header">
+          <div class="skill-name">
+            <span>🚗</span>
+            <span>Hotwiring</span>
+          </div>
+          <div class="skill-level">Lv. <span id="hotwireLevel">0</span></div>
+        </div>
+        
+        <div class="xp-container">
+          <div class="xp-label">
+            <span>XP Progress</span>
+            <span id="hotwireXP">0 / 100</span>
+          </div>
+          <div class="xp-bar">
+            <div class="xp-fill" id="hotwireXPBar" style="width: 0%"></div>
+          </div>
+        </div>
+        
+        <div class="skill-stats">
+          <div class="stat-item">
+            <span class="stat-label">Success Rate:</span>
+            <span class="stat-value">--</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Speed Bonus:</span>
+            <span class="stat-value">--</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Cars Stolen:</span>
+            <span class="stat-value">0</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Best Time:</span>
+            <span class="stat-value">--</span>
+          </div>
+        </div>
+        
+        <div class="missions-container">
+          <div class="missions-header">📋 Unlock at Rank: Thief</div>
+        </div>
+      </div>
+      
+      <!-- Hacking Skill -->
+      <div class="skill-card skill-locked" id="hackingSkill">
+        <div class="skill-header">
+          <div class="skill-name">
+            <span>💻</span>
+            <span>Hacking</span>
+          </div>
+          <div class="skill-level">Lv. <span id="hackingLevel">0</span></div>
+        </div>
+        
+        <div class="xp-container">
+          <div class="xp-label">
+            <span>XP Progress</span>
+            <span id="hackingXP">0 / 100</span>
+          </div>
+          <div class="xp-bar">
+            <div class="xp-fill" id="hackingXPBar" style="width: 0%"></div>
+          </div>
+        </div>
+        
+        <div class="skill-stats">
+          <div class="stat-item">
+            <span class="stat-label">Success Rate:</span>
+            <span class="stat-value">--</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Speed Bonus:</span>
+            <span class="stat-value">--</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Systems Hacked:</span>
+            <span class="stat-value">0</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Best Time:</span>
+            <span class="stat-value">--</span>
+          </div>
+        </div>
+        
+        <div class="missions-container">
+          <div class="missions-header">📋 Unlock at Rank: Hacker</div>
+        </div>
+      </div>
+      
+      <!-- Combat Skill -->
+      <div class="skill-card skill-locked" id="combatSkill">
+        <div class="skill-header">
+          <div class="skill-name">
+            <span>⚔️</span>
+            <span>Combat</span>
+          </div>
+          <div class="skill-level">Lv. <span id="combatLevel">0</span></div>
+        </div>
+        
+        <div class="xp-container">
+          <div class="xp-label">
+            <span>XP Progress</span>
+            <span id="combatXP">0 / 100</span>
+          </div>
+          <div class="xp-bar">
+            <div class="xp-fill" id="combatXPBar" style="width: 0%"></div>
+          </div>
+        </div>
+        
+        <div class="skill-stats">
+          <div class="stat-item">
+            <span class="stat-label">Win Rate:</span>
+            <span class="stat-value">--</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Damage Bonus:</span>
+            <span class="stat-value">--</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Enemies Defeated:</span>
+            <span class="stat-value">0</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Best Streak:</span>
+            <span class="stat-value">--</span>
+          </div>
+        </div>
+        
+        <div class="missions-container">
+          <div class="missions-header">📋 Unlock at Rank: Enforcer</div>
+        </div>
+      </div>
+      
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button class="action-btn btn-back" onclick="window.location.href='crew.html'">← Back to Crew</button>
+      <button class="action-btn btn-reset" onclick="resetProgress()">Reset Progress</button>
+    </div>
+  </div>
+  
+  <script>
+    // Skill progression data
+    let skillData = {
+      lockpick: {
+        level: 1,
+        xp: 0,
+        xpNeeded: 100,
+        totalPicked: 0,
+        bestTime: null,
+        missions: {
+          beginner: { completed: 0, total: 3 },
+          speed: { completed: 0, total: 1 },
+          master: { completed: 0, total: 5 }
+        }
+      },
+      hotwire: {
+        level: 0,
+        xp: 0,
+        xpNeeded: 100,
+        locked: true
+      },
+      hacking: {
+        level: 0,
+        xp: 0,
+        xpNeeded: 100,
+        locked: true
+      },
+      combat: {
+        level: 0,
+        xp: 0,
+        xpNeeded: 100,
+        locked: true
+      }
+    };
+    
+    // Rank system
+    const ranks = [
+      { name: 'Street Rat', stars: 1, totalXP: 0 },
+      { name: 'Thief', stars: 2, totalXP: 500 },
+      { name: 'Burglar', stars: 3, totalXP: 1500 },
+      { name: 'Hacker', stars: 4, totalXP: 3000 },
+      { name: 'Enforcer', stars: 5, totalXP: 5000 },
+      { name: 'Don', stars: 6, totalXP: 10000 }
+    ];
+    
+    // Load saved data
+    function loadProgress() {
+      const saved = localStorage.getItem('skill_progress');
+      if (saved) {
+        skillData = JSON.parse(saved);
+      }
+      
+      // Load lockpicking stats
+      const locksPicked = localStorage.getItem('locks_picked') || '0';
+      skillData.lockpick.totalPicked = parseInt(locksPicked);
+      
+      updateDisplay();
+    }
+    
+    // Save progress
+    function saveProgress() {
+      localStorage.setItem('skill_progress', JSON.stringify(skillData));
+    }
+    
+    // Update display
+    function updateDisplay() {
+      // Update lockpicking
+      document.getElementById('lockpickLevel').textContent = skillData.lockpick.level;
+      document.getElementById('lockpickXP').textContent = `${skillData.lockpick.xp} / ${skillData.lockpick.xpNeeded}`;
+      document.getElementById('lockpickXPBar').style.width = `${(skillData.lockpick.xp / skillData.lockpick.xpNeeded) * 100}%`;
+      document.getElementById('lockpickTotal').textContent = skillData.lockpick.totalPicked;
+      document.getElementById('lockpickSuccess').textContent = `${60 + (skillData.lockpick.level * 5)}%`;
+      document.getElementById('lockpickSpeed').textContent = `+${skillData.lockpick.level * 2}s`;
+      document.getElementById('lockpickBest').textContent = skillData.lockpick.bestTime || '--';
+      
+      // Update rank
+      updateRank();
+      
+      // Update mission progress
+      updateMissions();
+    }
+    
+    // Update rank display
+    function updateRank() {
+      const totalXP = calculateTotalXP();
+      let currentRank = ranks[0];
+      
+      for (let rank of ranks) {
+        if (totalXP >= rank.totalXP) {
+          currentRank = rank;
+        }
+      }
+      
+      document.getElementById('rankName').textContent = currentRank.name;
+      
+      // Update stars
+      const starsContainer = document.getElementById('rankStars');
+      const stars = starsContainer.children;
+      for (let i = 0; i < stars.length; i++) {
+        if (i < currentRank.stars) {
+          stars[i].classList.add('earned');
+        } else {
+          stars[i].classList.remove('earned');
+        }
+      }
+      
+      // Unlock skills based on rank
+      if (currentRank.stars >= 2) {
+        document.getElementById('hotwireSkill').classList.remove('skill-locked');
+      }
+      if (currentRank.stars >= 4) {
+        document.getElementById('hackingSkill').classList.remove('skill-locked');
+      }
+      if (currentRank.stars >= 5) {
+        document.getElementById('combatSkill').classList.remove('skill-locked');
+      }
+    }
+    
+    // Calculate total XP across all skills
+    function calculateTotalXP() {
+      let total = 0;
+      for (let skill in skillData) {
+        total += skillData[skill].xp + ((skillData[skill].level - 1) * 100);
+      }
+      return total;
+    }
+    
+    // Update mission progress
+    function updateMissions() {
+      // This would be updated based on actual mission completion
+      // For now, it reads from localStorage
+    }
+    
+    // Start a mission
+    function startMission(skill, missionType) {
+      // Store the active mission
+      localStorage.setItem('active_mission', JSON.stringify({
+        skill: skill,
+        type: missionType,
+        startTime: Date.now()
+      }));
+      
+      // Redirect to appropriate game
+      if (skill === 'lockpick') {
+        window.location.href = 'lockpick-game.html';
+      }
+      // Add other skill games here
+    }
+    
+    // Add XP to a skill
+    function addXP(skill, amount) {
+      if (!skillData[skill]) return;
+      
+      skillData[skill].xp += amount;
+      
+      // Level up check
+      while (skillData[skill].xp >= skillData[skill].xpNeeded) {
+        skillData[skill].xp -= skillData[skill].xpNeeded;
+        skillData[skill].level++;
+        skillData[skill].xpNeeded = 100 * skillData[skill].level;
+        
+        // Show level up notification
+        showLevelUp(skill, skillData[skill].level);
+      }
+      
+      saveProgress();
+      updateDisplay();
+    }
+    
+    // Show level up notification
+    function showLevelUp(skill, newLevel) {
+      const notification = document.createElement('div');
+      notification.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: linear-gradient(135deg, #ffea3e, #ff00ff);
+        color: #000;
+        padding: 30px;
+        border-radius: 20px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        z-index: 10000;
+        animation: levelUpPulse 1s ease;
+        box-shadow: 0 0 50px rgba(255, 234, 62, 0.8);
+      `;
+      notification.innerHTML = `
+        <div>🎉 LEVEL UP! 🎉</div>
+        <div style="font-size: 1.2rem; margin-top: 10px;">
+          ${skill.toUpperCase()} → Level ${newLevel}
+        </div>
+      `;
+      
+      document.body.appendChild(notification);
+      setTimeout(() => notification.remove(), 3000);
+    }
+    
+    // Reset all progress
+    function resetProgress() {
+      if (confirm('Are you sure you want to reset all skill progress? This cannot be undone!')) {
+        localStorage.removeItem('skill_progress');
+        localStorage.removeItem('locks_picked');
+        localStorage.removeItem('active_mission');
+        location.reload();
+      }
+    }
+    
+    // Check for completed missions when page loads
+    function checkCompletedMissions() {
+      // Check if returning from a game
+      const activeMission = localStorage.getItem('active_mission');
+      if (activeMission) {
+        const mission = JSON.parse(activeMission);
+        // Check if mission was completed (would need to read from game results)
+        // For now, just add some XP for demonstration
+        if (localStorage.getItem('last_game_success') === 'true') {
+          addXP(mission.skill, 50);
+          localStorage.removeItem('last_game_success');
+        }
+        localStorage.removeItem('active_mission');
+      }
+    }
+    
+    // Initialize
+    window.onload = function() {
+      loadProgress();
+      checkCompletedMissions();
+    };
+  </script>
+  
+  <!-- Unified Footer -->
+  <script src="unified-footer.js"></script>
+  
+</body>
+</html>

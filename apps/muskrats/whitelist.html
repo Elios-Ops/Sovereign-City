@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Join the MuskRats Whitelist</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #000000 0%, #1a001a 50%, #000033 100%);
+      color: #00ffff;
+      font-family: 'Courier New', monospace;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+    
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('images/brick_main_mint_bg.png') no-repeat center center fixed;
+      background-size: cover;
+      opacity: 0.3;
+      z-index: -1;
+    }
+    
+    .whitelist-container {
+      max-width: 600px;
+      width: 100%;
+      background: rgba(10, 10, 30, 0.95);
+      border: 2px solid #00ffff;
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 0 40px rgba(0, 255, 255, 0.3), 0 0 80px rgba(255, 0, 255, 0.1);
+      backdrop-filter: blur(10px);
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+    
+    @keyframes glow {
+      from { box-shadow: 0 0 40px rgba(0, 255, 255, 0.3), 0 0 80px rgba(255, 0, 255, 0.1); }
+      to { box-shadow: 0 0 60px rgba(0, 255, 255, 0.5), 0 0 100px rgba(255, 0, 255, 0.2); }
+    }
+    
+    h1 {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      text-shadow: 0 0 20px #00ffff, 0 0 40px #00ffff;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    
+    .tagline {
+      text-align: center;
+      color: #ff00ff;
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+      text-shadow: 0 0 10px #ff00ff;
+    }
+    
+    .benefits {
+      background: rgba(0, 255, 255, 0.05);
+      border: 1px solid rgba(0, 255, 255, 0.2);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .benefits h3 {
+      color: #ffea3e;
+      text-shadow: 0 0 10px #ffea3e;
+      margin-bottom: 15px;
+      font-size: 1.3rem;
+    }
+    
+    .benefits ul {
+      list-style: none;
+      padding: 0;
+    }
+    
+    .benefits li {
+      padding: 8px 0;
+      position: relative;
+      padding-left: 25px;
+    }
+    
+    .benefits li:before {
+      content: "▸";
+      position: absolute;
+      left: 0;
+      color: #ff00ff;
+      font-weight: bold;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #ffea3e;
+      font-size: 1.1rem;
+      text-shadow: 0 0 5px #ffea3e;
+    }
+    
+    input[type="text"],
+    input[type="email"],
+    select {
+      width: 100%;
+      padding: 12px;
+      background: rgba(0, 0, 0, 0.7);
+      border: 2px solid rgba(0, 255, 255, 0.5);
+      border-radius: 10px;
+      color: #00ffff;
+      font-family: 'Courier New', monospace;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+    
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    select:focus {
+      outline: none;
+      border-color: #00ffff;
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+      background: rgba(0, 0, 0, 0.9);
+    }
+    
+    input::placeholder {
+      color: rgba(0, 255, 255, 0.4);
+    }
+    
+    .checkbox-group {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 25px;
+      padding: 15px;
+      background: rgba(255, 0, 255, 0.05);
+      border-radius: 10px;
+      border: 1px solid rgba(255, 0, 255, 0.2);
+    }
+    
+    input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      margin-right: 12px;
+      margin-top: 2px;
+      cursor: pointer;
+      accent-color: #00ffff;
+    }
+    
+    .checkbox-label {
+      flex: 1;
+      color: #fff;
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
+    
+    .social-links {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+    
+    .social-input-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .social-icon {
+      font-size: 1.2rem;
+    }
+    
+    .submit-btn {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(90deg, #00ffff 0%, #ff00ff 100%);
+      border: none;
+      border-radius: 15px;
+      color: #000;
+      font-size: 1.2rem;
+      font-weight: bold;
+      font-family: 'Courier New', monospace;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 20px rgba(0, 255, 255, 0.4);
+    }
+    
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0, 255, 255, 0.6);
+    }
+    
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+    
+    .submit-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .success-message {
+      display: none;
+      background: rgba(0, 255, 0, 0.1);
+      border: 2px solid #00ff00;
+      border-radius: 15px;
+      padding: 20px;
+      margin-top: 20px;
+      text-align: center;
+      color: #00ff00;
+      text-shadow: 0 0 10px #00ff00;
+    }
+    
+    .success-message.show {
+      display: block;
+      animation: fadeIn 0.5s ease-in;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .error-message {
+      display: none;
+      background: rgba(255, 0, 0, 0.1);
+      border: 2px solid #ff0000;
+      border-radius: 15px;
+      padding: 20px;
+      margin-top: 20px;
+      text-align: center;
+      color: #ff0000;
+      text-shadow: 0 0 10px #ff0000;
+    }
+    
+    .error-message.show {
+      display: block;
+      animation: fadeIn 0.5s ease-in;
+    }
+    
+    .stats {
+      text-align: center;
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(0, 255, 255, 0.2);
+    }
+    
+    .stats-number {
+      font-size: 2rem;
+      color: #ffea3e;
+      text-shadow: 0 0 15px #ffea3e;
+      font-weight: bold;
+    }
+    
+    .stats-label {
+      color: #00ffff;
+      margin-top: 5px;
+    }
+    
+    /* Back Button */
+    .back-button {
+      position: fixed;
+      bottom: 30px;
+      left: 30px;
+      z-index: 1000;
+    }
+    
+    .back-button button {
+      background: rgba(0, 255, 255, 0.9);
+      border: 2px solid #00ffff;
+      color: #000;
+      padding: 15px 30px;
+      font-size: 1.1rem;
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .back-button button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.8);
+    }
+    
+    @media (max-width: 768px) {
+      .whitelist-container {
+        padding: 30px 20px;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .social-links {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="whitelist-container">
+    <h1>Join the Whitelist</h1>
+    <p class="tagline">Get Early Access • Save on Mint • Exclusive Rewards</p>
+    
+    <div class="benefits">
+      <h3>🎯 Whitelist Benefits</h3>
+      <ul>
+        <li>Early mint access before public launch</li>
+        <li>Discounted mint price: 0.028 ETH (vs 0.033 ETH public)</li>
+        <li>Guaranteed mint spot - no gas wars</li>
+        <li>Exclusive $MUSKRAT token airdrop</li>
+        <li>Access to private Discord channels</li>
+        <li>Priority for future drops & collaborations</li>
+      </ul>
+    </div>
+    
+    <form id="whitelistForm">
+      <div class="form-group">
+        <label for="walletAddress">ETH Wallet Address *</label>
+        <input type="text" id="walletAddress" name="walletAddress" placeholder="0x..." required pattern="^0x[a-fA-F0-9]{40}$">
+      </div>
+      
+      <div class="form-group">
+        <label for="email">Email Address *</label>
+        <input type="email" id="email" name="email" placeholder="sewer.rat@muskrats.io" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="discord">Discord Username</label>
+        <input type="text" id="discord" name="discord" placeholder="MuskRat#1234">
+      </div>
+      
+      <div class="form-group">
+        <label for="twitter">Twitter/X Handle</label>
+        <input type="text" id="twitter" name="twitter" placeholder="@MuskRatDegen">
+      </div>
+      
+      <div class="form-group">
+        <label for="referral">How did you hear about MuskRats?</label>
+        <select id="referral" name="referral">
+          <option value="">Select...</option>
+          <option value="twitter">Twitter/X</option>
+          <option value="discord">Discord</option>
+          <option value="friend">Friend/Referral</option>
+          <option value="alpha">Alpha Group</option>
+          <option value="influencer">Influencer/KOL</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="quantity">How many NFTs do you plan to mint?</label>
+        <select id="quantity" name="quantity">
+          <option value="1">1 NFT</option>
+          <option value="3">3-Pack</option>
+          <option value="5">5-Pack</option>
+          <option value="13">Whale Bundle (13)</option>
+          <option value="undecided">Undecided</option>
+        </select>
+      </div>
+      
+      <div class="checkbox-group">
+        <input type="checkbox" id="terms" name="terms" required>
+        <label for="terms" class="checkbox-label">
+          I understand that whitelist spots are limited and submission does not guarantee approval. 
+          I agree to follow MuskRats community guidelines and will not use bots or multiple wallets to game the system.
+        </label>
+      </div>
+      
+      <div class="checkbox-group">
+        <input type="checkbox" id="newsletter" name="newsletter">
+        <label for="newsletter" class="checkbox-label">
+          Keep me updated with MuskRats news, launches, and exclusive alpha (optional)
+        </label>
+      </div>
+      
+      <button type="submit" class="submit-btn" id="submitBtn">SECURE MY WHITELIST SPOT</button>
+    </form>
+    
+    <div class="success-message" id="successMessage">
+      <h3>🎉 Application Submitted!</h3>
+      <p>Your whitelist application has been received. Check your email for confirmation.</p>
+      <p>Make sure to join our Discord and follow us on Twitter for updates!</p>
+    </div>
+    
+    <div class="error-message" id="errorMessage">
+      <h3>❌ Error</h3>
+      <p id="errorText">Something went wrong. Please try again.</p>
+    </div>
+    
+    <div class="stats">
+      <div class="stats-number" id="spotsLeft">247</div>
+      <div class="stats-label">Whitelist Spots Remaining</div>
+    </div>
+  </div>
+  
+  <!-- Back Button -->
+  <div class="back-button">
+    <button onclick="window.location.href='mint.html'">← BACK TO MINT</button>
+  </div>
+  
+  <script>
+    // Animated countdown for spots
+    let currentSpots = 247;
+    function updateSpots() {
+      const change = Math.random() > 0.7 ? -1 : 0;
+      if (change !== 0 && currentSpots > 50) {
+        currentSpots += change;
+        document.getElementById('spotsLeft').textContent = currentSpots;
+      }
+    }
+    setInterval(updateSpots, 30000); // Update every 30 seconds
+    
+    // Form submission
+    document.getElementById('whitelistForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const submitBtn = document.getElementById('submitBtn');
+      const originalText = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'SUBMITTING...';
+      
+      // Collect form data
+      const formData = {
+        walletAddress: document.getElementById('walletAddress').value,
+        email: document.getElementById('email').value,
+        discord: document.getElementById('discord').value,
+        twitter: document.getElementById('twitter').value,
+        referral: document.getElementById('referral').value,
+        quantity: document.getElementById('quantity').value,
+        newsletter: document.getElementById('newsletter').checked,
+        timestamp: new Date().toISOString()
+      };
+      
+      // API call to backend
+      const backendUrl = window.location.hostname === 'localhost' 
+        ? 'http://localhost:3333' 
+        : 'https://muskrats-backend.herokuapp.com'; // TODO: Update with your production URL
+      
+      fetch(`${backendUrl}/api/whitelist`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      })
+      .then(response => response.json())
+      .then(result => {
+        if (result.success) {
+          // Show success message
+          document.getElementById('successMessage').classList.add('show');
+          document.getElementById('whitelistForm').style.display = 'none';
+          
+          // Update spots
+          currentSpots--;
+          document.getElementById('spotsLeft').textContent = currentSpots;
+          
+          // Store in localStorage
+          localStorage.setItem('muskrats_whitelist', JSON.stringify(formData));
+        } else {
+          alert('Error: ' + (result.message || 'Please try again.'));
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        // Fallback to localStorage if backend is down
+        document.getElementById('successMessage').classList.add('show');
+        document.getElementById('whitelistForm').style.display = 'none';
+        currentSpots--;
+        document.getElementById('spotsLeft').textContent = currentSpots;
+        localStorage.setItem('muskrats_whitelist', JSON.stringify(formData));
+      })
+      .finally(() => {
+        // Reset button
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+      });
+    });
+    
+    // Wallet address validation
+    document.getElementById('walletAddress').addEventListener('input', function(e) {
+      const value = e.target.value;
+      if (value && !value.startsWith('0x')) {
+        e.target.value = '0x' + value;
+      }
+    });
+  </script>
+</body>
+</html>

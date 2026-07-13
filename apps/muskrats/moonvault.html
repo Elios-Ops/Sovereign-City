@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Operation Moon Vault</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    body {
+      background: black;
+      color: #00ffff;
+      font-family: monospace;
+      padding: 60px 20px;
+      text-align: center;
+    
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    h1 {
+      font-size: 2.4rem;
+      text-shadow: 0 0 12px #00ffff;
+      margin-bottom: 20px;
+    }
+    .scroll {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 30px;
+      border: 2px solid #00ffff55;
+      border-radius: 10px;
+      background: rgba(0, 255, 255, 0.04);
+      box-shadow: 0 0 10px #00ffff33;
+    }
+    p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+    img {
+      width: 100%;
+      max-width: 800px;
+      margin-bottom: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 20px #00ffff66;
+    }
+    /* Footer styles */
+    /* Footer styles removed - using unified footer */
+    
+    
+    
+    
+    
+    
+    .copyright { width: 100vw; background: rgba(5,5,10,0.95); color: #00ffff; text-align: center; padding: 8px 0; position: fixed; bottom: 0; left: 0; right: 0; font-size: 0.9rem; z-index: 3999; border-top: 1px solid #00ffff22;}
+    /* Floating top-left gameplay button & drop styles */
+    .floating-gameplay-btn {
+      position: fixed;
+      top: 30px;
+      left: 22px;
+      z-index: 10000;
+      background: #10151a;
+      border: 2px solid #00ffff99;
+      color: #00ffff;
+      font-weight: bold;
+      border-radius: 8px 8px 18px 8px;
+      padding: 11px 22px;
+      text-decoration: none;
+      box-shadow: 0 2px 24px #00ffff33;
+      font-size: 1.09rem;
+      transition: background 0.13s, color 0.13s;
+    }
+    .floating-gameplay-btn:hover {
+      background: #00ffff;
+      color: #10151a;
+    }
+    .floating-gameplay-drop {
+      display: none;
+      position: fixed;
+      top: 60px;
+      left: 22px;
+      background: #10151a;
+      border: 2px solid #00ffff99;
+      border-radius: 11px 11px 18px 11px;
+      box-shadow: 0 2px 24px #00ffff77;
+      z-index: 10001;
+      min-width: 195px;
+      padding: 15px 16px 10px 16px;
+      text-align: left;
+    }
+    .floating-gameplay-drop a {
+      display: block;
+      color: #00ffff;
+      font-weight: bold;
+      padding: 7px 0;
+      text-decoration: none;
+      font-size: 1.05rem;
+    }
+    .floating-gameplay-drop a:hover {
+      color: #fff;
+      text-shadow: 0 0 12px #00ffff99;
+    }
+    @media (max-width:650px) {
+      .footer-nav { font-size: 0.96rem; gap: 8px; flex-direction: column; padding: 22px 0 8px 0;}
+      
+      body { padding-bottom: 140px;}
+      .floating-gameplay-btn {
+        top: 16px;
+        left: 7px;
+        padding: 7px 12px;
+        font-size: 1rem;
+      }
+      .floating-gameplay-drop {
+        top: 44px;
+        left: 7px;
+        min-width: 94vw;
+        border-radius: 8px 8px 16px 8px;
+        padding: 13px 4vw 9px 4vw;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<img src="images/operation_moon_vault_poster.png" alt="Operation Moon Vault Poster" />
+
+<h1>🪙 Operation Moon Vault</h1>
+
+<div class="scroll">
+  <p>
+    It started as a whisper in the vents of the Treasury.
+    A glyph pulsed beneath the marble. And then they came — not hackers, but rats.
+  </p>
+  <p>
+    Glowing glyphs. Glitch-marked coin. The vault was never empty… it was sealed.
+    Until now.
+  </p>
+  <p>
+    Operation Moon Vault is the prophecy scroll that binds them all. It leads to relics, to sacrifice,
+    and to a stash over 200 ETH — buried beneath digital rituals.
+  </p>
+</div>
+
+<!-- Floating Top-Left Gameplay Button (only add to hub/landing pages) -->
+<a href="#" class="floating-gameplay-btn" id="floatingGameplayBtn">🎮 Gameplay</a>
+<div id="floatingGameplayDrop" class="floating-gameplay-drop">
+  <a href="gate.html">Mission Gate</a>
+  <a href="dossier_lobby.html">Dossier Lobby</a>
+  <a href="cellar.html">Cellar Vault</a>
+  <a href="codex.html">Codex Manifesto</a>
+  <a href="syndicate.html">Syndicate Terminal</a>
+</div>
+
+<!-- BEGIN: MUSKRATS FOOTER -->
+
+<div class="copyright">MuskRats © 2025. All rights reserved.</div>
+<!-- END: MUSKRATS FOOTER -->
+
+<script>
+  // Floating gameplay dropdown (top-left)
+  const floatingGameplayBtn = document.getElementById('floatingGameplayBtn');
+  const floatingGameplayDrop = document.getElementById('floatingGameplayDrop');
+  if (floatingGameplayBtn && floatingGameplayDrop) {
+    floatingGameplayBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      floatingGameplayDrop.style.display = (floatingGameplayDrop.style.display === 'block') ? 'none' : 'block';
+    });
+    document.addEventListener('click', function(e) {
+      if (!floatingGameplayBtn.contains(e.target) && !floatingGameplayDrop.contains(e.target)) {
+        floatingGameplayDrop.style.display = 'none';
+      }
+    });
+  }
+</script>
+
+
+  <!-- Unified Footer -->
+  <script src="unified-footer.js"></script>
+
+</body>
+</html>

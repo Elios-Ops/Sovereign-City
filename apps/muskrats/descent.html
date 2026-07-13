@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Sewer Descent</title>
+  <style>
+    html, body { height: 100%; margin: 0; padding: 0; }
+    body {
+      background: black;
+      color: #00ffff;
+      font-family: 'Courier New', monospace;
+      min-height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    #video-wrap {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: black;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 10;
+    }
+    #sewerVideo {
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      background: black;
+      display: block;
+    }
+    #fork-area {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: url('images/sewer_fork.jpg') no-repeat center center;
+      background-size: cover;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      z-index: 20;
+      flex-direction: column;
+      padding: 0;
+      transition: opacity 0.6s;
+      opacity: 0;
+      pointer-events: none;
+    }
+    #fork-area.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .fork-btns {
+      width: 100vw;
+      position: relative;
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-end;
+      padding: 0 7vw 42px 7vw;
+      z-index: 3;
+    }
+    .fork-btn {
+      font-size: 1.22rem;
+      padding: 19px 38px;
+      border-radius: 12px;
+      background: #00ffffd9;
+      color: #191b1c;
+      border: 2px solid #00ffffcc;
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+      box-shadow: 0 0 16px #00ffff99;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, box-shadow 0.23s, transform 0.13s;
+      outline: none;
+      text-shadow: 0 0 6px #0007;
+      min-width: 164px;
+    }
+    .fork-btn:hover {
+      background: #00bfff;
+      color: #fff;
+      transform: scale(1.04);
+      box-shadow: 0 0 28px #00ffffdd;
+    }
+    .back-btn {
+      position: absolute;
+      left: 15vw;
+      bottom: 0;
+      margin-bottom: 3vh;
+    }
+    .cellar-btn {
+      margin-bottom: 3vh;
+    }
+    @media (max-width:900px) {
+      .fork-btns {
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 32px 0 32px 0;
+      }
+      .fork-btn {
+        margin: 0 0 0 0;
+        width: 80vw;
+        max-width: 320px;
+      }
+      .back-btn {
+        position: static;
+        margin: 0 0 24px 0;
+        width: 80vw;
+        max-width: 320px;
+      }
+      .cellar-btn {
+        margin: 0 0 12px 0;
+      }
+    }
+    /* Tap to start overlay */
+    #start-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.77);
+      color: #00ffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 99;
+      font-family: 'Bangers', 'Impact', 'Courier New', monospace;
+      font-size: 2.6rem;
+      letter-spacing: 1.2px;
+      text-shadow: 0 0 28px #00ffff, 0 0 7px #191f44;
+      transition: opacity 0.6s;
+      opacity: 1;
+      pointer-events: all;
+      user-select: none;
+    }
+    #start-overlay.hide {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.6s;
+    }
+    @media (max-width:650px) {
+      #start-overlay { font-size: 1.3rem; padding: 0 10vw; }
+    }
+    /* Footer styles removed - using unified footer */
+    
+    
+    
+    
+    
+    
+    /* Footer styles removed - using unified footer */
+    
+    
+    
+    
+    
+    
+    .copyright { width: 100%; background: rgba(5,5,10,0.95); color: #00ffff; text-align: center; padding: 8px 0; font-size: 0.9rem; z-index: 3999; border-top: 1px solid #00ffff22;}
+  </style>
+  <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
+</head>
+<body>
+
+  <div id="video-wrap">
+    <video id="sewerVideo" preload="auto">
+      <source src="video/sewer_fall_2.mp4" type="video/mp4">
+      Sorry, your browser does not support the video tag.
+    </video>
+    <div id="start-overlay">Tap or Press Space to Start</div>
+  </div>
+
+  <div id="fork-area">
+    <div class="fork-btns">
+      <button class="fork-btn back-btn" onclick="location.href='poster.html'">⬅️ Back to Alley</button>
+      <button class="fork-btn cellar-btn" id="cellarBtn" onclick="proceedCellar()">Proceed to Don's Cellar</button>
+    </div>
+  </div>
+
+  <audio id="fallAudio" src="audio/sewer_fall.mp3" preload="auto"></audio>
+
+  <script>
+    const video = document.getElementById('sewerVideo');
+    const videoWrap = document.getElementById('video-wrap');
+    const forkArea = document.getElementById('fork-area');
+    const fallAudio = document.getElementById('fallAudio');
+    const startOverlay = document.getElementById('start-overlay');
+
+    // Play video/audio logic with tap/spacebar overlay
+    function startExperience() {
+      if (!video.paused) return;
+      video.play().catch(()=>{});
+      fallAudio.currentTime = 0;
+      fallAudio.play().catch(()=>{});
+      startOverlay.classList.add('hide');
+    }
+
+    // Overlay auto-fade after 3s, or on start
+    let overlayTimeout = setTimeout(() => {
+      startOverlay.classList.add('hide');
+      startExperience();
+    }, 3000);
+
+    startOverlay.addEventListener('click', function() {
+      clearTimeout(overlayTimeout);
+      startExperience();
+    });
+
+    window.addEventListener('keydown', function(e){
+      if (e.code === 'Space') {
+        clearTimeout(overlayTimeout);
+        startExperience();
+      }
+    });
+
+    // Hide overlay on video play
+    video.addEventListener('play', () => {
+      startOverlay.classList.add('hide');
+      fallAudio.currentTime = 0;
+      fallAudio.play().catch(()=>{});
+    });
+
+    video.addEventListener('ended', () => {
+      videoWrap.style.display = 'none';
+      forkArea.classList.add('active');
+      fallAudio.pause();
+      fallAudio.currentTime = 0;
+    });
+
+    // Wallet guard logic for MuskRat NFT (Ethereum)
+    async function proceedCellar() {
+      if (typeof window.ethereum === 'undefined') {
+        alert("Please install MetaMask to continue.");
+        return;
+      }
+      try {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        await provider.send("eth_requestAccounts", []);
+        const signer = provider.getSigner();
+        const address = await signer.getAddress();
+        const contract = new ethers.Contract(
+          "0xa810f0E95d6fcC10842933D2cd0441437a005df7",
+          ["function balanceOf(address owner) view returns (uint256)"],
+          provider
+        );
+        const balance = await contract.balanceOf(address);
+        if (balance.toString() === "0") {
+          alert("You need a MuskRat NFT to proceed into the Don's Cellar.");
+          return;
+        }
+        // Success! Redirect to the Cellar
+        window.location.href = "cellar.html";
+      } catch (e) {
+        alert("Wallet check failed or cancelled.");
+      }
+    }
+  </script>
+
+  <!-- Unified Footer -->
+  <script src="unified-footer.js"></script>
+
+</body>
+</html>
+

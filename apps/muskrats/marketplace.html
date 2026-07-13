@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>OpenSewer Marketplace</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 40px 20px 92px 20px; /* bottom padding for footer */
+      background: black;
+      color: #00ffff;
+      font-family: 'Courier New', monospace;
+    }
+    h1 {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 30px;
+      text-shadow: 0 0 10px #00ffff;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+      max-width: 1200px;
+      margin: auto;
+    }
+    
+    @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+      }
+    }
+    .item-card {
+      background: rgba(0, 255, 255, 0.05);
+      border: 2px solid #00ffff;
+      padding: 15px;
+      box-shadow: 0 0 10px #00ffff30;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border-radius: 10px;
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .item-card:hover {
+      background: rgba(0, 255, 255, 0.12);
+      box-shadow: 0 0 20px #00ffff;
+    }
+    .item-img {
+      width: 100%;
+      height: 180px;
+      background: #111;
+      margin-bottom: 15px;
+      border: 2px solid #00ffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .item-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .locked {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+    .back-button {
+      text-align: center;
+      margin-top: 60px;
+    }
+    .back-button button {
+      background: #00ffff;
+      color: black;
+      font-weight: bold;
+      border: none;
+      padding: 12px 24px;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    .back-button button:hover {
+      background: white;
+      color: black;
+    }
+    /* Footer styles removed - using unified footer */
+    @media (max-width:650px) {
+      .muskrats-footer {
+        flex-direction: column !important;
+        gap: 10px 0 !important;
+        padding: 22px 0 8px 0 !important;
+      }
+      
+      body {
+        padding-bottom: 112px !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🛒 OpenSewer Marketplace</h1>
+
+  <div class="grid">
+    <div class="item-card" onclick="window.location.href='vault1.html'">
+      <div class="item-img">
+        <img src="images/glitchborn/glitch_rat33.png" alt="Vault 01 Preview" />
+      </div>
+      <p>💎 Vault 01 – Glitchborn</p>
+    </div>
+    <div class="item-card" onclick="window.location.href='vault2.html'">
+      <div class="item-img">
+        <img src="images/bloodborn/blood_rat28.png" alt="Vault 02 Preview" />
+      </div>
+      <p>🩸 Vault 02 – Bloodborn</p>
+    </div>
+    <div class="item-card" onclick="window.location.href='vault3.html'">
+      <div class="item-img">
+        <img src="images/hacker_rats/dgx1.png" alt="Vault 03 Preview" />
+      </div>
+      <p>🧠 Vault 03 – DGX-Spark Brains</p>
+    </div>
+    <div class="item-card" onclick="window.location.href='vault4.html'">
+      <div class="item-img">
+        <img src="images/relics/relic_1.png" alt="Vault 04 Preview" />
+      </div>
+      <p>🏺 Vault 04 – Ancient Relics</p>
+    </div>
+    <div class="item-card" onclick="window.location.href='vault5.html'">
+      <div class="item-img">
+        <img src="images/duffle_bag.png" alt="Vault 05 Preview" />
+      </div>
+      <p>🎒 Vault 05 – Duffle Bags</p>
+    </div>
+    <div class="item-card" onclick="window.location.href='vault6.html'">
+      <div class="item-img">
+        <img src="images/vehicles/motorcycle.png" alt="Vault 06 Preview" />
+      </div>
+      <p>🏎️ Vault 06 – Getaway Vehicles</p>
+    </div>
+  </div>
+
+  <div class="back-button">
+    <button onclick="window.location.href='poster.html'">⬅ Back to Sewer Alley</button>
+  </div>
+
+
+
+  <!-- Unified Footer -->
+  <script src="unified-footer.js"></script>
+
+</body>
+</html>

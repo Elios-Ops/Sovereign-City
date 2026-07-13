@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Scroll 5 – The Sewer Cipher</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 40px 20px;
+      background: black;
+      color: #00ffff;
+      font-family: 'Courier New', monospace;
+      text-align: center;
+    
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 30px;
+      text-shadow: 0 0 12px #00ffff;
+    }
+    .scroll-container {
+      max-width: 700px;
+      margin: auto;
+      background: rgba(0,255,255,0.05);
+      padding: 30px;
+      border: 2px solid #00ffff;
+      border-radius: 10px;
+      box-shadow: 0 0 20px #00ffff40;
+    }
+    .cipher-text {
+      font-size: 1.1rem;
+      line-height: 1.7;
+      margin-bottom: 20px;
+      white-space: pre-wrap;
+    }
+    .glyph-secret {
+      display: inline-block;
+      margin-top: 20px;
+      font-weight: bold;
+      color: #00ffff;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .glyph-secret:hover {
+      color: white;
+      text-shadow: 0 0 15px #00ffff;
+    }
+    .back-link {
+      display: block;
+      margin-top: 40px;
+      color: #00ffff;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📜 Scroll 5: The Sewer Cipher</h1>
+
+  <div class="scroll-container">
+    <div class="cipher-text">
+      The glyphs do not speak in words, they echo in symbols.
+      Below the hatch, beneath the rusted pipe marked XIII,
+      carve the code with light, not steel.
+
+      Where shadow glyphs align, the cipher will hum:
+
+      <em>Will Fill what cannot be drained.<br>
+      W.I.F.I. through the stone remains.</em>
+    </div>
+
+    <div class="glyph-secret" onclick="alert('🔐 Vault Access Hint: Sedona coordinates embedded in Codex 13.')">
+      ☠️ Tap for hidden meaning...
+    </div>
+  </div>
+
+  <a class="back-link" href="codex.html">⬅ Back to Codex</a>
+
+  <div id="footer"></div>
+  <script>
+    fetch("footer.html")
+      .then(res => res.text())
+      .then(html => document.getElementById("footer").innerHTML = html);
+  </script>
+
+
+  <!-- Unified Footer -->
+  <script src="unified-footer.js"></script>
+
+</body>
+</html>

@@ -4,13 +4,15 @@ Tracking board for recovery, verification, and promotion work across Sovereign C
 
 | Application | Recovery Stage | Owner | Notes |
 |---|---|---|---|
-| Muskrats.io | Not started | — | Unknown — verification required |
-| Ledger AI / Gus | Not started | — | Unknown — verification required |
-| F.A.M. | Not started | — | Unknown — verification required |
-| Infinite Agentic Loop | Not started | — | Unknown — verification required |
-| Agent Router | Not started | — | Unknown — verification required |
-| Production Orchestrator | Not started | — | Unknown — verification required |
+| Muskrats.io | **Promoted — verify complete; commit pending** | Claude Code | 44 HTML pages, 195 files in `apps/muskrats/`. 30/30 routes HTTP 200. See `docs/recovery/MUSKRATS_LOCAL_VERIFICATION.md`. |
+| Ledger AI / Gus | **Promoted — verified** | Claude Code | `apps/gus/` — see `docs/recovery/GUS_LOCAL_VERIFICATION.md` |
+| F.A.M. | **Promoted — verified** | Claude Code | `apps/fam/` — see `docs/recovery/FAM_LOCAL_VERIFICATION.md` |
+| Infinite Agentic Loop | **Promoted — verified** | Claude Code | `apps/infinite-agentic-loop/` — see `docs/recovery/INFINITE_AGENTIC_LOOP_LOCAL_VERIFICATION.md` |
+| Agent Router | Not started | — | Source in `AI_APP/ledger-ai-v2/` — not promoted to `apps/` |
+| Production Orchestrator | Not started | — | Source in `AI_APP/ledger-ai-v2/` — not promoted to `apps/` |
 | MCP components | Not started | — | Unknown — verification required |
 | Trading / Pine Script lane | In progress | Claude Code / Mini Hermes | See `docs/trading/CURRENT_TRADING_STATE.md` |
 
 Recovery stages: Preserve source → Identify canonical copy → Verify independently → Trace dependencies → Restore navigation → Promote.
+
+**Next:** Commit Muskrats.io full import; ecosystem URL reconnection (Netlify → local/deploy).

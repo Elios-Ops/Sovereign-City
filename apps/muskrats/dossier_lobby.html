@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dossier Lobby – Crew Assignment</title>
+  <style>
+    body {
+      background: #10161a url('images/dossier_lobby_bg.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #00ffff;
+      font-family: 'Courier New', monospace;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    .header {
+      font-size: 2.3rem;
+      letter-spacing: 1px;
+      margin-top: 40px;
+      margin-bottom: 34px;
+      text-shadow: 0 0 14px #00fff8, 0 0 7px #0ff6;
+      width: 100%;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .dossier-map-container {
+      width: 100%;
+      max-width: 730px;
+      margin: 0 auto 28px auto;
+      overflow: hidden;
+      border-radius: 15px;
+      box-shadow: 0 0 24px #00ffff33, 0 0 4px #ff00ff55;
+      background: #10161a;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .dossier-map-img {
+      width: 100%;
+      height: 245px;
+      object-fit: cover;
+      object-position: center 54%;
+      display: block;
+      transform: scale(1.14);
+      margin: 0 auto;
+    }
+    .centered-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+    }
+    .dossier-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      max-width: 900px;
+      margin: 0 auto 42px auto;
+      justify-items: center;
+    }
+    .dossier-card {
+      width: 180px;
+      height: 260px;
+      background: rgba(15,32,42,0.92);
+      border: 2.5px solid #00ffff99;
+      border-radius: 13px;
+      box-shadow: 0 0 22px #00fff833, 0 2px 18px #0ff4 inset;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      transition: box-shadow 0.2s, border 0.2s;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      padding-top: 12px;
+    }
+    .dossier-card:hover {
+      box-shadow: 0 0 44px #00fff888, 0 2px 22px #0ff8 inset;
+      border-color: #ff00ff;
+    }
+    .dossier-title {
+      font-size: 1.19rem;
+      font-weight: bold;
+      margin-bottom: 6px;
+      color: #fff;
+      text-shadow: 0 0 10px #0ff8, 0 0 2px #fff;
+      margin-top: 3px;
+    }
+    .dossier-card img {
+      width: 82px;
+      margin-bottom: 12px;
+      border-radius: 8px;
+      background: rgba(0,255,255,0.04);
+      box-shadow: 0 0 8px #0ff6;
+    }
+    .dossier-blurb {
+      font-size: 0.99rem;
+      color: #bff;
+      padding: 0 6px;
+      margin-top: 4px;
+      margin-bottom: 8px;
+      text-align: center;
+      min-height: 56px;
+      line-height: 1.35;
+    }
+    .slot-status {
+      font-size: 1rem;
+      color: #0ff;
+      margin-bottom: 3px;
+    }
+    .slot-empty {
+      color: #bbb;
+      font-size: 0.96rem;
+    }
+    .cta-btn, .back-btn {
+      background: #00ffff;
+      color: #0c2024;
+      font-weight: bold;
+      font-size: 1.12rem;
+      padding: 12px 28px;
+      border-radius: 7px;
+      border: none;
+      cursor: pointer;
+      margin: 28px 12px 8px 12px;
+      transition: background 0.14s, color 0.14s;
+      box-shadow: 0 0 15px #00ffff88;
+      display: inline-block;
+    }
+    .cta-btn:hover, .back-btn:hover {
+      background: #fff;
+      color: #00ffff;
+    }
+    .button-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    /* Modal styling */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(9,18,22,0.92);
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-overlay.active {
+      display: flex;
+    }
+    .modal-content {
+      background: #10161a;
+      border: 2.5px solid #ff00ffb8;
+      border-radius: 14px;
+      color: #fff;
+      box-shadow: 0 0 44px #ff00ff55, 0 0 10px #00ffff80;
+      max-width: 94vw;
+      width: 420px;
+      padding: 36px 24px 32px 24px;
+      text-align: left;
+      position: relative;
+      font-family: 'Courier New', monospace;
+    }
+    .close-modal {
+      position: absolute;
+      top: 18px;
+      right: 22px;
+      font-size: 1.35rem;
+      color: #ff8fff;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      text-shadow: 0 0 8px #ff00ff99;
+    }
+    /* --- Footer Styles --- */
+        /* Footer styles removed - using unified footer */
+    
+    
+    
+    
+    
+    
+    .copyright { width: 100vw; background: rgba(5,5,10,0.95); color: #00ffff; text-align: center; padding: 8px 0; position: fixed; bottom: 0; left: 0; right: 0; font-size: 0.9rem; z-index: 3999; border-top: 1px solid #00ffff22;}
+    @media (max-width: 950px) {
+      .dossier-grid {
+        grid-template-columns: 1fr 1fr;
+        max-width: 98vw;
+      }
+      .dossier-card { width: 45vw; max-width: 270px; height: 180px; }
+    }
+    @media (max-width:650px) {
+      .header { font-size: 1.23rem; margin-top:22px; }
+      .dossier-map-container { max-width: 99vw; }
+      .dossier-map-img { height: 24vw; min-height: 120px; }
+      .dossier-grid { grid-template-columns: 1fr; gap: 13px; }
+      .dossier-card { width: 98vw; max-width: 280px; height: 120px; }
+      .muskrats-footer {
+        flex-direction: column !important;
+        gap: 10px 0 !important;
+        padding: 22px 0 8px 0 !important;
+      }
+      
+      .button-row {
+        flex-direction: column;
+        gap: 6px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">DOSSIER LOBBY – Crew Assignments & Intel</div>
+
+  <div class="centered-block">
+    <div class="dossier-map-container">
+      <img src="images/dossier_lobby_map.jpg" alt="Dossier Lobby Map" class="dossier-map-img">
+    </div>
+  </div>
+
+  <div class="centered-block">
+    <div class="dossier-grid">
+      <!-- Boss -->
+      <div class="dossier-card" onclick="openDossier('boss')">
+        <div class="dossier-title">BOSS</div>
+        <img src="images/crew/boss.png" alt="Boss">
+        <div class="slot-status">Unlocked</div>
+        <div class="dossier-blurb">The Don’s hand-picked enforcer. Controls crew assignments, vault access, and runs jobs for the F.A.M. Prophecy starts here.</div>
+      </div>
+      <!-- Under Boss -->
+      <div class="dossier-card" onclick="openDossier('underboss')">
+        <div class="dossier-title">UNDER BOSS</div>
+        <img src="images/crew/underboss.png" alt="Under Boss">
+        <div class="slot-status">Unlocked</div>
+        <div class="dossier-blurb">Second-in-command. Takes the hit when the Boss disappears. Rumor says two Under Bosses keep the crew in check.</div>
+      </div>
+      <!-- Made Man -->
+      <div class="dossier-card" onclick="openDossier('mademan')">
+        <div class="dossier-title">MADE MAN</div>
+        <img src="images/crew/made_man.png" alt="Made Man">
+        <div class="slot-status">Unlocked</div>
+        <div class="dossier-blurb">Loyal to the bone. A Made Man has earned his stripes, survived the rites, and can run his own crew when called upon.</div>
+      </div>
+      <!-- Handler (now active) -->
+      <div class="dossier-card" onclick="openDossier('handler')">
+        <div class="dossier-title">HANDLER</div>
+        <img src="images/crew/handler.png" alt="Handler">
+        <div class="slot-empty">Slot will fill as you mint or acquire Handler NFTs.<br>
+          <span style="color:#00ffff;">Track vault rewards & job offers for this role.</span>
+        </div>
+      </div>
+      <!-- Contractor (now active) -->
+      <div class="dossier-card" onclick="openDossier('contractor')">
+        <div class="dossier-title">CONTRACTOR</div>
+        <img src="images/crew/contractor.png" alt="Contractor">
+        <div class="slot-empty">Slot will fill as you mint or acquire Contractor NFTs.<br>
+          <span style="color:#00ffff;">Check back for job & vault updates for this crew slot.</span>
+        </div>
+      </div>
+      <!-- Associate (now active) -->
+      <div class="dossier-card" onclick="openDossier('associate')">
+        <div class="dossier-title">ASSOCIATE</div>
+        <img src="images/crew/associate.png" alt="Associate">
+        <div class="slot-empty">Slot will fill as you mint or acquire Associate NFTs.<br>
+          <span style="color:#00ffff;">Crew assignments & vault status will appear here.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="button-row">
+    <button class="back-btn" onclick="window.location.href='descent.html'">⬅ Back to Sewer Fork</button>
+    <button class="cta-btn" onclick="window.location.href='poster.html'">⬅ Back to Sewer Alley</button>
+  </div>
+
+  <!-- Modal for Dossier Detail -->
+  <div class="modal-overlay" id="dossierModal">
+    <div class="modal-content" id="dossierModalContent">
+      <button class="close-modal" id="closeDossierModal" title="Close">&times;</button>
+      <div id="dossierModalBody"></div>
+    </div>
+  </div>
+
+  <!-- MUSKRATS FOOTER -->
+      
+  <div class="copyright">MuskRats © 2025. All rights reserved.</div>
+
+  <!-- Ambient Audio + Mute Button -->
+  <audio id="dossierAudio" src="audio/dossier_lobby_ambience.mp3" loop autoplay></audio>
+  <button id="dossierMute" style="position:fixed;top:24px;right:24px;z-index:99;background:#090e13;color:#00ffff;padding:10px 16px;border-radius:6px;border:2px solid #00ffffcc;box-shadow:0 2px 18px #00fff8a6;font-size:1.2rem;">🔊</button>
+  <script>
+    // Modal logic for dossiers
+    const dossierModal = document.getElementById('dossierModal');
+    const dossierModalBody = document.getElementById('dossierModalBody');
+    document.getElementById('closeDossierModal').onclick = () => dossierModal.classList.remove('active');
+
+    function openDossier(type) {
+      let html = "";
+      if (type === "boss") {
+        html = `<h2 style="color:#0ff;">Boss</h2>
+          <p>The Don’s hand-picked enforcer. Controls crew assignments, vault access, and runs jobs for the F.A.M. Prophecy starts here.</p>`;
+      } else if (type === "underboss") {
+        html = `<h2 style="color:#0ff;">Under Boss</h2>
+          <p>Second-in-command. Takes the hit when the Boss disappears. Rumor says two Under Bosses keep the crew in check.</p>`;
+      } else if (type === "mademan") {
+        html = `<h2 style="color:#0ff;">Made Man</h2>
+          <p>Loyal to the bone. A Made Man has earned his stripes, survived the rites, and can run his own crew when called upon.</p>`;
+      } else if (type === "handler") {
+        html = `<h2 style="color:#0ff;">Handler</h2>
+          <p>Handler crew slot. Slot will fill when you mint or acquire a Handler NFT.<br><br>
+          Job vault rewards, assignments, and upcoming job offers will show here as you progress.</p>`;
+      } else if (type === "contractor") {
+        html = `<h2 style="color:#0ff;">Contractor</h2>
+          <p>Contractor crew slot. Slot will fill when you mint or acquire a Contractor NFT.<br><br>
+          Check back for new job offers and vault reward updates for this role.</p>`;
+      } else if (type === "associate") {
+        html = `<h2 style="color:#0ff;">Associate</h2>
+          <p>Associate crew slot. Slot will fill as soon as you mint or acquire an Associate NFT.<br><br>
+          Crew assignments, first job offers, and rewards will appear here.</p>`;
+      } else {
+        html = `<h2>Classified</h2><p>This dossier is locked. Mint or complete missions to unlock.</p>`;
+      }
+      dossierModalBody.innerHTML = html;
+      dossierModal.classList.add('active');
+    }
+
+    // Close modal on overlay click or ESC
+    dossierModal.onclick = function(e) { if (e.target === dossierModal) dossierModal.classList.remove('active'); };
+    document.addEventListener('keydown', function(e) { if (e.key === "Escape") dossierModal.classList.remove('active'); });
+
+    // Audio mute/unmute logic
+    const dossierAudio = document.getElementById('dossierAudio');
+    const dossierMute = document.getElementById('dossierMute');
+    dossierAudio.volume = 0.14;
+    dossierMute.onclick = () => {
+      dossierAudio.muted = !dossierAudio.muted;
+      dossierMute.textContent = dossierAudio.muted ? "🔇" : "🔊";
+    };
+  </script>
+
+  <!-- Unified Footer -->
+  <script src="unified-footer.js"></script>
+
+</body>
+</html>
+

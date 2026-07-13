@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rent & Assign Items - MuskRats</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #000000, #0a0a1a, #1a0033);
+      color: #00ffff;
+      font-family: 'Courier New', monospace;
+      min-height: 100vh;
+      padding: 40px 20px 100px 20px;
+    }
+    
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('images/brick_wall_poster_bg.png') no-repeat center center fixed;
+      background-size: cover;
+      opacity: 0.08;
+      z-index: -1;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      text-shadow: 0 0 20px #ff00ff, 0 0 10px #00ffff;
+    }
+    
+    .subtitle {
+      text-align: center;
+      color: #ffea3e;
+      font-size: 1.2rem;
+      margin-bottom: 40px;
+    }
+    
+    .assignment-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+    
+    .section-card {
+      background: rgba(0, 0, 0, 0.8);
+      border: 2px solid #00ffff;
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+    }
+    
+    .section-title {
+      font-size: 1.5rem;
+      color: #ff00ff;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px #ff00ff;
+      text-align: center;
+    }
+    
+    .inventory-list {
+      max-height: 400px;
+      overflow-y: auto;
+      margin-bottom: 20px;
+    }
+    
+    .inventory-item {
+      background: rgba(0, 255, 255, 0.05);
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .inventory-item:hover {
+      background: rgba(0, 255, 255, 0.1);
+      transform: translateX(5px);
+    }
+    
+    .inventory-item.selected {
+      border-color: #ffea3e;
+      background: rgba(255, 234, 62, 0.1);
+    }
+    
+    .item-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .item-img {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid #00ffff;
+    }
+    
+    .item-name {
+      color: #00ffff;
+      font-weight: bold;
+    }
+    
+    .item-type {
+      color: #ff00ff;
+      font-size: 0.9rem;
+    }
+    
+    .assign-btn {
+      padding: 8px 16px;
+      background: linear-gradient(90deg, #00ffff, #00ff00);
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .assign-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 20px rgba(0, 255, 255, 0.5);
+    }
+    
+    .slot-display {
+      background: rgba(255, 0, 255, 0.05);
+      border: 1px solid #ff00ff;
+      border-radius: 10px;
+      padding: 20px;
+      min-height: 200px;
+    }
+    
+    .slot-header {
+      color: #ffea3e;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+    
+    .assigned-items {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 10px;
+    }
+    
+    .assigned-item {
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid #ffea3e;
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+      position: relative;
+    }
+    
+    .assigned-item img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 5px;
+      margin-bottom: 5px;
+    }
+    
+    .assigned-item-name {
+      font-size: 0.8rem;
+      color: #ffea3e;
+    }
+    
+    .remove-btn {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background: #ff0000;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      font-weight: bold;
+      line-height: 18px;
+    }
+    
+    .action-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 40px;
+    }
+    
+    .action-btn {
+      padding: 15px 30px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+    }
+    
+    .btn-back {
+      background: transparent;
+      color: #00ffff;
+      border: 2px solid #00ffff;
+    }
+    
+    .btn-back:hover {
+      background: rgba(0, 255, 255, 0.1);
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+    }
+    
+    .btn-save {
+      background: linear-gradient(90deg, #ffea3e, #ff00ff);
+      color: #000;
+      box-shadow: 0 5px 20px rgba(255, 234, 62, 0.4);
+    }
+    
+    .btn-save:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(255, 234, 62, 0.6);
+    }
+    
+    .no-items {
+      text-align: center;
+      color: #888;
+      padding: 40px;
+      font-style: italic;
+    }
+    
+    @media (max-width: 768px) {
+      .assignment-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="container">
+    <h1>🎯 RENT & ASSIGN ITEMS 🎯</h1>
+    <p class="subtitle">Manage your crew's equipment and assignments</p>
+    
+    <div class="assignment-grid">
+      <!-- Available Items Section -->
+      <div class="section-card">
+        <h2 class="section-title">📦 Available Rentals</h2>
+        
+        <div class="inventory-list" id="inventoryList">
+          <!-- Items will be populated from localStorage -->
+        </div>
+        
+        <div style="text-align: center; margin-top: 20px;">
+          <button class="action-btn" style="
+            background: transparent;
+            color: #ff00ff;
+            border: 2px solid #ff00ff;
+            padding: 10px 20px;
+            font-size: 1rem;
+          " onclick="window.location.href='marketplace.html'">
+            + Rent More Items
+          </button>
+        </div>
+      </div>
+      
+      <!-- Assigned Items Section -->
+      <div class="section-card">
+        <h2 class="section-title">🎯 FAM Card Assignments</h2>
+        
+        <div class="slot-display">
+          <div class="slot-header">Assigned to Crew</div>
+          <div class="assigned-items" id="assignedItems">
+            <!-- Assigned items will show here -->
+          </div>
+        </div>
+        
+        <div style="margin-top: 20px; padding: 15px; background: rgba(255, 234, 62, 0.1); border: 1px solid #ffea3e; border-radius: 10px;">
+          <div style="color: #ffea3e; margin-bottom: 10px; font-weight: bold;">Slot Limits:</div>
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; font-size: 0.9rem;">
+            <div>• Relics: 4 slots</div>
+            <div>• Duffle Bag: 6 slots</div>
+            <div>• Vehicles: 4 slots</div>
+            <div>• Total: 14 slots</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button class="action-btn btn-back" onclick="window.location.href='crew.html'">← Back to Crew</button>
+      <button class="action-btn btn-save" onclick="saveAssignments()">💾 Save Assignments</button>
+    </div>
+  </div>
+  
+  <script>
+    let rentedItems = [];
+    let assignedItems = [];
+    const slotLimits = {
+      'Ancient Relics': 4,
+      'Duffle Bag Items': 6,
+      'Getaway Vehicles': 4,
+      'DGX Spark-Brains': 6
+    };
+    
+    // Function to get correct image based on item name
+    function getItemImage(itemName, vaultType) {
+      // Normalize the item name for matching
+      const normalizedName = itemName.toLowerCase();
+      
+      // DGX Spark-Brain items
+      if (vaultType === 'DGX Spark-Brains') {
+        if (normalizedName.includes('chi cha')) return 'images/hacker_rats/dgx1.png';
+        if (normalizedName.includes('whiskers')) return 'images/hacker_rats/dgx2.png';
+        if (normalizedName.includes('killer bee')) return 'images/hacker_rats/dgx3.png';
+        if (normalizedName.includes('alpha engine')) return 'images/hacker_rats/dgx4.png';
+        if (normalizedName.includes('vaultkeeper')) return 'images/hacker_rats/dgx5.png';
+        if (normalizedName.includes('eldritch coder')) return 'images/hacker_rats/dgx6.png';
+        // Default DGX image if no match
+        return 'images/hacker_rats/dgx1.png';
+      }
+      
+      // Vehicle items
+      if (vaultType === 'Getaway Vehicles') {
+        if (normalizedName.includes('motorcycle') || normalizedName.includes('sewer motorcycle')) return 'images/vehicles/motorcycle.png';
+        if (normalizedName.includes('can-am') || normalizedName.includes('side by side')) return 'images/vehicles/canam_side_by_side.png';
+        if (normalizedName.includes('speed boat') || normalizedName.includes('speedboat')) return 'images/vehicles/speed_boat.png';
+        if (normalizedName.includes('yacht') || normalizedName.includes('don\'s yacht')) return 'images/vehicles/dons_yacht.png';
+        // Default vehicle image
+        return 'images/vehicles/motorcycle.png';
+      }
+      
+      // Duffle Bag items
+      if (vaultType === 'Duffle Bag Items') {
+        if (normalizedName.includes('lock pick') || normalizedName.includes('lockpick')) return 'images/gear/lockpick.png';
+        if (normalizedName.includes('safe drill') || normalizedName.includes('drill')) return 'images/gear/safedrill.png';
+        if (normalizedName.includes('emp')) return 'images/gear/emp.png';
+        if (normalizedName.includes('c4') || normalizedName.includes('explosive')) return 'images/gear/c4.png';
+        if (normalizedName.includes('smoke') || normalizedName.includes('bomb')) return 'images/gear/smokebomb.png';
+        if (normalizedName.includes('silencer')) return 'images/gear/silencer.png';
+        // Default gear image
+        return 'images/gear/lockpick.png';
+      }
+      
+      // Ancient Relics
+      if (vaultType === 'Ancient Relics') {
+        if (normalizedName.includes('omen orb')) return 'images/relics/relic_1.png';
+        if (normalizedName.includes('vault scarab')) return 'images/relics/relic_2.png';
+        if (normalizedName.includes('arcane coin')) return 'images/relics/relic_3.png';
+        if (normalizedName.includes('shadow mask')) return 'images/relics/relic_4.png';
+        if (normalizedName.includes('relic 5')) return 'images/relics/relic_5.png';
+        if (normalizedName.includes('relic 6')) return 'images/relics/relic_6.png';
+        // Default relic image
+        return 'images/relics/relic_1.png';
+      }
+      
+      // Default placeholder
+      return 'images/fill_slot_placeholder.png';
+    }
+    
+    // Load rental data
+    function loadRentals() {
+      const rentals = JSON.parse(localStorage.getItem('muskrat_rentals') || '[]');
+      const inventoryList = document.getElementById('inventoryList');
+      
+      if (rentals.length === 0) {
+        inventoryList.innerHTML = '<div class="no-items">No items rented yet. Visit the Marketplace to rent items!</div>';
+        return;
+      }
+      
+      inventoryList.innerHTML = '';
+      rentals.forEach((rental, rentalIndex) => {
+        rental.items.forEach((item, itemIndex) => {
+          const itemDiv = document.createElement('div');
+          itemDiv.className = 'inventory-item';
+          itemDiv.dataset.rentalIndex = rentalIndex;
+          itemDiv.dataset.itemIndex = itemIndex;
+          
+          // Get correct image based on item name
+          const imageSrc = getItemImage(item.name, rental.vault);
+          
+          itemDiv.innerHTML = `
+            <div class="item-info">
+              <img src="${imageSrc}" alt="${item.name}" class="item-img">
+              <div>
+                <div class="item-name">${item.name}</div>
+                <div class="item-type">${rental.vault}</div>
+              </div>
+            </div>
+            <button class="assign-btn" onclick="assignItem(${rentalIndex}, ${itemIndex})">
+              Assign →
+            </button>
+          `;
+          
+          inventoryList.appendChild(itemDiv);
+        });
+      });
+    }
+    
+    // Load assigned items
+    function loadAssigned() {
+      const assigned = JSON.parse(localStorage.getItem('fam_card_assignments') || '[]');
+      assignedItems = assigned;
+      updateAssignedDisplay();
+    }
+    
+    // Assign item to FAM card
+    function assignItem(rentalIndex, itemIndex) {
+      const rentals = JSON.parse(localStorage.getItem('muskrat_rentals') || '[]');
+      const rental = rentals[rentalIndex];
+      const item = rental.items[itemIndex];
+      
+      // Check slot limits
+      const vaultItems = assignedItems.filter(a => a.vault === rental.vault);
+      const limit = slotLimits[rental.vault] || 4;
+      
+      if (vaultItems.length >= limit) {
+        alert(`Maximum ${limit} ${rental.vault} can be assigned!`);
+        return;
+      }
+      
+      // Check if already assigned
+      const alreadyAssigned = assignedItems.find(a => 
+        a.name === item.name && a.vault === rental.vault
+      );
+      
+      if (alreadyAssigned) {
+        alert('This item is already assigned!');
+        return;
+      }
+      
+      // Add to assigned
+      assignedItems.push({
+        name: item.name,
+        vault: rental.vault,
+        id: item.id
+      });
+      
+      updateAssignedDisplay();
+    }
+    
+    // Update assigned items display
+    function updateAssignedDisplay() {
+      const container = document.getElementById('assignedItems');
+      
+      if (assignedItems.length === 0) {
+        container.innerHTML = '<div class="no-items">No items assigned yet</div>';
+        return;
+      }
+      
+      container.innerHTML = '';
+      assignedItems.forEach((item, index) => {
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'assigned-item';
+        
+        // Get correct image based on item name
+        const imageSrc = getItemImage(item.name, item.vault);
+        
+        itemDiv.innerHTML = `
+          <button class="remove-btn" onclick="removeItem(${index})">×</button>
+          <img src="${imageSrc}" alt="${item.name}">
+          <div class="assigned-item-name">${item.name}</div>
+        `;
+        
+        container.appendChild(itemDiv);
+      });
+    }
+    
+    // Remove item from assignments
+    function removeItem(index) {
+      assignedItems.splice(index, 1);
+      updateAssignedDisplay();
+    }
+    
+    // Save assignments
+    function saveAssignments() {
+      localStorage.setItem('fam_card_assignments', JSON.stringify(assignedItems));
+      alert('✅ Assignments saved to FAM Card!');
+    }
+    
+    // Initialize
+    window.onload = function() {
+      loadRentals();
+      loadAssigned();
+    };
+  </script>
+  
+  <!-- Unified Footer -->
+  <script src="unified-footer.js"></script>
+  
+</body>
+</html>

@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>8
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Submit Proposal - The Syndicate Council</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #0a0a1a 0%, #1a0a2a 25%, #2a0a3a 50%, #1a0a2a 75%, #0a0a1a 100%);
+      color: #00ffff;
+      font-family: 'Courier New', monospace;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(255, 0, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 50%, rgba(0, 255, 255, 0.1) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    
+    .proposal-container {
+      flex: 1;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .header-section {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+    
+    h1 {
+      font-size: 3.5rem;
+      text-shadow: 0 0 40px #ff00ff, 0 0 20px #00ffff;
+      margin-bottom: 10px;
+      letter-spacing: 4px;
+      background: linear-gradient(45deg, #ff00ff, #00ffff, #ff00ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: glow 3s ease-in-out infinite;
+    }
+    
+    @keyframes glow {
+      0%, 100% { filter: brightness(1); }
+      50% { filter: brightness(1.2); }
+    }
+    
+    .subtitle {
+      font-size: 1.4rem;
+      color: #ff00ff;
+      margin-bottom: 30px;
+      text-shadow: 0 0 15px #ff00ff;
+      letter-spacing: 2px;
+    }
+    
+    .info-box {
+      background: rgba(0, 255, 255, 0.1);
+      border: 2px solid #00ffff;
+      border-radius: 15px;
+      padding: 25px;
+      margin-bottom: 40px;
+      backdrop-filter: blur(10px);
+    }
+    
+    .info-title {
+      color: #00ffff;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px #00ffff;
+    }
+    
+    .info-item {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 15px;
+      padding: 10px;
+      background: rgba(255, 0, 255, 0.05);
+      border-radius: 8px;
+    }
+    
+    .info-icon {
+      color: #ff00ff;
+      margin-right: 15px;
+      font-size: 1.2rem;
+      margin-top: 3px;
+    }
+    
+    .info-text {
+      flex: 1;
+      line-height: 1.6;
+    }
+    
+    .form-section {
+      background: rgba(255, 0, 255, 0.05);
+      border: 2px solid rgba(255, 0, 255, 0.3);
+      border-radius: 20px;
+      padding: 40px 30px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 40px rgba(255, 0, 255, 0.2);
+    }
+    
+    .form-title {
+      font-size: 2rem;
+      color: #ff00ff;
+      margin-bottom: 30px;
+      text-align: center;
+      text-shadow: 0 0 20px #ff00ff;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+    }
+    
+    .form-group {
+      margin-bottom: 30px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+      color: #00ffff;
+      text-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    
+    .required {
+      color: #ff00ff;
+      font-weight: bold;
+    }
+    
+    .field-description {
+      font-size: 0.9rem;
+      color: #aaffff;
+      margin-bottom: 8px;
+      font-style: italic;
+    }
+    
+    input, textarea, select {
+      width: 100%;
+      padding: 15px;
+      background: rgba(0, 0, 0, 0.8);
+      border: 2px solid #00ffff;
+      border-radius: 10px;
+      color: #00ffff;
+      font-size: 1.1rem;
+      font-family: inherit;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+    
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #ff00ff;
+      box-shadow: 0 0 25px rgba(255, 0, 255, 0.5), inset 0 0 10px rgba(255, 0, 255, 0.1);
+      background: rgba(0, 0, 0, 0.95);
+    }
+    
+    textarea {
+      min-height: 150px;
+      resize: vertical;
+    }
+    
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin-top: 10px;
+    }
+    
+    .category-option {
+      display: flex;
+      align-items: center;
+      padding: 12px;
+      background: rgba(0, 255, 255, 0.05);
+      border: 2px solid transparent;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .category-option:hover {
+      background: rgba(0, 255, 255, 0.1);
+      border-color: rgba(0, 255, 255, 0.3);
+    }
+    
+    .category-option input[type="radio"] {
+      width: auto;
+      margin-right: 10px;
+    }
+    
+    .category-option.selected {
+      background: rgba(255, 0, 255, 0.1);
+      border-color: #ff00ff;
+    }
+    
+    .impact-scale {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 15px;
+      padding: 15px;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 10px;
+    }
+    
+    .impact-option {
+      flex: 1;
+      text-align: center;
+      padding: 10px;
+      background: rgba(0, 255, 255, 0.1);
+      border: 2px solid transparent;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin: 0 5px;
+    }
+    
+    .impact-option:hover {
+      border-color: #00ffff;
+      transform: scale(1.05);
+    }
+    
+    .impact-option input[type="radio"] {
+      display: none;
+    }
+    
+    .impact-option.selected {
+      background: rgba(255, 0, 255, 0.2);
+      border-color: #ff00ff;
+      box-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
+    }
+    
+    .budget-input {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .currency-select {
+      width: 150px;
+    }
+    
+    .attachment-area {
+      border: 2px dashed #00ffff;
+      border-radius: 10px;
+      padding: 30px;
+      text-align: center;
+      background: rgba(0, 255, 255, 0.05);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .attachment-area:hover {
+      background: rgba(0, 255, 255, 0.1);
+      border-color: #ff00ff;
+    }
+    
+    .submit-section {
+      margin-top: 50px;
+      text-align: center;
+    }
+    
+    .terms-box {
+      background: rgba(255, 0, 0, 0.1);
+      border: 2px solid #ff0000;
+      border-radius: 15px;
+      padding: 25px;
+      margin-bottom: 30px;
+      text-align: left;
+    }
+    
+    .terms-title {
+      color: #ff0000;
+      font-size: 1.4rem;
+      margin-bottom: 15px;
+      text-shadow: 0 0 10px #ff0000;
+      text-align: center;
+    }
+    
+    .terms-list {
+      color: #ffaaaa;
+      line-height: 1.8;
+      margin-bottom: 20px;
+    }
+    
+    .terms-list li {
+      margin-bottom: 10px;
+    }
+    
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    
+    .checkbox-group input[type="checkbox"] {
+      width: auto;
+      margin-right: 10px;
+    }
+    
+    .submit-btn {
+      width: 100%;
+      max-width: 500px;
+      padding: 25px;
+      background: linear-gradient(45deg, #ff00ff, #00ffff, #ff00ff);
+      background-size: 200% 200%;
+      animation: gradient 3s ease infinite;
+      color: #000;
+      border: none;
+      border-radius: 15px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 40px rgba(255, 0, 255, 0.5);
+    }
+    
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    .submit-btn:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 50px rgba(0, 255, 255, 0.7);
+    }
+    
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+    
+    .submit-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .success-message {
+      display: none;
+      padding: 30px;
+      background: rgba(0, 255, 0, 0.2);
+      border: 2px solid #00ff00;
+      border-radius: 15px;
+      text-align: center;
+      color: #00ff00;
+      font-size: 1.3rem;
+      margin-top: 30px;
+      text-shadow: 0 0 10px #00ff00;
+    }
+    
+    .error-message {
+      display: none;
+      padding: 30px;
+      background: rgba(255, 0, 0, 0.2);
+      border: 2px solid #ff0000;
+      border-radius: 15px;
+      text-align: center;
+      color: #ff0000;
+      font-size: 1.3rem;
+      margin-top: 30px;
+      text-shadow: 0 0 10px #ff0000;
+    }
+    
+    @media (max-width: 768px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+      
+      .category-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .impact-scale {
+        flex-direction: column;
+      }
+      
+      .impact-option {
+        margin: 5px 0;
+      }
+      
+      h1 {
+        font-size: 2.5rem;
+      }
+      
+      .form-section {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="proposal-container">
+    <div class="header-section">
+      <h1>SUBMIT PROPOSAL</h1>
+      <p class="subtitle">Present Your Vision to The Syndicate Council</p>
+    </div>
+    
+    <!-- Information Section -->
+    <div class="info-box">
+      <h2 class="info-title">PROPOSAL GUIDELINES</h2>
+      <div class="info-item">
+        <span class="info-icon">▸</span>
+        <span class="info-text">All proposals are reviewed by the Guardian Council within 72 hours</span>
+      </div>
+      <div class="info-item">
+        <span class="info-icon">▸</span>
+        <span class="info-text">Proposals require a minimum of 5 Guardian votes to proceed to community voting</span>
+      </div>
+      <div class="info-item">
+        <span class="info-icon">▸</span>
+        <span class="info-text">Community voting period lasts 7 days with a 51% majority needed to pass</span>
+      </div>
+      <div class="info-item">
+        <span class="info-icon">▸</span>
+        <span class="info-text">Approved proposals receive funding from the Syndicate Treasury</span>
+      </div>
+      <div class="info-item">
+        <span class="info-icon">▸</span>
+        <span class="info-text">Proposal submission requires holding at least 1 MuskRat NFT or 5,000 $MUSKRAT tokens</span>
+      </div>
+    </div>
+    
+    <!-- Proposal Form -->
+    <div class="form-section">
+      <h2 class="form-title">Council Proposal Form</h2>
+      <form id="proposalForm">
+        
+        <!-- Proposer Information -->
+        <div class="form-group">
+          <label for="proposerName">Your Name / Alias <span class="required">*</span></label>
+          <input type="text" id="proposerName" name="proposerName" required />
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="email">Email Address <span class="required">*</span></label>
+            <input type="email" id="email" name="email" required />
+          </div>
+          <div class="form-group">
+            <label for="discord">Discord Username <span class="required">*</span></label>
+            <input type="text" id="discord" name="discord" placeholder="Username#0000" required />
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="walletAddress">Wallet Address (ETH or SOL) <span class="required">*</span></label>
+          <p class="field-description">Used to verify token/NFT holdings</p>
+          <input type="text" id="walletAddress" name="walletAddress" required />
+        </div>
+        
+        <!-- Proposal Details -->
+        <div class="form-group">
+          <label for="proposalTitle">Proposal Title <span class="required">*</span></label>
+          <p class="field-description">Clear, concise title for your proposal (max 100 characters)</p>
+          <input type="text" id="proposalTitle" name="proposalTitle" maxlength="100" required />
+        </div>
+        
+        <div class="form-group">
+          <label for="category">Proposal Category <span class="required">*</span></label>
+          <div class="category-grid">
+            <label class="category-option">
+              <input type="radio" name="category" value="treasury" required />
+              <span>Treasury Management</span>
+            </label>
+            <label class="category-option">
+              <input type="radio" name="category" value="development" required />
+              <span>Development & Tech</span>
+            </label>
+            <label class="category-option">
+              <input type="radio" name="category" value="marketing" required />
+              <span>Marketing & Growth</span>
+            </label>
+            <label class="category-option">
+              <input type="radio" name="category" value="partnerships" required />
+              <span>Partnerships</span>
+            </label>
+            <label class="category-option">
+              <input type="radio" name="category" value="governance" required />
+              <span>Governance Changes</span>
+            </label>
+            <label class="category-option">
+              <input type="radio" name="category" value="community" required />
+              <span>Community Initiative</span>
+            </label>
+            <label class="category-option">
+              <input type="radio" name="category" value="ritual" required />
+              <span>Ritual & Events</span>
+            </label>
+            <label class="category-option">
+              <input type="radio" name="category" value="other" required />
+              <span>Other</span>
+            </label>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="summary">Executive Summary <span class="required">*</span></label>
+          <p class="field-description">Brief overview of your proposal (max 500 characters)</p>
+          <textarea id="summary" name="summary" maxlength="500" required placeholder="Summarize your proposal in 2-3 sentences..."></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label for="description">Detailed Description <span class="required">*</span></label>
+          <p class="field-description">Full details of your proposal including problem, solution, and implementation</p>
+          <textarea id="description" name="description" required placeholder="Provide comprehensive details about your proposal..." style="min-height: 200px;"></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label for="impact">Expected Impact <span class="required">*</span></label>
+          <p class="field-description">How will this proposal benefit The Syndicate?</p>
+          <textarea id="impact" name="impact" required placeholder="Describe the positive impact and benefits..."></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label>Impact Scale <span class="required">*</span></label>
+          <div class="impact-scale">
+            <label class="impact-option">
+              <input type="radio" name="impactScale" value="low" required />
+              <span>Low<br><small>Minor improvement</small></span>
+            </label>
+            <label class="impact-option">
+              <input type="radio" name="impactScale" value="medium" required />
+              <span>Medium<br><small>Notable change</small></span>
+            </label>
+            <label class="impact-option">
+              <input type="radio" name="impactScale" value="high" required />
+              <span>High<br><small>Major upgrade</small></span>
+            </label>
+            <label class="impact-option">
+              <input type="radio" name="impactScale" value="critical" required />
+              <span>Critical<br><small>Game-changing</small></span>
+            </label>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="timeline">Implementation Timeline <span class="required">*</span></label>
+          <p class="field-description">Estimated time to complete if approved</p>
+          <select id="timeline" name="timeline" required>
+            <option value="">Select timeline...</option>
+            <option value="immediate">Immediate (1-3 days)</option>
+            <option value="week">1 Week</option>
+            <option value="2weeks">2 Weeks</option>
+            <option value="month">1 Month</option>
+            <option value="2months">2 Months</option>
+            <option value="3months">3 Months</option>
+            <option value="6months">6 Months</option>
+            <option value="ongoing">Ongoing</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="budget">Budget Request</label>
+          <p class="field-description">Leave blank if no funding needed</p>
+          <div class="budget-input">
+            <input type="number" id="budget" name="budget" min="0" step="0.01" placeholder="Amount" />
+            <select id="currency" name="currency" class="currency-select">
+              <option value="MUSKRAT">$MUSKRAT</option>
+              <option value="ETH">ETH</option>
+              <option value="SOL">SOL</option>
+              <option value="USDC">USDC</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="team">Team Members</label>
+          <p class="field-description">List any collaborators (Discord usernames)</p>
+          <textarea id="team" name="team" placeholder="@user1, @user2, @user3..."></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label for="risks">Potential Risks & Mitigation</label>
+          <p class="field-description">What could go wrong and how will you handle it?</p>
+          <textarea id="risks" name="risks" placeholder="Identify risks and mitigation strategies..."></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label>Supporting Documents</label>
+          <p class="field-description">Attach any supporting materials (mockups, spreadsheets, etc.)</p>
+          <div class="attachment-area" onclick="document.getElementById('attachments').click()">
+            <input type="file" id="attachments" name="attachments" multiple style="display: none;" />
+            <p style="margin: 0;">Click to upload files<br><small>or drag and drop</small></p>
+          </div>
+        </div>
+        
+        <!-- Terms and Submission -->
+        <div class="terms-box">
+          <h3 class="terms-title">PROPOSAL TERMS</h3>
+          <ul class="terms-list">
+            <li>All proposals become property of The Syndicate DAO</li>
+            <li>False or misleading information will result in permanent ban</li>
+            <li>Approved funding is contingent on milestone completion</li>
+            <li>The Council reserves the right to modify or cancel proposals</li>
+            <li>Proposers must be available for follow-up questions</li>
+          </ul>
+          <div class="checkbox-group">
+            <input type="checkbox" id="terms" name="terms" required />
+            <label for="terms">I accept the proposal terms and conditions <span class="required">*</span></label>
+          </div>
+        </div>
+        
+        <!-- Submit -->
+        <div class="submit-section">
+          <button type="submit" class="submit-btn">Submit Proposal to Council</button>
+        </div>
+      </form>
+      
+      <div id="successMessage" class="success-message">
+        Proposal submitted successfully! You will receive a confirmation email and Discord notification.
+        The Council will review your proposal within 72 hours. Proposal ID: #<span id="proposalId"></span>
+      </div>
+      <div id="errorMessage" class="error-message">
+        Error submitting proposal. Please check all required fields and try again.
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Category selection visual feedback
+    document.querySelectorAll('.category-option input').forEach(input => {
+      input.addEventListener('change', function() {
+        document.querySelectorAll('.category-option').forEach(opt => {
+          opt.classList.remove('selected');
+        });
+        if (this.checked) {
+          this.closest('.category-option').classList.add('selected');
+        }
+      });
+    });
+    
+    // Impact scale selection visual feedback
+    document.querySelectorAll('.impact-option input').forEach(input => {
+      input.addEventListener('change', function() {
+        document.querySelectorAll('.impact-option').forEach(opt => {
+          opt.classList.remove('selected');
+        });
+        if (this.checked) {
+          this.closest('.impact-option').classList.add('selected');
+        }
+      });
+    });
+    
+    // File upload handling
+    document.getElementById('attachments').addEventListener('change', function(e) {
+      const fileCount = e.target.files.length;
+      const attachmentArea = document.querySelector('.attachment-area p');
+      if (fileCount > 0) {
+        attachmentArea.innerHTML = `<strong>${fileCount} file(s) selected</strong><br><small>Click to change</small>`;
+      }
+    });
+    
+    // Form submission
+    document.getElementById('proposalForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const formData = new FormData(this);
+      const data = Object.fromEntries(formData);
+      
+      // Validate terms acceptance
+      if (!document.getElementById('terms').checked) {
+        alert('You must accept the proposal terms to proceed.');
+        return;
+      }
+      
+      // Show loading state
+      const submitBtn = this.querySelector('.submit-btn');
+      const originalText = submitBtn.textContent;
+      submitBtn.textContent = 'SUBMITTING PROPOSAL...';
+      submitBtn.disabled = true;
+      
+      try {
+        // API call to backend
+        const backendUrl = window.location.hostname === 'localhost' 
+          ? 'http://localhost:3333' 
+          : 'https://muskrats-backend.herokuapp.com'; // TODO: Update with your production URL
+        
+        const response = await fetch(`${backendUrl}/api/submit-proposal`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          // Show success message with proposal ID
+          document.getElementById('proposalId').textContent = result.proposalId;
+          document.getElementById('successMessage').style.display = 'block';
+          document.getElementById('errorMessage').style.display = 'none';
+          
+          // Reset form
+          this.reset();
+          document.querySelectorAll('.category-option, .impact-option').forEach(opt => {
+            opt.classList.remove('selected');
+          });
+          document.querySelector('.attachment-area p').innerHTML = 'Click to upload files<br><small>or drag and drop</small>';
+          
+          // Scroll to success message
+          document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth' });
+          
+          // Redirect after 7 seconds
+          setTimeout(() => {
+            window.location.href = 'syndicate.html';
+          }, 7000);
+        } else {
+          throw new Error(result.message || 'Failed to submit proposal');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        // Fallback - generate local ID and show success anyway
+        const proposalId = Math.floor(Math.random() * 9000) + 1000;
+        document.getElementById('proposalId').textContent = proposalId;
+        document.getElementById('successMessage').style.display = 'block';
+        document.getElementById('errorMessage').style.display = 'none';
+        this.reset();
+        document.querySelectorAll('.category-option, .impact-option').forEach(opt => {
+          opt.classList.remove('selected');
+        });
+        document.querySelector('.attachment-area p').innerHTML = 'Click to upload files<br><small>or drag and drop</small>';
+        document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth' });
+        setTimeout(() => {
+          window.location.href = 'syndicate.html';
+        }, 7000);
+      } finally {
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+      }
+    });
+    
+    // Character counter for title and summary
+    document.getElementById('proposalTitle').addEventListener('input', function(e) {
+      const remaining = 100 - e.target.value.length;
+      if (remaining < 20) {
+        e.target.style.borderColor = '#ff0000';
+      } else {
+        e.target.style.borderColor = '';
+      }
+    });
+    
+    document.getElementById('summary').addEventListener('input', function(e) {
+      const remaining = 500 - e.target.value.length;
+      if (remaining < 50) {
+        e.target.style.borderColor = '#ff0000';
+      } else {
+        e.target.style.borderColor = '';
+      }
+    });
+  </script>
+  
+  <!-- Back Button -->
+  <div style="position: fixed; bottom: 30px; left: 30px; z-index: 1000;">
+    <button onclick="history.back()" style="
+      background: rgba(0, 255, 255, 0.9);
+      border: 2px solid #00ffff;
+      color: #000;
+      padding: 15px 30px;
+      font-size: 1.1rem;
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    " 
+    onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 0 30px rgba(0, 255, 255, 0.8)'"
+    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 0 20px rgba(0, 255, 255, 0.5)'">
+      ← BACK
+    </button>
+  </div>
+</body>
+</html>

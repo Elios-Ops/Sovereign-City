@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "status": "open",
+    "title": "Glitchborn MuskRat #014",
+    "img": "images/vault1.jpg",
+    "link": "vault1.html",
+    "preview": "images/glitchborn/glitch_rat1.png"
+  },
+  {
+    "id": 2,
+    "status": "open",
+    "title": "Bloodborn MuskRat #027",
+    "img": "images/vault2.jpg",
+    "link": "vault2.html",
+    "preview": "images/bloodborn/blood_rat1.png"
+  },
+  {
+    "id": 3,
+    "status": "locked",
+    "title": "Slot 3 of 13",
+    "img": "images/locked.jpg"
+  },
+  {
+    "id": 4,
+    "status": "locked",
+    "title": "Slot 4 of 13",
+    "img": "images/locked.jpg"
+  },
+  {
+    "id": 5,
+    "status": "locked",
+    "title": "Slot 5 of 13",
+    "img": "images/locked.jpg"
+  },
+  {
+    "id": 6,
+    "status": "locked",
+    "title": "Slot 6 of 13",
+    "img": "images/locked.jpg"
+  }
+]

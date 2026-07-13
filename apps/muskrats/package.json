@@ -1,0 +1,21 @@
+{
+  "name": "muskrats-backend",
+  "version": "1.0.0",
+  "description": "Backend server for MuskRats.io forms and whitelist",
+  "main": "backend-server.js",
+  "scripts": {
+    "start": "node backend-server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "nodemailer": "^6.9.0",
+    "googleapis": "^118.0.0",
+    "dotenv": "^16.0.3",
+    "body-parser": "^1.20.2"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

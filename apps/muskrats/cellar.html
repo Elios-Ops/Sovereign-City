@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>The Cellar Vault – MuskRats.io</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #10161a url('images/cellar_vault_bg.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #00ffff;
+      font-family: 'Courier New', monospace;
+      min-height: 100vh;
+      text-align: center;
+      overflow-x: hidden;
+      position: relative;
+    }
+    /* Subtle overlay for readability */
+    .bg-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(10, 20, 32, 0.73);
+      z-index: 0;
+      pointer-events: none;
+      transition: background 0.35s;
+    }
+    .cellar-header {
+      font-size: 2.35rem;
+      margin-top: 56px;
+      letter-spacing: 1.5px;
+      text-shadow: 0 0 16px #00fff8, 0 0 4px #ff00ff88;
+      font-family: 'Bangers', 'Impact', 'Courier New', monospace;
+      margin-bottom: 32px;
+      position: relative;
+      z-index: 2;
+    }
+    .cellar-img {
+      width: 95vw;
+      max-width: 820px;
+      margin: 0 auto 30px auto;
+      border-radius: 12px;
+      border: 2.5px solid #00ffff99;
+      box-shadow: 0 0 40px #00fff844, 0 4px 24px #0ff6 inset;
+      display: block;
+      position: relative;
+      z-index: 2;
+    }
+    .vault-desc {
+      max-width: 700px;
+      margin: 0 auto 40px auto;
+      background: rgba(11,26,32,0.93);
+      border-radius: 12px;
+      border-left: 4px solid #00ffff66;
+      box-shadow: 0 0 10px #00ffff44;
+      padding: 32px 20px 26px 20px;
+      font-size: 1.17rem;
+      line-height: 1.65;
+      color: #e8ffff;
+      text-align: left;
+      position: relative;
+      z-index: 2;
+    }
+    .cellar-btns {
+      margin: 45px 0 24px 0;
+      display: flex;
+      justify-content: center;
+      gap: 28px;
+      position: relative;
+      z-index: 2;
+    }
+    .cellar-btn {
+      background: #00ffff;
+      color: #10161a;
+      font-weight: bold;
+      font-size: 1.09rem;
+      padding: 15px 36px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 0 18px #00ffff88;
+      transition: background 0.15s, color 0.15s;
+      letter-spacing: 1.1px;
+    }
+    .cellar-btn:hover {
+      background: #fff;
+      color: #00ffff;
+    }
+    /* Audio/mute button always above overlay */
+    #cellarMute { z-index: 20 !important; }
+    @media (max-width:650px) {
+      .cellar-header { font-size: 1.4rem; margin-top: 22px; }
+      .cellar-img { max-width: 99vw; }
+      .vault-desc { padding: 15px 7px 15px 13px; font-size: 1.01rem; }
+      .cellar-btns { flex-direction: column; gap: 14px; }
+      .cellar-btn { padding: 12px 8px; font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-overlay"></div>
+
+  <div class="cellar-header">🍷 The Cellar Vault</div>
+
+  <img class="cellar-img" src="images/cellar_vault_main.jpg" alt="Cellar Vault – The Hidden Treasury" />
+
+  <div class="vault-desc">
+    Beneath the Mansion, through the pipes and whispers, lies the legendary Cellar Vault. Only the bravest MuskRats, those who have followed the glyphs and braved the sewer's riddles, can ever reach this room.<br><br>
+    Here, treasures are sealed behind blood-stained brick and ancient glyphs—vaulted ETH, forbidden relics, scrolls, and the secrets of the F.A.M.<br><br>
+    <b>Are you ready to unlock your crew's fortune?</b> The next job starts now.
+  </div>
+
+  <div class="cellar-btns">
+    <button class="cellar-btn" onclick="window.location.href='descent.html'">⬅ Back to Sewer Fork</button>
+    <button class="cellar-btn" onclick="window.location.href='poster.html'">⬅ Back to Sewer Alley</button>
+  </div>
+
+  <!-- Audio + mute button -->
+  <audio id="cellarAudio" src="audio/cellar_vault_audio.mp3" loop autoplay></audio>
+  <button id="cellarMute" style="position:fixed;top:20px;right:20px;z-index:99;background:#090e13;color:#00ffff;padding:10px 16px;border-radius:6px;border:2px solid #00ffffcc;box-shadow:0 2px 18px #00fff8a6;font-size:1.2rem;">🔊</button>
+  <script>
+    const cellarAudio = document.getElementById('cellarAudio');
+    const cellarMute = document.getElementById('cellarMute');
+    cellarAudio.volume = 0.16;
+    cellarMute.onclick = () => {
+      cellarAudio.muted = !cellarAudio.muted;
+      cellarMute.textContent = cellarAudio.muted ? "🔇" : "🔊";
+    };
+  </script>
+
+
+  <!-- Unified Footer -->
+  <script src="unified-footer.js"></script>
+
+</body>
+</html>

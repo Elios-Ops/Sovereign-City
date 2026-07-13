@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Scroll 6 – Bloodborn Rising</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 40px 20px;
+      background: black;
+      color: #ff4444;
+      font-family: 'Courier New', monospace;
+      text-align: center;
+    
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 30px;
+      text-shadow: 0 0 12px #ff4444;
+    }
+    .scroll-container {
+      max-width: 700px;
+      margin: auto;
+      background: rgba(255, 68, 68, 0.05);
+      padding: 30px;
+      border: 2px solid #ff4444;
+      border-radius: 10px;
+      box-shadow: 0 0 25px #ff444480;
+    }
+    .lore-text {
+      font-size: 1.1rem;
+      line-height: 1.7;
+      margin-bottom: 20px;
+      white-space: pre-wrap;
+    }
+    .hover-reveal {
+      margin-top: 20px;
+      color: #ff4444;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: bold;
+    }
+    .hover-reveal:hover {
+      color: white;
+      text-shadow: 0 0 15px #ff4444;
+    }
+    .back-link {
+      display: block;
+      margin-top: 40px;
+      color: #ff4444;
+      text-decoration: none;
+    }
+  </style>
+
+  <!-- Audio assets -->
+  <audio id="heartbeat" src="audio/heartbeat.mp3" loop autoplay></audio>
+  <audio id="chant" src="audio/chant_loop.mp3" loop></audio>
+</head>
+<body>
+
+  <h1>🩸 Scroll 6: Bloodborn Rising</h1>
+
+  <div class="scroll-container">
+    <div class="lore-text">
+      Beneath the Don’s cellar floor, the blood didn’t dry — it pooled.
+      And from that pool, thirteen shapes emerged. Glyphs pulsed in time with a heartbeat no longer mortal.
+
+      Their names forgotten. Their purpose clear.
+      One for each moon. One for each offering.
+
+      <em>You can’t see the pain — it’s in the knees.<br>
+      Little RATS giving birth to babies with rabies…</em>
+    </div>
+
+    <div class="hover-reveal" onclick="alert('🩸 Hidden Phrase: From sewer to stars…')">
+      🩸 Tap to reveal glyphline...
+    </div>
+  </div>
+
+  <a class="back-link" href="codex.html">⬅ Back to Codex</a>
+
+  <script>
+    window.addEventListener("DOMContentLoaded", () => {
+      const heartbeat = document.getElementById("heartbeat");
+      const chant = document.getElementById("chant");
+      const reveal = document.querySelector(".hover-reveal");
+
+      heartbeat.volume = 0.5;
+      heartbeat.play().catch(() => {});
+
+      reveal.addEventListener("mouseenter", () => {
+        chant.volume = 0.6;
+        chant.play().catch(() => {});
+      });
+
+      reveal.addEventListener("mouseleave", () => {
+        chant.pause();
+        chant.currentTime = 0;
+      });
+    });
+
+    // Inject dynamic footer
+    fetch("footer.html")
+      .then(res => res.text())
+      .then(html => {
+        const footer = document.createElement("div");
+        footer.innerHTML = html;
+        document.body.appendChild(footer);
+      });
+  </script>
+
+
+  <!-- Unified Footer -->
+  <script src="unified-footer.js"></script>
+
+</body>
+</html>
+

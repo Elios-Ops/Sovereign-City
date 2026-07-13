@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Syndicate Terminal – Hacker Rats</title>
+  <style>
+    body {
+      background: #161b1e url('images/brick_wall_syndicate_bg.png') no-repeat center center fixed;
+      background-size: cover;
+      color: #00ffff;
+      font-family: 'Courier New', monospace;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      position: relative;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(18,23,28,0.75);
+      z-index: 0;
+      pointer-events: none;
+    }
+    .main-content {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto 48px auto;
+      padding: 30px 2vw 0 2vw;
+    }
+    .hero-img {
+      width: 100%;
+      max-width: 820px;
+      border-radius: 18px;
+      margin: 32px auto 38px auto;
+      box-shadow: 0 0 42px #00fff81c, 0 2px 12px #0ff4 inset;
+      display: block;
+    }
+    .section-title {
+      font-size: 2.3rem;
+      letter-spacing: 2px;
+      text-shadow: 0 0 16px #00fff8, 0 0 7px #0ff6;
+      margin-bottom: 18px;
+      margin-top: 8px;
+      font-family: 'Bangers', 'Impact', 'Courier New', monospace;
+      text-transform: uppercase;
+    }
+    .syn-desc {
+      color: #d0fff9;
+      font-size: 1.12rem;
+      margin: 18px auto 38px auto;
+      max-width: 830px;
+      background: rgba(15,24,33,0.68);
+      padding: 18px 18px 12px 18px;
+      border-radius: 12px;
+      box-shadow: 0 0 18px #00ffff28;
+    }
+    /* --- DGX GRID --- */
+    .hacker-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 38px 36px;
+      justify-content: center;
+      align-items: center;
+      margin: 0 auto 46px auto;
+      max-width: 900px; /* Match hero width */
+    }
+    .hacker-card {
+      background: rgba(16, 34, 50, 0.94);
+      border: 2.3px solid #00ffffbb;
+      border-radius: 13px;
+      width: 260px;
+      max-width: 95vw;
+      min-width: 210px;
+      box-shadow: 0 0 16px #00fff822, 0 2px 12px #0ff4 inset;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 18px 8px 18px 8px;
+      position: relative;
+      transition: box-shadow 0.2s, border 0.2s;
+      margin: 0 auto;
+    }
+    .hacker-card img {
+      width: 100%;
+      max-width: 168px;
+      min-height: 120px;
+      border-radius: 11px;
+      margin-bottom: 15px;
+      background: #141b21;
+      border: 2px solid #00ffff33;
+      box-shadow: 0 0 12px #00ffff22;
+      object-fit: cover;
+    }
+    .dgx-title {
+      color: #fff;
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+      font-size: 1.11rem;
+      letter-spacing: 1px;
+      margin-bottom: 2px;
+      text-shadow: 0 0 10px #00fff8b5, 0 0 2px #fff;
+      text-align: center;
+    }
+    .dgx-role {
+      font-family: 'Bangers', 'Courier New', monospace;
+      font-size: 1.03rem;
+      margin-bottom: 10px;
+      text-shadow: 0 0 9px #ff00ff66;
+      text-align: center;
+    }
+    .dgx-role.Grid { color: #39ffd7; }
+    .dgx-role.Meme { color: #f300ff; }
+    .dgx-role.Ritual { color: #ffba20; }
+    .dgx-role.Alpha { color: #82fffb; }
+    .dgx-role.Vault { color: #00fff7; }
+    .dgx-role.Stealth { color: #ff237d; }
+    .market-btn {
+      background: #00ffff;
+      color: #10161a;
+      font-weight: bold;
+      font-size: 1.09rem;
+      padding: 10px 19px;
+      border-radius: 7px;
+      border: none;
+      cursor: pointer;
+      margin-bottom: 8px;
+      box-shadow: 0 0 18px #00ffff99;
+      transition: background 0.13s, color 0.13s;
+      letter-spacing: 1.1px;
+      margin-right: 8px;
+    }
+    .market-btn:hover {
+      background: #ff00ff;
+      color: #fff;
+    }
+    .assign-btn {
+      background: #ff00ff;
+      color: #fff;
+      font-weight: bold;
+      font-size: 1.09rem;
+      padding: 10px 19px;
+      border-radius: 7px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 0 18px #ff00ff88;
+      transition: background 0.13s, color 0.13s;
+      margin-bottom: 8px;
+    }
+    .assign-btn:hover {
+      background: #00ffff;
+      color: #10161a;
+    }
+    /* DAO GUARDIAN */
+    .dao-hero {
+      margin: 58px auto 24px auto;
+      max-width: 820px;
+      border-radius: 18px;
+      box-shadow: 0 0 44px #ff00ff33, 0 2px 14px #0ff2 inset;
+      background: rgba(17,17,27,0.97);
+      padding: 44px 12px 36px 12px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .dao-img {
+      width: 100%;
+      max-width: 790px;
+      border-radius: 13px;
+      margin: 0 auto 22px auto;
+      display: block;
+      box-shadow: 0 0 18px #00ffff44;
+      object-fit: cover;
+    }
+    .dao-title {
+      font-size: 2.15rem;
+      color: #00ffff;
+      letter-spacing: 2px;
+      margin-bottom: 14px;
+      font-family: 'Bangers', 'Courier New', monospace;
+      text-shadow: 0 0 15px #00fff8b2, 0 0 2px #fff;
+      text-align: center;
+    }
+    .dao-desc {
+      font-size: 1.17rem;
+      color: #fff;
+      margin-bottom: 16px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      text-shadow: 0 0 7px #00fff8a2;
+      text-align: center;
+    }
+    .dao-cta {
+      color: #ff00ff;
+      font-weight: bold;
+      font-size: 1.13rem;
+      margin: 0 0 10px 0;
+      letter-spacing: 0.5px;
+      text-align: center;
+    }
+    .dao-btn-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 24px;
+      margin-bottom: 12px;
+    }
+    .dao-btn {
+      background: #00ffff;
+      color: #10161a;
+      font-weight: bold;
+      font-size: 1.13rem;
+      padding: 13px 30px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      margin-top: 5px;
+      box-shadow: 0 0 20px #00ffff88;
+      transition: background 0.14s, color 0.14s;
+    }
+    .dao-btn.propose {
+      background: #ff00ff;
+      color: #fff;
+      margin-left: 8px;
+      box-shadow: 0 0 18px #ff00ff99;
+    }
+    .dao-btn:hover {
+      background: #fff;
+      color: #00ffff;
+    }
+    .dao-btn.propose:hover {
+      background: #fff;
+      color: #ff00ff;
+    }
+    /* Footer Styles */
+    /* Footer styles removed - using unified footer */
+    
+    
+    
+    
+    
+    
+    @media (max-width:1200px) {
+      .main-content { max-width: 99vw; }
+      .hacker-card { width: 41vw; max-width: 190px;}
+    }
+    @media (max-width:950px) {
+      .hacker-grid { grid-template-columns: 1fr 1fr; max-width: 99vw; }
+      .dao-hero, .hero-img, .dao-img { max-width: 99vw !important; }
+      .hacker-card { width: 48vw; max-width: 230px;}
+    }
+    @media (max-width:650px) {
+      .section-title { font-size: 1.18rem; }
+      .dao-title { font-size: 1.13rem; }
+      .main-content { padding: 8px 0 0 0;}
+      .hacker-card { max-width: 98vw; }
+      .hacker-grid { gap: 14px; }
+      .dao-hero { padding: 11px 2vw 13px 2vw;}
+      .dao-img { max-width: 97vw !important;}
+      .dao-btn-row { flex-direction: column; gap: 11px;}
+    }
+  </style>
+</head>
+<body>
+  <audio id="syndicateAmbience" src="audio/syndicate_ambience.mp3" loop autoplay></audio>
+  <button id="syndicateMute" style="position:fixed;top:24px;right:24px;z-index:99;background:#090e13;color:#00ffff;padding:11px 17px;border-radius:8px;border:2px solid #00ffffcc;box-shadow:0 2px 18px #00fff8a6;font-size:1.27rem;">🔊</button>
+  <script>
+    const syndicateAudio = document.getElementById('syndicateAmbience');
+    const syndicateMute = document.getElementById('syndicateMute');
+    syndicateAudio.volume = 0.15;
+    syndicateMute.onclick = () => {
+      syndicateAudio.muted = !syndicateAudio.muted;
+      syndicateMute.textContent = syndicateAudio.muted ? "🔇" : "🔊";
+    };
+  </script>
+
+  <div class="main-content">
+
+    <!-- HERO IMAGE (ABOVE GRID) -->
+    <img src="images/syndicate_bg.jpg" alt="Syndicate Hero" class="hero-img">
+
+    <div class="section-title">SYNDICATE TERMINAL</div>
+    <div class="syn-desc">
+      Welcome to the MuskRats Syndicate Terminal. This is the high-table: where the network’s best hackers, drip lords, and guardians of the DAO conspire.<br>
+      <span style="color:#ff00ff;">Unlock DGX Spark-Brain roles, discover rare drip, and decode missions from the alley’s digital shadows.</span>
+    </div>
+
+    <!-- CENTERED GRID OF 6 -->
+    <div class="hacker-grid">
+      <div class="hacker-card">
+        <img src="images/hacker_rats/dgx1.png" alt="DGX Spark-Brain #1">
+        <div class="dgx-title">DGX Spark-Brain</div>
+        <div class="dgx-role Grid">Grid Ops</div>
+        <button class="market-btn" onclick="window.location.href='vault3.html'">Rent/Assign</button>
+        <button class="assign-btn" onclick="window.location.href='crew.html'">Add to Crew</button>
+      </div>
+      <div class="hacker-card">
+        <img src="images/hacker_rats/dgx2.png" alt="DGX Spark-Brain #2">
+        <div class="dgx-title">DGX Spark-Brain</div>
+        <div class="dgx-role Meme">Meme Terminal</div>
+        <button class="market-btn" onclick="window.location.href='vault3.html'">Rent/Assign</button>
+        <button class="assign-btn" onclick="window.location.href='crew.html'">Add to Crew</button>
+      </div>
+      <div class="hacker-card">
+        <img src="images/hacker_rats/dgx3.png" alt="DGX Spark-Brain #3">
+        <div class="dgx-title">DGX Spark-Brain</div>
+        <div class="dgx-role Ritual">Ritual Node</div>
+        <button class="market-btn" onclick="window.location.href='vault3.html'">Rent/Assign</button>
+        <button class="assign-btn" onclick="window.location.href='crew.html'">Add to Crew</button>
+      </div>
+      <div class="hacker-card">
+        <img src="images/hacker_rats/dgx4.png" alt="DGX Spark-Brain #4">
+        <div class="dgx-title">DGX Spark-Brain</div>
+        <div class="dgx-role Alpha">Alpha Engine</div>
+        <button class="market-btn" onclick="window.location.href='vault3.html'">Rent/Assign</button>
+        <button class="assign-btn" onclick="window.location.href='crew.html'">Add to Crew</button>
+      </div>
+      <div class="hacker-card">
+        <img src="images/hacker_rats/dgx5.png" alt="DGX Spark-Brain #5">
+        <div class="dgx-title">DGX Spark-Brain</div>
+        <div class="dgx-role Vault">Vaultkeeper</div>
+        <button class="market-btn" onclick="window.location.href='vault3.html'">Rent/Assign</button>
+        <button class="assign-btn" onclick="window.location.href='crew.html'">Add to Crew</button>
+      </div>
+      <div class="hacker-card">
+        <img src="images/hacker_rats/dgx6.png" alt="DGX Spark-Brain #6">
+        <div class="dgx-title">DGX Spark-Brain</div>
+        <div class="dgx-role Stealth">Stealth Coder</div>
+        <button class="market-btn" onclick="window.location.href='vault3.html'">Rent/Assign</button>
+        <button class="assign-btn" onclick="window.location.href='crew.html'">Add to Crew</button>
+      </div>
+    </div>
+
+    <!-- DAO GUARDIAN HERO (FULL WIDTH BELOW GRID) -->
+    <div class="dao-hero">
+      <img src="images/syndicate/dao_guardian.png" alt="Guardians of the DAO" class="dao-img">
+      <div class="dao-title">Guardians of the DAO</div>
+      <div class="dao-desc">
+        Elite protectors of the MuskRats order. Earn YOUR place on the council and decide the fate of the Vault.
+      </div>
+      <div class="dao-cta">APPLY BELOW to be considered for guardianship.</div>
+      <div class="dao-btn-row">
+        <button class="dao-btn" onclick="window.location.href='guardianship.html'">Apply for Guardianship</button>
+        <button class="dao-btn propose" onclick="openDaoProposal()">Propose Idea to Council</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DAO Modal -->
+  <div id="daoModal" style="display:none; position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:5000;background:rgba(10,15,23,0.97);justify-content:center;align-items:center;">
+    <div style="background:#1c232b;border-radius:16px;box-shadow:0 0 66px #ff00ff80, 0 0 13px #00ffff70;padding:42px 22px 32px 22px;max-width:470px;width:95vw;text-align:center;">
+      <button onclick="closeDaoModal()" style="position:absolute;top:16px;right:26px;font-size:2.0rem;background:transparent;color:#ff00ff;border:none;cursor:pointer;font-weight:bold;">&times;</button>
+      <h2 style="color:#00ffff;text-align:center;margin-bottom:18px;">Guardians of the DAO</h2>
+      <div style="color:#fff;margin-bottom:12px;font-size:1.13rem;">
+        Elite council, vault overseers, and ritual gatekeepers.<br>
+        <span style="color:#ff00ff;font-weight:bold;">Apply below</span> to be considered for guardianship.
+      </div>
+      <div class="dao-btn-row" style="justify-content:center;gap:14px;">
+        <button class="dao-btn" style="margin:0;" onclick="window.location.href='guardianship.html'">Apply for Guardianship</button>
+      </div>
+      <div style="margin:22px 0 8px 0;font-weight:bold;color:#ff00ff;text-align:center;">Council Leaderboard</div>
+      <div id="daoLeaderboard" style="background:#12181c;border-radius:9px;padding:14px 8px 8px 18px;box-shadow:0 0 16px #00ffff33;margin:0 auto 0 auto;max-width:320px;display:inline-block;text-align:left;">
+        <ol style="color:#0ff;font-size:1.07rem;padding-left:18px;">
+          <li>0x13...BEEF <span style="color:#ff00ff">(Council Chair)</span></li>
+          <li>0x9a...D09E</li>
+          <li>0xA3...C0DE</li>
+          <li>0x51...DADD</li>
+          <li>0x7F...F00D</li>
+        </ol>
+      </div>
+      <div style="margin-top:18px;color:#aaa;font-size:0.97rem;text-align:center;">
+        <span style="color:#ff00ff;">Summon the Council:</span>
+        <a href="#" onclick="alert('Proposal feature coming soon!');return false;" style="color:#00ffff;text-decoration:underline;">Submit Vault Proposal</a>
+      </div>
+    </div>
+  </div>
+  <script>
+    function openDaoModal() {
+      document.getElementById('daoModal').style.display = 'flex';
+    }
+    function closeDaoModal() {
+      document.getElementById('daoModal').style.display = 'none';
+    }
+    function openDaoProposal() {
+      window.location.href = 'proposal.html';
+    }
+  </script>
+  <!-- MUSKRATS FOOTER -->
+  
+
+  <!-- Unified Footer -->
+  <script src="unified-footer.js"></script>
+
+</body>
+</html>

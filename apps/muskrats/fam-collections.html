@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FAM Syndicate - Collections & Phases Overview</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #000000, #002626);
+      color: #00ffff;
+      font-family: 'Courier New', monospace;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .container {
+      flex: 1;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+    
+    h1 {
+      text-align: center;
+      font-size: 2.5rem;
+      text-shadow: 0 0 20px #00ffff;
+      margin-bottom: 20px;
+      letter-spacing: 2px;
+      color: #00ffff;
+    }
+    
+    h2 {
+      color: #ff00ff;
+      font-size: 1.8rem;
+      margin-top: 40px;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px #ff00ff;
+      border-bottom: 2px solid #ff00ff;
+      padding-bottom: 10px;
+    }
+    
+    h3 {
+      color: #ffea3e;
+      font-size: 1.4rem;
+      margin-top: 30px;
+      margin-bottom: 15px;
+      text-shadow: 0 0 8px #ffea3e;
+    }
+    
+    .token-info {
+      background: rgba(0, 255, 255, 0.05);
+      border: 2px solid rgba(0, 255, 255, 0.3);
+      border-radius: 15px;
+      padding: 30px;
+      margin-bottom: 40px;
+      backdrop-filter: blur(10px);
+    }
+    
+    .token-info ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .token-info li {
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+    }
+    
+    .token-info li:last-child {
+      border-bottom: none;
+    }
+    
+    .token-info strong {
+      color: #ff00ff;
+      margin-right: 10px;
+    }
+    
+    .phase-section {
+      margin-bottom: 50px;
+    }
+    
+    .table-wrapper {
+      overflow-x: auto;
+      margin: 20px 0;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid #00ffff;
+    }
+    
+    th {
+      background: rgba(0, 255, 255, 0.2);
+      color: #fff;
+      padding: 12px 8px;
+      text-align: left;
+      font-size: 0.9rem;
+      border: 1px solid #00ffff;
+      white-space: nowrap;
+    }
+    
+    td {
+      padding: 10px 8px;
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      font-size: 0.85rem;
+    }
+    
+    tr:hover {
+      background: rgba(0, 255, 255, 0.05);
+    }
+    
+    .lockbox-rewards {
+      background: rgba(255, 0, 255, 0.05);
+      border: 2px solid rgba(255, 0, 255, 0.3);
+      border-radius: 15px;
+      padding: 25px;
+      margin: 20px 0;
+    }
+    
+    .lockbox-rewards ul {
+      list-style: none;
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 10px;
+    }
+    
+    .lockbox-rewards li {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 0, 255, 0.2);
+    }
+    
+    .highlight {
+      background: rgba(255, 234, 62, 0.1);
+      color: #ffea3e;
+      padding: 15px;
+      border-radius: 10px;
+      border: 1px solid #ffea3e;
+      margin: 20px 0;
+      text-align: center;
+      font-weight: bold;
+    }
+    
+    .vr-section {
+      background: linear-gradient(135deg, rgba(255, 0, 255, 0.1), rgba(0, 255, 255, 0.1));
+      border: 2px solid #ff00ff;
+      border-radius: 20px;
+      padding: 30px;
+      margin-top: 40px;
+    }
+    
+    .vr-section ul {
+      list-style: none;
+      padding-left: 20px;
+    }
+    
+    .vr-section li:before {
+      content: "▸ ";
+      color: #00ffff;
+      font-weight: bold;
+    }
+    
+    /* Back Button */
+    .back-button {
+      position: fixed;
+      bottom: 30px;
+      left: 30px;
+      z-index: 1000;
+    }
+    
+    .back-button button {
+      background: rgba(0, 255, 255, 0.9);
+      border: 2px solid #00ffff;
+      color: #000;
+      padding: 15px 30px;
+      font-size: 1.1rem;
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .back-button button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.8);
+    }
+    
+    @media (max-width: 768px) {
+      table {
+        font-size: 0.75rem;
+      }
+      
+      th, td {
+        padding: 6px 4px;
+      }
+      
+      .lockbox-rewards ul {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>FAM Syndicate — Collections & Phases Overview</h1>
+    
+    <div class="token-info">
+      <h2>$MUSKRAT Token</h2>
+      <ul>
+        <li><strong>Total Supply:</strong> 1,000,000,000 (1B)</li>
+        <li><strong>Chain:</strong> Solana</li>
+        <li><strong>Pre-Launch:</strong> 2025-08-21 @ $0.01</li>
+        <li><strong>Public Launch:</strong> 2025-08-28 @ $0.02 on Raydium (SOL/USDC)</li>
+        <li><strong>Utility:</strong>
+          <ul style="margin-top: 10px; padding-left: 30px;">
+            <li style="border: none;">• Game fuel (Vaults, Rituals, Slots)</li>
+            <li style="border: none;">• Staking & rewards</li>
+            <li style="border: none;">• Purchase consumables (Relics, Duffle Bags, Vehicles)</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    
+    <div class="phase-section">
+      <h2>Phase 1 — Genesis (GEN1)</h2>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Collection</th>
+              <th>Supply</th>
+              <th>Mint Price</th>
+              <th>Mint Date</th>
+              <th>$MUSKRAT Allocation</th>
+              <th>Utility</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>MuskRats</strong></td>
+              <td>1,111</td>
+              <td>0.033 ETH / 0.028 WL</td>
+              <td>2025-08-28</td>
+              <td>1,000 per NFT</td>
+              <td>Community identity, Early ecosystem access, Token seeding</td>
+            </tr>
+            <tr>
+              <td><strong>Gutter Punk Kids</strong></td>
+              <td>1,111</td>
+              <td>0.033 ETH / 0.028 WL</td>
+              <td>2025-08-28</td>
+              <td>1,000 per NFT</td>
+              <td>Community expansion, Narrative recruitment, Token seeding</td>
+            </tr>
+            <tr>
+              <td><strong>FAM Card</strong></td>
+              <td>1,111 (cap 3,333)</td>
+              <td>0.13–0.15 ETH</td>
+              <td>2025-09-04</td>
+              <td>None</td>
+              <td>Player command board, 33 Crew slots + Relics/Bags/Vehicles, Vault controller</td>
+            </tr>
+            <tr>
+              <td><strong>Crew Members</strong></td>
+              <td>3,333</td>
+              <td>0.042 ETH</td>
+              <td>2025-09-04</td>
+              <td>None</td>
+              <td>Playable slot pieces, Unlock Don's Ritual payouts, Usable across all phases</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="lockbox-rewards">
+        <h3>GEN1 Crew Lockbox Rewards</h3>
+        <ul>
+          <li>5 Lockboxes → 10 ETH each</li>
+          <li>10 Lockboxes → 5 ETH each</li>
+          <li>15 Lockboxes → 3 ETH each</li>
+          <li>20 Lockboxes → 1 ETH each</li>
+          <li>25 Lockboxes → 0.5 ETH each</li>
+          <li>30 Lockboxes → 0.4 ETH each</li>
+          <li>40 Lockboxes → 0.3 ETH each</li>
+          <li>1,000 Lockboxes → 0.013 ETH each</li>
+        </ul>
+        <div class="highlight">
+          Plus NFTs and $MUSKRAT drops<br>
+          More than 66% of Crew Members in GEN1 receive extra rewards!
+        </div>
+      </div>
+    </div>
+    
+    <div class="phase-section">
+      <h2>Phase 2 — Expansion (GEN2)</h2>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Collection</th>
+              <th>Supply (Phase)</th>
+              <th>Cumulative Supply</th>
+              <th>Mint Price</th>
+              <th>Mint Date</th>
+              <th>$MUSKRAT Allocation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>MuskRats</strong></td>
+              <td>1,111</td>
+              <td>2,222</td>
+              <td>TBA</td>
+              <td>TBA</td>
+              <td>1,000 per NFT</td>
+            </tr>
+            <tr>
+              <td><strong>Gutter Punk Kids</strong></td>
+              <td>1,111</td>
+              <td>2,222</td>
+              <td>TBA</td>
+              <td>TBA</td>
+              <td>1,000 per NFT</td>
+            </tr>
+            <tr>
+              <td><strong>FAM Card</strong></td>
+              <td>1,111</td>
+              <td>2,222 (cap 3,333)</td>
+              <td>TBA</td>
+              <td>TBA</td>
+              <td>None</td>
+            </tr>
+            <tr>
+              <td><strong>Crew Members</strong></td>
+              <td>3,333</td>
+              <td>6,666</td>
+              <td>TBA</td>
+              <td>TBA</td>
+              <td>None</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <div class="phase-section">
+      <h2>Phase 3 — Full Scale (GEN3)</h2>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Collection</th>
+              <th>Supply (Phase)</th>
+              <th>Cumulative Supply</th>
+              <th>Mint Price</th>
+              <th>Mint Date</th>
+              <th>$MUSKRAT Allocation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>MuskRats</strong></td>
+              <td>1,111</td>
+              <td>3,333</td>
+              <td>TBA</td>
+              <td>TBA</td>
+              <td>1,000 per NFT</td>
+            </tr>
+            <tr>
+              <td><strong>Gutter Punk Kids</strong></td>
+              <td>1,111</td>
+              <td>3,333</td>
+              <td>TBA</td>
+              <td>TBA</td>
+              <td>1,000 per NFT</td>
+            </tr>
+            <tr>
+              <td><strong>FAM Card</strong></td>
+              <td>1,111</td>
+              <td>3,333 (cap)</td>
+              <td>TBA</td>
+              <td>TBA</td>
+              <td>None</td>
+            </tr>
+            <tr>
+              <td><strong>Crew Members</strong></td>
+              <td>3,333</td>
+              <td>9,999</td>
+              <td>TBA</td>
+              <td>TBA</td>
+              <td>None</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="vr-section">
+        <h3>GEN3 Unlock — Sovereign City</h3>
+        <ul>
+          <li>Full VR Unreal Engine crossover</li>
+          <li>NFTs become playable assets (Crew = avatars, Relics/Bags/Vehicles = 3D items, FAM Card = Vault HQ)</li>
+          <li>$MUSKRAT functions as in-game currency</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Back Button -->
+  <div class="back-button">
+    <button onclick="history.back()">← BACK</button>
+  </div>
+</body>
+</html>
