@@ -32,10 +32,10 @@ Structure established (Directive 001): `apps/` (promoted, verified applications)
 | App | Historical name | Future name | Status |
 |---|---|---|---|
 | Ledger AI / Gus | Ledger AI (specifically "Ledger-AI V1+V2 Integrated Edition") | Gus | **Imported and verified locally**, `apps/gus/` |
-| Muskrats.io | Muskrats.io | Muskrats.io | Selected source, **partially imported**, entry point verified, `apps/muskrats/` |
+| Muskrats.io | Muskrats.io | Muskrats.io | Selected source, **partially imported** (~14/60 pages; entry point and "ENTER THE SEWER" destination both verified end-to-end), `apps/muskrats/` |
 | Ledger AI V2 (backend) | "Ledger~AI V2 - Infinite Agentic Loop System" | Unknown — verification required | Source located (`AI_APP/ledger-ai-v2/`), houses Agent Router / Production Orchestrator / LLM Router / n8n webhook server; preserved only, not promoted |
-| F.A.M. | F.A.M. Card Viewer | F.A.M. | Selected source, partially imported, `apps/fam/` |
-| Infinite Agentic Loop | Infinite Agentic Loop | Infinite Agentic Loop | Selected source (`AI_APP/infinite-agentic-loop-site/`), import not yet substantially started |
+| F.A.M. | F.A.M. Card Viewer | F.A.M. | **Imported and verified locally** (all 17 files, all assets 200 OK), `apps/fam/` |
+| Infinite Agentic Loop | Infinite Agentic Loop | Infinite Agentic Loop | Selected source (`AI_APP/infinite-agentic-loop-site/`), import in progress via resumed background agent as of this handoff |
 | GPK | GPK | GPK | Not located this session |
 
 ## 4. Naming Corrections and Gus Naming Decision
@@ -52,9 +52,9 @@ Structure established (Directive 001): `apps/` (promoted, verified applications)
   - Canonical source located (in Drive, not local disk — documented deviation from the directive's assumption).
   - `docs/recovery/CANONICAL_SOURCE_MAP.md` written with exact paths/IDs/entry points/exclusions.
   - `apps/gus/` fully imported, locally verified (HTTP 200, byte-exact), outbound navigation to Muskrats.io and Infinite Agentic Loop confirmed via source grep.
-  - `apps/muskrats/` partially imported; entry point verified to load; "ENTER THE SEWER" → `poster.html` navigation confirmed in source (destination not yet imported).
-  - `apps/fam/` partially imported (several JS files present; entry point `index.html` not yet transferred as of this handoff).
-  - `apps/infinite-agentic-loop/` destination created; import not yet substantially underway.
+  - `apps/fam/` fully imported, locally verified (all 17 files, all 15 referenced assets HTTP 200), outbound navigation to Muskrats.io marketplace/mint/syndicate confirmed via source grep.
+  - `apps/muskrats/` partially imported (~14/60 pages); entry point verified to load; "ENTER THE SEWER" → `poster.html` navigation confirmed **end-to-end** (both files present and serving HTTP 200); further internal navigation (Mission Gate, Dossier Lobby, Cellar Vault, Codex, Syndicate Terminal, job offer easter egg, descent trigger) discovered in `poster.html` and recorded, destinations mostly not yet imported.
+  - `apps/infinite-agentic-loop/` destination created; import in progress via a resumed background agent as of this handoff.
   - `docs/trading/CURRENT_TRADING_STATE.md` and supporting trading docs imported verbatim from the supplied TradingView MCP + Pine Script current-state document, placed exactly where that document specified.
   - `docs/architecture/CONNECTION_REGISTRY.md` populated with real, source-grepped connections (not invented).
   - `CURRENT_STATE.md` (repo root) written and kept current as of this handoff.
