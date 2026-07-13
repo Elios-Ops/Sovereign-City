@@ -2,7 +2,7 @@
 
 **Date:** 2026-07-13  
 **Baseline tag:** `muskrats-recovery-baseline` (`f08af7e`)  
-**Reconnect commit:** *(pending — see git log)*  
+**Reconnect commit:** `54667b4`  
 **Status:** Front-end graph reconnected with documented limitations
 
 ## Configuration layer
