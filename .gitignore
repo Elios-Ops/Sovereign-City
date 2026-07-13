@@ -47,7 +47,20 @@ Thumbs.db
 # Muskrats.io promoted copy lives in apps/muskrats/. Drive sync may duplicate
 # assets under source/canonical; only the partial HTML/JS/CSS/JSON set is tracked.
 source/canonical/AI_APP/muskrats-io/*
-!source/canonical/AI_APP/muskrats-io/*.html
-!source/canonical/AI_APP/muskrats-io/*.css
-!source/canonical/AI_APP/muskrats-io/*.js
-!source/canonical/AI_APP/muskrats-io/*.json
+!source/canonical/AI_APP/muskrats-io/alpha.html
+!source/canonical/AI_APP/muskrats-io/crew.html
+!source/canonical/AI_APP/muskrats-io/donworld.css
+!source/canonical/AI_APP/muskrats-io/gate.html
+!source/canonical/AI_APP/muskrats-io/index.html
+!source/canonical/AI_APP/muskrats-io/joboffer.html
+!source/canonical/AI_APP/muskrats-io/mint.html
+!source/canonical/AI_APP/muskrats-io/muskrat-token-metadata.json
+!source/canonical/AI_APP/muskrats-io/poster.html
+!source/canonical/AI_APP/muskrats-io/presale.html
+!source/canonical/AI_APP/muskrats-io/relics.html
+!source/canonical/AI_APP/muskrats-io/tokenomics.html
+!source/canonical/AI_APP/muskrats-io/unified-footer.js
+!source/canonical/AI_APP/muskrats-io/vault1.html
+!source/canonical/AI_APP/muskrats-io/vault2.html
+!source/canonical/AI_APP/muskrats-io/vault3.html
+!source/canonical/AI_APP/muskrats-io/vault4.html
