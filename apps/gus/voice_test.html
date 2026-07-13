@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ledger Voice Test</title>
+</head>
+<body>
+    <h1>Ledger Voice Integration Test</h1>
+    <button onclick="testLedgerVoice()">Test Ledger Voice</button>
+    <button onclick="testPersonalityLoad()">Test Personality Load</button>
+    <div id="status"></div>
+
+    <script>
+        // Test voice functionality
+        async function testLedgerVoice() {
+            const utterance = new SpeechSynthesisUtterance("Welcome to the future of crypto trading. I'm Ledger. I've been expecting you.");
+            const voices = speechSynthesis.getVoices();
+            
+            const preferredVoice = voices.find(v => 
+                v.name.includes('Male') || 
+                v.name.includes('Daniel') || 
+                v.name.includes('Alex') ||
+                v.name.includes('Microsoft David')
+            ) || voices[0];
+            
+            utterance.voice = preferredVoice;
+            utterance.rate = 0.85;
+            utterance.pitch = 0.9;
+            utterance.volume = 0.8;
+            
+            speechSynthesis.speak(utterance);
+            document.getElementById('status').innerHTML = `<p>Voice Test: Using ${preferredVoice ? preferredVoice.name : 'default voice'}</p>`;
+        }
+
+        // Test personality loading
+        async function testPersonalityLoad() {
+            try {
+                const response = await fetch('./ledger_agent.json');
+                const personality = await response.json();
+                document.getElementById('status').innerHTML = `<p>Personality Loaded: ${personality.name}</p><p>Welcome Messages: ${personality.voice_phrases.welcome_messages.length}</p>`;
+            } catch(e) {
+                document.getElementById('status').innerHTML = `<p>Error loading personality: ${e.message}</p>`;
+            }
+        }
+
+        // Load voices when page loads
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = function() {
+                console.log('Voices loaded:', speechSynthesis.getVoices().length);
+            };
+        }
+    </script>
+</body>
+</html>

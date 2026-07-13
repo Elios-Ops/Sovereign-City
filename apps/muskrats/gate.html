@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>The Mansion Gate – MuskRats.io</title>
+  <style>
+    body {
+      margin: 0;
+      background: #0a1015;
+      color: #00ffff;
+      font-family: 'Courier New', monospace;
+      overflow: hidden;
+    
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .video-bg {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: 1;
+      object-fit: cover;
+      min-width: 100vw; min-height: 100vh;
+      pointer-events: none;
+    }
+    .intercom-btn {
+      position: absolute;
+      top: 80%;
+      left: 85%;
+      transform: translate(-50%, -50%);
+      z-index: 3;
+      background: #0a2b2f;
+      color: #00ffff;
+      border: 2.5px solid #00ffff88;
+      border-radius: 40px;
+      padding: 22px 38px;
+      font-size: 1.15rem;
+      font-weight: bold;
+      box-shadow: 0 0 22px #00ffff70, 0 0 7px #1ff8;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s, box-shadow 0.18s;
+      opacity: 0.91;
+    }
+    .intercom-btn:hover {
+      background: #00ffff;
+      color: #0a1015;
+      box-shadow: 0 0 40px #00ffffa0;
+    }
+    .intercom-dialog {
+      position: absolute;
+      left: 50%; top: 47%;
+      transform: translate(-50%, -50%);
+      background: rgba(14,28,37,0.96);
+      color: #fff;
+      padding: 22px 34px;
+      border-radius: 14px;
+      box-shadow: 0 0 18px #00ffff55;
+      font-size: 1.12rem;
+      font-family: 'Courier New', monospace;
+      text-align: center;
+      z-index: 5;
+      min-width: 260px;
+      max-width: 86vw;
+      display: none;
+    }
+    .back-btn {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 20;
+      background: #00ffff;
+      color: #0a2024;
+      font-weight: bold;
+      font-size: 1.09rem;
+      padding: 14px 32px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 0 16px #00ffffb7;
+      transition: background 0.14s, color 0.14s;
+    }
+    .back-btn:hover {
+      background: #fff;
+      color: #00ffff;
+    }
+    @media (max-width: 700px) {
+      .intercom-btn { padding: 13px 22px; font-size: 1.02rem; top: 70%; left: 72%; }
+      .back-btn { padding: 10px 14px; font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <video id="gateVideo" class="video-bg" src="video/mansion_gate.mp4" autoplay loop playsinline muted></video>
+  <audio id="rainAudio" src="audio/mansion_rain.mp3" autoplay loop></audio>
+
+  <button class="intercom-btn" id="intercomBtn">🔊 Intercom</button>
+  <div class="intercom-dialog" id="intercomDialog"></div>
+
+  <audio id="guard1" src="audio/audio1.mp3"></audio>
+  <audio id="guard2" src="audio/audio2.mp3"></audio>
+  <audio id="guard3" src="audio/audio3.mp3"></audio>
+  <audio id="guard4" src="audio/audio4.mp3"></audio>
+
+  <script>
+    // Volume setup & video autoplay
+    window.onload = function() {
+      // Set volumes
+      const vid = document.getElementById('gateVideo');
+      const audio = document.getElementById('rainAudio');
+      vid.volume = 0.65;
+      audio.volume = 0.65;
+      // Attempt to play if browser allows
+      vid.play().catch(()=>{});
+      audio.play().catch(()=>{});
+    };
+
+    // Guard audio lines and display
+    const guardLines = [
+      "Don’t even think about it. That gate don’t open for no bodies braaaa.",
+      "Ain’t no magic password, braaa. This ain’t Clubhouse. HA!",
+      "Scroll 14? Ha!!! That don’t even exist yet! You got played dog.",
+      "Rats and Punks? They glitch together. Follow the GLYPH."
+    ];
+    const guardAudios = [
+      document.getElementById('guard1'),
+      document.getElementById('guard2'),
+      document.getElementById('guard3'),
+      document.getElementById('guard4')
+    ];
+    let guardIndex = 0;
+    let audioPlaying = false;
+
+    const dialog = document.getElementById('intercomDialog');
+    const intercomBtn = document.getElementById('intercomBtn');
+
+    intercomBtn.onclick = function() {
+      if (audioPlaying) return; // prevent overlap
+      dialog.innerText = guardLines[guardIndex];
+      dialog.style.display = 'block';
+      const currentAudio = guardAudios[guardIndex];
+      audioPlaying = true;
+      currentAudio.currentTime = 0;
+      currentAudio.play();
+      currentAudio.onended = function() {
+        dialog.style.display = 'none';
+        audioPlaying = false;
+        guardIndex = (guardIndex + 1) % guardLines.length;
+      };
+    };
+  </script>
+
+  <!-- Unified Footer -->
+  <script src="unified-footer.js"></script>
+
+</body>
+</html>

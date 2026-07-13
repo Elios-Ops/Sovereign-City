@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ledger Voice Selector</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #000000 0%, #0a0a1f 25%, #1a1a2e 50%, #16213e 75%, #0a0a1f 100%);
+            color: white;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(26, 26, 46, 0.8);
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid #00FFFF;
+        }
+        h1 {
+            color: #00FFFF;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .voice-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .voice-info {
+            flex: 1;
+        }
+        .voice-name {
+            font-weight: bold;
+            color: #FFD700;
+        }
+        .voice-details {
+            font-size: 0.9em;
+            color: #B0B0C3;
+            margin-top: 5px;
+        }
+        .test-btn {
+            background: #00FFFF;
+            color: #000;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .test-btn:hover {
+            background: #00CCCC;
+        }
+        .select-btn {
+            background: #FFD700;
+            color: #000;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .select-btn:hover {
+            background: #E6C200;
+        }
+        .selected {
+            border-color: #FFD700;
+            background: rgba(255, 215, 0, 0.1);
+        }
+        .test-phrase {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .slider-group {
+            display: inline-block;
+            margin: 0 15px;
+            text-align: center;
+        }
+        .slider {
+            width: 100px;
+            margin: 10px 0;
+        }
+        #englishOnly {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .back-btn {
+            background: linear-gradient(135deg, #00FFFF, #0080FF);
+            color: #000;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .back-btn:hover {
+            background: linear-gradient(135deg, #00CCCC, #0066CC);
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px;">
+            <button onclick="goBack()" class="back-btn">
+                ← Back to Ledger AI
+            </button>
+            <h1 style="margin: 0; display: flex; align-items: center; gap: 15px;">
+                <img src="ledger_ai/ledger_ai.png" alt="Ledger" style="width: 50px; height: 50px; border-radius: 50%; border: 2px solid #00FFFF;">
+                Ledger Voice Selector
+            </h1>
+            <div style="width: 120px;"></div> <!-- Spacer for centering -->
+        </div>
+        
+        <div class="test-phrase">
+            <strong>Test Phrase:</strong><br>
+            "Welcome to the future of crypto trading. I'm Ledger, your guide through the quantum realm of profit."
+        </div>
+
+        <div class="controls">
+            <div class="slider-group">
+                <label>Rate</label><br>
+                <input type="range" id="rateSlider" class="slider" min="0.1" max="2" step="0.1" value="0.85">
+                <div id="rateValue">0.85</div>
+            </div>
+            <div class="slider-group">
+                <label>Pitch</label><br>
+                <input type="range" id="pitchSlider" class="slider" min="0" max="2" step="0.1" value="0.9">
+                <div id="pitchValue">0.9</div>
+            </div>
+            <div class="slider-group">
+                <label>Volume</label><br>
+                <input type="range" id="volumeSlider" class="slider" min="0" max="1" step="0.1" value="0.8">
+                <div id="volumeValue">0.8</div>
+            </div>
+        </div>
+
+        <div id="englishOnly">
+            <label>
+                <input type="checkbox" id="englishFilter" checked> Show only English accents
+            </label>
+        </div>
+
+        <div id="voiceList">
+            Loading voices...
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <button id="applyToLedger" class="select-btn" style="padding: 12px 24px; font-size: 16px;">
+                Apply Selected Voice to Ledger AI
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let voices = [];
+        let selectedVoice = null;
+        let currentRate = 0.85;
+        let currentPitch = 0.9;
+        let currentVolume = 0.8;
+
+        const testPhrase = "Welcome to the future of crypto trading. I'm Ledger, your guide through the quantum realm of profit.";
+
+        function loadVoices() {
+            voices = speechSynthesis.getVoices();
+            console.log('Total voices available:', voices.length);
+            displayVoices();
+        }
+
+        function displayVoices() {
+            const voiceList = document.getElementById('voiceList');
+            const englishOnly = document.getElementById('englishFilter').checked;
+            
+            let filteredVoices = voices;
+            if (englishOnly) {
+                filteredVoices = voices.filter(voice => 
+                    voice.lang.startsWith('en-') && (
+                        voice.name.toLowerCase().includes('uk') ||
+                        voice.name.toLowerCase().includes('british') ||
+                        voice.name.toLowerCase().includes('english') ||
+                        voice.name.toLowerCase().includes('daniel') ||
+                        voice.name.toLowerCase().includes('oliver') ||
+                        voice.name.toLowerCase().includes('male') ||
+                        voice.lang === 'en-GB'
+                    )
+                );
+            }
+
+            voiceList.innerHTML = filteredVoices.map((voice, index) => `
+                <div class="voice-item" data-voice="${index}">
+                    <div class="voice-info">
+                        <div class="voice-name">${voice.name}</div>
+                        <div class="voice-details">
+                            Language: ${voice.lang} | ${voice.localService ? 'Local' : 'Remote'} | ${voice.default ? 'Default' : ''}
+                        </div>
+                    </div>
+                    <div>
+                        <button class="test-btn" onclick="testVoice(${voices.indexOf(voice)})">Test</button>
+                        <button class="select-btn" onclick="selectVoice(${voices.indexOf(voice)})">Select</button>
+                    </div>
+                </div>
+            `).join('') || '<p>No voices found. Please wait for voices to load.</p>';
+        }
+
+        function testVoice(voiceIndex) {
+            const voice = voices[voiceIndex];
+            const utterance = new SpeechSynthesisUtterance(testPhrase);
+            utterance.voice = voice;
+            utterance.rate = currentRate;
+            utterance.pitch = currentPitch;
+            utterance.volume = currentVolume;
+            
+            speechSynthesis.cancel(); // Stop any current speech
+            speechSynthesis.speak(utterance);
+            
+            console.log('Testing voice:', voice.name, voice.lang);
+        }
+
+        function selectVoice(voiceIndex) {
+            selectedVoice = voices[voiceIndex];
+            
+            // Update UI
+            document.querySelectorAll('.voice-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            document.querySelector(`[data-voice="${voiceIndex}"]`).classList.add('selected');
+            
+            console.log('Selected voice:', selectedVoice.name);
+        }
+
+        function updateSliderValues() {
+            document.getElementById('rateValue').textContent = currentRate;
+            document.getElementById('pitchValue').textContent = currentPitch;
+            document.getElementById('volumeValue').textContent = currentVolume;
+        }
+
+        // Event listeners
+        document.getElementById('rateSlider').addEventListener('input', (e) => {
+            currentRate = parseFloat(e.target.value);
+            updateSliderValues();
+        });
+
+        document.getElementById('pitchSlider').addEventListener('input', (e) => {
+            currentPitch = parseFloat(e.target.value);
+            updateSliderValues();
+        });
+
+        document.getElementById('volumeSlider').addEventListener('input', (e) => {
+            currentVolume = parseFloat(e.target.value);
+            updateSliderValues();
+        });
+
+        document.getElementById('englishFilter').addEventListener('change', displayVoices);
+
+        document.getElementById('applyToLedger').addEventListener('click', () => {
+            if (selectedVoice) {
+                const voiceConfig = {
+                    voice: selectedVoice.name,
+                    voiceURI: selectedVoice.voiceURI,
+                    lang: selectedVoice.lang,
+                    rate: currentRate,
+                    pitch: currentPitch,
+                    volume: currentVolume
+                };
+                
+                localStorage.setItem('ledgerVoiceConfig', JSON.stringify(voiceConfig));
+                alert(`✅ Voice applied to Ledger AI!\n\nVoice: ${selectedVoice.name}\nLanguage: ${selectedVoice.lang}\n\nRefresh Ledger AI to hear the new voice.`);
+            } else {
+                alert('Please select a voice first!');
+            }
+        });
+
+        // Navigation function
+        function goBack() {
+            // Try to go back to the parent window if opened from main app
+            if (window.opener && !window.opener.closed) {
+                window.close();
+            } else {
+                // Otherwise navigate to main app
+                window.location.href = './index.html';
+            }
+        }
+
+        // Initialize
+        updateSliderValues();
+        
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = loadVoices;
+        }
+        
+        // Load voices immediately if available
+        setTimeout(loadVoices, 100);
+    </script>
+</body>
+</html>
