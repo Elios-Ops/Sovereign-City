@@ -65,5 +65,5 @@ source/canonical/AI_APP/muskrats-io/*
 !source/canonical/AI_APP/muskrats-io/vault3.html
 !source/canonical/AI_APP/muskrats-io/vault4.html
 
-# Externalized oversized media (preserved in media-vault — see external-assets.json)
-apps/muskrats/video/mansion_gate.mp4
+# Recovery tooling (not part of application source)
+scripts/git-filter-repo
