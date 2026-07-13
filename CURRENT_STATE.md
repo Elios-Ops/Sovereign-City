@@ -45,7 +45,11 @@ Restore and reconnect the Sovereign City ecosystem from the canonical recovered 
 
 ## Immediate Next Action
 
-Review `docs/recovery/MUSKRATS_RECONNECT_PLAN.md` and approve the ecosystem reconnection pass (Netlify → local architecture). No route changes have been applied yet.
+Backend form reconnect (whitelist/contact/proposal → local `backend-server.js` on 3333) — see deferred items in `docs/recovery/ECOSYSTEM_RECONNECT_VERIFICATION.md`. Push local commits and tag after `gh auth refresh`.
+
+## Front-End Reconnect (Directive 004)
+
+**Complete** — shared `ecosystem-urls.js` config, 25 cross-app references reconnected, 4 Muskrats clean redirects added. Verification: `docs/recovery/ECOSYSTEM_RECONNECT_VERIFICATION.md`.
 
 ## Blockers
 

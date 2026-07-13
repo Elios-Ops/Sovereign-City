@@ -1,6 +1,28 @@
 // NFT Slot System for FAM Card Viewer
 // This file implements the NFT slot categories and interactions
 
+function getMuskratsMintUrl(categorySlug) {
+  if (window.SOVEREIGN_CITY_URLS) {
+    return window.SOVEREIGN_CITY_URLS.url(
+      'muskrats',
+      '/mint?category=' + encodeURIComponent(categorySlug)
+    );
+  }
+  return (
+    'https://muskrats-io.netlify.app/mint?category=' +
+    encodeURIComponent(categorySlug)
+  );
+}
+
+function wireNftSlotMintUrls() {
+  Object.keys(nftSlotCategories).forEach(function (key) {
+    var category = nftSlotCategories[key];
+    if (category.mintCategory) {
+      category.mintUrl = getMuskratsMintUrl(category.mintCategory);
+    }
+  });
+}
+
 // NFT Slot Categories Definition
 const nftSlotCategories = {
   boss: { 
@@ -8,57 +30,59 @@ const nftSlotCategories = {
     slots: 1, 
     signetRing: true,
     description: "The highest rank in the FAM hierarchy",
-    mintUrl: "https://muskrats-io.netlify.app/mint?category=boss"
+    mintCategory: "boss"
   },
   underBoss: { 
     name: "Under Boss", 
     slots: 2,
     description: "Second-in-command of the FAM syndicate",
-    mintUrl: "https://muskrats-io.netlify.app/mint?category=under-boss"
+    mintCategory: "under-boss"
   },
   madeMan: { 
     name: "Made Man", 
     slots: 2,
     description: "A fully initiated member of the syndicate",
-    mintUrl: "https://muskrats-io.netlify.app/mint?category=made-man"
+    mintCategory: "made-man"
   },
   handler: { 
     name: "Handler", 
     slots: 4,
     description: "Manages operations and crew assignments",
-    mintUrl: "https://muskrats-io.netlify.app/mint?category=handler"
+    mintCategory: "handler"
   },
   contractor: { 
     name: "Contractor", 
     slots: 8,
     description: "Hired specialists for specific jobs",
-    mintUrl: "https://muskrats-io.netlify.app/mint?category=contractor"
+    mintCategory: "contractor"
   },
   associate: { 
     name: "Associate", 
     slots: 16,
     description: "Entry-level syndicate members",
-    mintUrl: "https://muskrats-io.netlify.app/mint?category=associate"
+    mintCategory: "associate"
   },
   relics: { 
     name: "Relics", 
     slots: 4,
     description: "Valuable artifacts and mystical items",
-    mintUrl: "https://muskrats-io.netlify.app/mint?category=relics"
+    mintCategory: "relics"
   },
   duffleBag: { 
     name: "Duffle Bag", 
     slots: 6,
     description: "Essential items for syndicate operations",
-    mintUrl: "https://muskrats-io.netlify.app/mint?category=duffle-bag"
+    mintCategory: "duffle-bag"
   },
   getawayVehicles: { 
     name: "Getaway Vehicles", 
     slots: 6,
     description: "Transportation for quick escapes",
-    mintUrl: "https://muskrats-io.netlify.app/mint?category=getaway-vehicles"
+    mintCategory: "getaway-vehicles"
   }
 };
+
+wireNftSlotMintUrls();
 
 // Generate NFT slots for each category
 function generateNFTSlots() {

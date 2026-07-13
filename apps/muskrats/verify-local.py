@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import os
 import re
 import sys
 import urllib.error
@@ -11,7 +12,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urljoin, urlparse
 
-BASE = "http://127.0.0.1:8802"
+BASE = os.environ.get("MUSKRATS_BASE", "http://127.0.0.1:8802")
 ROOT = Path(__file__).resolve().parent
 
 REQUIRED_PAGES = [
@@ -42,7 +43,7 @@ REQUIRED_PAGES = [
     "/joboffer.html",
 ]
 
-CLEAN_URLS = ["/gate", "/dossier_lobby", "/cellar", "/codex", "/syndicate"]
+CLEAN_URLS = ["/gate", "/dossier_lobby", "/cellar", "/codex", "/syndicate", "/marketplace", "/mint", "/crew", "/relics"]
 
 ATTR_RE = re.compile(r"(?:href|src)\s*=\s*['\"]([^'\"#]+)")
 

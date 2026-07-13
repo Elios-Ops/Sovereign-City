@@ -17,6 +17,10 @@ CLEAN_URLS = {
     "/cellar": "cellar.html",
     "/codex": "codex.html",
     "/syndicate": "syndicate.html",
+    "/marketplace": "marketplace.html",
+    "/mint": "mint.html",
+    "/crew": "crew.html",
+    "/relics": "relics.html",
 }
 
 
@@ -25,13 +29,14 @@ class MuskratsHandler(SimpleHTTPRequestHandler):
         super().__init__(*args, directory=str(ROOT), **kwargs)
 
     def do_GET(self):
-        path = self.path.split("?", 1)[0]
+        raw = self.path
+        path, sep, query = raw.partition("?")
         if path in CLEAN_URLS:
-            self.path = "/" + CLEAN_URLS[path]
+            self.path = "/" + CLEAN_URLS[path] + (sep + query if sep else "")
         elif path.endswith("/") and path != "/":
             candidate = path.rstrip("/") + ".html"
             if (ROOT / candidate.lstrip("/")).is_file():
-                self.path = candidate
+                self.path = candidate + (sep + query if sep else "")
         return super().do_GET()
 
 

@@ -4,7 +4,7 @@ Tracking board for recovery, verification, and promotion work across Sovereign C
 
 | Application | Recovery Stage | Owner | Notes |
 |---|---|---|---|
-| Muskrats.io | **Promoted — verify complete; commit pending** | Claude Code | 44 HTML pages, 195 files in `apps/muskrats/`. 30/30 routes HTTP 200. See `docs/recovery/MUSKRATS_LOCAL_VERIFICATION.md`. |
+| Muskrats.io | **Promoted — verified; front-end reconnected** | Claude Code | Directive 004 complete; see `ECOSYSTEM_RECONNECT_VERIFICATION.md` |
 | Ledger AI / Gus | **Promoted — verified** | Claude Code | `apps/gus/` — see `docs/recovery/GUS_LOCAL_VERIFICATION.md` |
 | F.A.M. | **Promoted — verified** | Claude Code | `apps/fam/` — see `docs/recovery/FAM_LOCAL_VERIFICATION.md` |
 | Infinite Agentic Loop | **Promoted — verified** | Claude Code | `apps/infinite-agentic-loop/` — see `docs/recovery/INFINITE_AGENTIC_LOOP_LOCAL_VERIFICATION.md` |
@@ -15,4 +15,4 @@ Tracking board for recovery, verification, and promotion work across Sovereign C
 
 Recovery stages: Preserve source → Identify canonical copy → Verify independently → Trace dependencies → Restore navigation → Promote.
 
-**Next:** Commit Muskrats.io full import; ecosystem URL reconnection (Netlify → local/deploy).
+**Next:** Backend form reconnect; push commits after `gh auth refresh`; restart Muskrats on 8802 if stale process present.
